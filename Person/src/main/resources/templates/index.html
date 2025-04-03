@@ -8,7 +8,68 @@
     <div th:replace="base :: header"></div>
 
     <main class="container">
-
+        <h1 class="mt-2">Danh sách Hồ sơ Sức khỏe</h1>
+        <form th:action="@{/}" method="get">
+            <div class="row">
+                <div class="col-6">
+                    <div class="mb-3 mt-3">
+                        <input type="text" class="form-control" name="username" placeholder="Tìm theo tên người dùng" />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="mb-3 mt-3">
+                        <input type="text" class="form-control" name="kw" placeholder="Tìm theo mục tiêu" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="mb-3 mt-3">
+                        <input type="number" step="0.1" class="form-control" name="minBmi" placeholder="BMI min" />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="mb-3 mt-3">
+                        <input type="number" step="0.1" class="form-control" name="maxBmi" placeholder="BMI max" />
+                    </div>
+                </div>
+            </div>
+            <div class="mb-2 mt-1">
+                <button class="btn btn-info" type="submit">Tìm kiếm</button>
+            </div>
+        </form>
+        <a th:href="@{/products}" class="btn btn-success mt-2 mb-2">Thêm Profile</a>
+        <table border="1" class="table table-striped">
+            <tr>
+                <th>ID</th>
+                <th>Tên người dùng</th>
+                <th>Chiều cao</th>
+                <th>Cân nặng</th>
+                <th>BMI</th>
+                <th>Nhịp tim</th>   
+                <th>Số bước </th>
+                <th>Lượng nước</th>
+                <th>Mục tiêu</th>
+                <th>Last Updated</th>
+                <th>HÀNH ĐỘNG</th>
+            </tr>
+            <tr th:each="profile : ${healthProfiles}">
+                <td th:text="${profile.id}"></td>
+                <td th:text="${profile.userId.username}"></td>
+                <td th:text="${profile.height}"></td>
+                <td th:text="${profile.weight}"></td>
+                <td th:text="${profile.bmi}"></td>
+                <td th:text="${profile.heartRate}"></td>
+                <td th:text="${profile.stepsPerDay}"></td>
+                <td th:text="${profile.waterIntake}"></td>
+                <td th:text="${profile.target}"></td>
+                <td th:text="${profile.updatedAt}"></td>
+                <td>
+                    <button class="btn btn-danger" th:onclick="'deleteHealthProfile('+'@{/health-profiles/delete/}'+${profile.id}+')'">&times;</button>
+                    <a th:href="@{'/health-profiles/edit/' + ${profile.id}}" class="btn btn-success">&#128296;️</a>
+                </td>
+            </tr>
+        </table>
     </main>
 
     <div th:replace="base :: footer"></div>

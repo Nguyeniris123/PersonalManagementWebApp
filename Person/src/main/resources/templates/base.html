@@ -11,7 +11,7 @@
     <header th:fragment="header">
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Personal Management Admin</a>
+                <a class="navbar-brand" th:href="@{/}">Personal Management Admin</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -29,10 +29,40 @@
         </nav>
     </header>
 
-    <footer th:fragment="footer">
-        <div class="mt-4 p-5 bg-primary text-white rounded">
-            <h1>Jumbotron Example</h1>
-            <p>Lorem ipsum...</p>
+    <footer th:fragment="footer" class="bg-dark text-white pt-5 pb-4">
+        <div class="container">
+            <div class="row">
+                <!-- Column 1: About Us -->
+                <div class="col-md-4">
+                    <h5 class="text-uppercase mb-4">About Us</h5>
+                    <p>We are committed to helping individuals monitor their health and fitness with personalized insights and guidance. Our platform empowers you to track your activity, set health goals, and make informed decisions about your well-being.</p>
+                </div>
+
+                <!-- Column 2: Quick Links -->
+                <div class="col-md-4">
+                    <h5 class="text-uppercase mb-4">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Home</a></li>
+                        <li><a href="#" class="text-white">Health Profile</a></li>
+                        <li><a href="#" class="text-white">Track Activity</a></li>
+                        <li><a href="#" class="text-white">Nutrition Plan</a></li>
+                        <li><a href="#" class="text-white">Support</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3: Contact Information -->
+                <div class="col-md-4">
+                    <h5 class="text-uppercase mb-4">Contact Information</h5>
+                    <p><i class="fa fa-envelope"></i> support@healthtracker.com</p>
+                    <p><i class="fa fa-phone"></i> +1 800 123 4567</p>
+                    <p><i class="fa fa-map-marker"></i> 123 Wellness Ave, Healthy City, HC 56789</p>
+                </div>
+            </div>
+
+            <!-- Footer Bottom Section -->
+            <div class="text-center mt-4">
+                <p>&copy; 2025 HealthTracker Inc. All rights reserved. Empowering you to live healthier every day.</p>
+            </div>
         </div>
     </footer>
 </body>
