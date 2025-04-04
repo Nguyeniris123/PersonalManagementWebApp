@@ -40,7 +40,7 @@ public class HealthProfileServiceImpl implements HealthProfileService {
     @Override
     public boolean deleteHealthProfile(int id) {
         try {
-            healthProfileRepository.deleteHealthProfile(id);
+            this.healthProfileRepository.deleteHealthProfile(id);
             return true;
         } catch (Exception e) {
             return false;
