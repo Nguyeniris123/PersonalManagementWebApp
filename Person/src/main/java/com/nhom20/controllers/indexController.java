@@ -4,12 +4,12 @@
  */
 package com.nhom20.controllers;
 
-
 import com.nhom20.services.HealthProfileService;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -17,10 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
  *
  * @author admin
  */
-
 @Controller
 public class indexController {
-    
+
     @Autowired
     private HealthProfileService healthProfileService;
 

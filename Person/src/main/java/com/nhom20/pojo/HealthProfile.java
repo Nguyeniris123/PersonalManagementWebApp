@@ -12,12 +12,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -55,6 +56,7 @@ public class HealthProfile implements Serializable {
     @Column(name = "heart_rate")
     private Integer heartRate;
     @Lob
+    @Size(max = 65535)
     @Column(name = "target")
     private String target;
     @Column(name = "steps_per_day")
@@ -65,7 +67,7 @@ public class HealthProfile implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @OneToOne(optional = false)
     private UserAccount userId;
 
     public HealthProfile() {

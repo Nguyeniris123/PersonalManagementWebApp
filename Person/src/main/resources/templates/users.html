@@ -1,0 +1,52 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Danh sách User</title>
+    <th:block th:replace="base :: bootstrap"></th:block>
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+
+    <main class="container">
+        <h1 class="text-center mt-2 mb-2">Danh sách User</h1>
+        <form th:action="@{/}" method="get">
+            <div class="row">
+                <div class="col-6">
+                    <div class="mb-3 mt-3">
+                        <input type="text" class="form-control" name="username" placeholder="Tìm theo tên người dùng" />
+                    </div>
+                </div>
+            </div>
+            <div class="mb-2 mt-1">
+                <button class="btn btn-info" type="submit">Tìm kiếm</button>
+            </div>
+        </form>
+        <a th:href="@{/health-profiles}" class="btn btn-success mt-2 mb-2">Thêm Profile</a>
+
+        <table class="table table-bordered table-hover">
+            <thead class="table-light text-center">
+                <tr>
+                    <th>ID</th>
+                    <th>Tên đầy đủ</th>
+                    <th>Tên đăng nhập</th>
+                    <th>Email</th>
+                    <th>Quyền</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="u : ${users}">
+                    <td th:text="${u.id}"></td>
+                    <td th:text="${u.fullName}"></td>
+                    <td th:text="${u.username}"></td>
+                    <td th:text="${u.email}"></td>
+                    <td th:text="${u.role}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <div th:replace="base :: footer"></div>
+</body>
+</html>
+
+

@@ -5,44 +5,53 @@
 package com.nhom20.services.impl;
 
 import com.nhom20.pojo.UserAccount;
+import com.nhom20.repositories.UserRepository;
 import com.nhom20.services.UserService;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author nguyenho
  */
+@Service
+@Transactional
 public class UserServiceImpl implements UserService {
+    
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public UserAccount getUserById(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return userRepository.getUserById(id);
     }
 
     @Override
     public UserAccount getUserByUsername(String username) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return userRepository.getUserByUsername(username);
     }
 
     @Override
-    public UserAccount createUser(UserAccount user) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public List<UserAccount> getAllUsers() {
+        return userRepository.getAllUsers();
+    }
+
+    @Override
+    public UserAccount addUser(UserAccount user) {
+        return userRepository.addUser(user);
     }
 
     @Override
     public UserAccount updateUser(UserAccount user) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return userRepository.updateUser(user);
     }
 
     @Override
     public boolean deleteUser(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return userRepository.deleteUser(id);
     }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-    
 }

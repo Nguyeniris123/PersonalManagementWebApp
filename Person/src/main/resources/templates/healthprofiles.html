@@ -1,0 +1,74 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Health Profile</title>
+    <th:block th:replace="base :: bootstrap"></th:block>
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+
+    <main class="container">
+        <h1 class="text-center mb-2 mt-2">Hồ sơ Sức khỏe</h1>
+        <div th:if="${error}" class="alert alert-danger text-center">
+            <p th:text="${error}"></p>
+        </div>
+        <form th:action="@{/health-profile/add}" th:object="${healthProfile}" method="post">
+            <input type="hidden" th:field="*{id}" />
+            <div class="mb-3">
+                <label for="user" class="form-label">Người dùng</label>
+                <select th:field="*{userId}" class="form-control" required>
+                    <option th:each="u : ${users}" 
+                            th:value="${u.id}" 
+                            th:text="${u.fullName + ' (' + u.username + ')'}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Chiều cao (cm)</label>
+                <input type="number" step="0.1" th:field="*{height}" class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Cân nặng (kg)</label>
+                <input type="number" step="0.1" th:field="*{weight}" class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">BMI</label>
+                <input type="number" step="0.1" th:field="*{bmi}" class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Nhịp tim</label>
+                <input type="number" th:field="*{heartRate}" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Bước đi mỗi ngày</label>
+                <input type="number" th:field="*{stepsPerDay}" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Lượng nước (lít)</label>
+                <input type="number" step="0.1" th:field="*{waterIntake}" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Mục tiêu sức khỏe</label>
+                <textarea th:field="*{target}" class="form-control" rows="3"></textarea>
+            </div>
+
+            <div>
+                <button class="btn btn-success mt-1 mb-3" type="submit">
+                    <span th:if="${healthProfile.id == null}">Thêm Profile</span>
+                    <span th:unless="${healthProfile.id == null}">Cập nhật Profile</span>
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <div th:replace="base :: footer"></div>
+</body>
+</html>
+

@@ -8,7 +8,7 @@
     <div th:replace="base :: header"></div>
 
     <main class="container">
-        <h1 class="mt-2">Danh sách Hồ sơ Sức khỏe</h1>
+        <h1 class="text-center mt-2 mb-2">Danh sách Hồ sơ Sức khỏe</h1>
         <form th:action="@{/}" method="get">
             <div class="row">
                 <div class="col-6">
@@ -38,7 +38,7 @@
                 <button class="btn btn-info" type="submit">Tìm kiếm</button>
             </div>
         </form>
-        <a th:href="@{/products}" class="btn btn-success mt-2 mb-2">Thêm Profile</a>
+        <a th:href="@{/health-profiles}" class="btn btn-success mt-2 mb-2">Thêm Profile</a>
         <table border="1" class="table table-striped">
             <tr>
                 <th>ID</th>
@@ -66,7 +66,7 @@
                 <td th:text="${profile.updatedAt}"></td>
                 <td>
                     <button class="btn btn-danger" th:onclick="'deleteHealthProfile('+'@{/health-profiles/delete/}'+${profile.id}+')'">&times;</button>
-                    <a th:href="@{'/health-profiles/edit/' + ${profile.id}}" class="btn btn-success">&#128296;️</a>
+                    <a th:href="@{'/health-profiles/' + ${profile.id}}" class="btn btn-success">&#128296;️</a>
                 </td>
             </tr>
         </table>

@@ -18,6 +18,8 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -43,9 +45,11 @@ public class WorkoutPlan implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
+    @NotNull
     @Column(name = "date")
     @Temporal(TemporalType.DATE)
     private Date date;
+    @Size(max = 100)
     @Column(name = "exercise_name")
     private String exerciseName;
     @Column(name = "duration_minutes")
@@ -53,6 +57,7 @@ public class WorkoutPlan implements Serializable {
     @Column(name = "calories_burned")
     private Integer caloriesBurned;
     @Lob
+    @Size(max = 65535)
     @Column(name = "notes")
     private String notes;
     @JoinColumn(name = "user_id", referencedColumnName = "id")

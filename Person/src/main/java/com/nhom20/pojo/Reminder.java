@@ -17,6 +17,7 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -41,8 +42,10 @@ public class Reminder implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Size(max = 100)
     @Column(name = "title")
     private String title;
+    @Size(max = 11)
     @Column(name = "reminder_type")
     private String reminderType;
     @Column(name = "time")

@@ -101,7 +101,18 @@ public class HealthProfileRepositoryImpl implements HealthProfileRepository {
     @Override
     public HealthProfile addOrUpdateHealthProfile(HealthProfile healthProfile) {
         Session s = this.factory.getObject().getCurrentSession();
+
+        // Kiểm tra nếu đang cập nhật mà user_id trùng với hồ sơ khác
         if (healthProfile.getId() == null) {
+            // Tạo mới → kiểm tra user_id đã tồn tại chưa
+            HealthProfile existing = (HealthProfile) s.createQuery("FROM HealthProfile WHERE userId = :user")
+                    .setParameter("user", healthProfile.getUserId())
+                    .uniqueResult();
+
+            if (existing != null) {
+                throw new RuntimeException("Người dùng này đã có hồ sơ sức khỏe!");
+            }
+
             s.persist(healthProfile);
         } else {
             s.merge(healthProfile);

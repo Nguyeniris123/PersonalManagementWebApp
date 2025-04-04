@@ -5,6 +5,7 @@
 package com.nhom20.services;
 
 import com.nhom20.pojo.UserAccount;
+import java.util.List;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
@@ -12,10 +13,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  * @author nguyenho
  */
 
-public interface UserService extends UserDetailsService {
+public interface UserService {
     UserAccount getUserById(int id);
     UserAccount getUserByUsername(String username);
-    UserAccount createUser(UserAccount user);
+    List<UserAccount> getAllUsers();
+    UserAccount addUser(UserAccount user);
     UserAccount updateUser(UserAccount user);
     boolean deleteUser(int id);
 }

@@ -14,9 +14,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -49,24 +52,36 @@ public class UserAccount implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 50)
     @Column(name = "username")
     private String username;
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
     @Column(name = "password")
     private String password;
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    @Size(max = 100)
     @Column(name = "email")
     private String email;
+    @Size(max = 7)
     @Column(name = "role")
     private String role;
+    @Size(max = 100)
     @Column(name = "full_name")
     private String fullName;
+    @Size(max = 6)
     @Column(name = "gender")
     private String gender;
     @Column(name = "date_of_birth")
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
+    // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
+    @Size(max = 20)
     @Column(name = "phone")
     private String phone;
+    @Size(max = 255)
     @Column(name = "avatar")
     private String avatar;
     @Column(name = "created_at")
@@ -88,8 +103,8 @@ public class UserAccount implements Serializable {
     private Set<ChatMessage> chatMessageSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "receiverId")
     private Set<ChatMessage> chatMessageSet1;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
-    private Set<HealthProfile> healthProfileSet;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "userId")
+    private HealthProfile healthProfile;
 
     public UserAccount() {
     }
@@ -256,12 +271,12 @@ public class UserAccount implements Serializable {
         this.chatMessageSet1 = chatMessageSet1;
     }
 
-    public Set<HealthProfile> getHealthProfileSet() {
-        return healthProfileSet;
+    public HealthProfile getHealthProfile() {
+        return healthProfile;
     }
 
-    public void setHealthProfileSet(Set<HealthProfile> healthProfileSet) {
-        this.healthProfileSet = healthProfileSet;
+    public void setHealthProfile(HealthProfile healthProfile) {
+        this.healthProfile = healthProfile;
     }
 
     @Override
