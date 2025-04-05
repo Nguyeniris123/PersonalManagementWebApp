@@ -127,6 +127,7 @@ public class HealthProfileRepositoryImpl implements HealthProfileRepository {
         Session s = this.factory.getObject().getCurrentSession();
         HealthProfile hp = this.getHealthProfileById(id);
         if (hp != null) {
+            s.evict(hp.getUserId()); // tách đối tượng UserAccount khỏi session
             s.remove(hp);
         }
     }
