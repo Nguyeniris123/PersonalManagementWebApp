@@ -65,7 +65,7 @@ public class UserAccount implements Serializable {
     @Size(max = 100)
     @Column(name = "email")
     private String email;
-    @Size(max = 7)
+    @Size(max = 12)
     @Column(name = "role")
     private String role;
     @Size(max = 100)

@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  * @author nguyenho
  */
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
     UserAccount getUserById(int id);
     UserAccount getUserByUsername(String username);
     List<UserAccount> getAllUsers();

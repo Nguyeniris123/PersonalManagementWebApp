@@ -1,0 +1,26 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Đăng nhập</title>
+    <th:block th:replace="base :: bootstrap"></th:block>
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+    <main class="container">
+        <h1 class="text-center text-info mt-2">ĐĂNG NHẬP</h1>
+        <form th:action="@{/login}" method="post">
+            <div class="mb-3 mt-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="Username..." name="username">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Password..." name="password">
+            </div>
+            <button type="submit" class="btn btn-primary mb-3">Đăng nhập</button>
+        </form>
+    </main>
+    <div th:replace="base :: footer"></div>
+</body>
+
+

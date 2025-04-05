@@ -5,7 +5,7 @@ CREATE TABLE user_account (
     username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     email VARCHAR(100) UNIQUE,
-    role ENUM('USER', 'TRAINER', 'ADMIN') DEFAULT 'USER',
+    role ENUM('ROLE_USER', 'ROLE_TRAINER', 'ROLE_ADMIN') DEFAULT 'ROLE_USER',
     full_name VARCHAR(100),
     gender ENUM('MALE', 'FEMALE', 'OTHER'),
     date_of_birth DATE,
@@ -16,7 +16,7 @@ CREATE TABLE user_account (
 
 CREATE TABLE health_profile (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    user_id INT NOT NULL UNIQUE,  -- Ràng buộc UNIQUE để đảm bảo mỗi user chỉ có 1 hồ sơ
     height FLOAT,
     weight FLOAT,
     bmi FLOAT,
