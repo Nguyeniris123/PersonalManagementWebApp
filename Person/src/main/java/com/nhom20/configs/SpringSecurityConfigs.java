@@ -46,11 +46,11 @@ public class SpringSecurityConfigs {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws
             Exception {
         http.csrf(c -> c.disable()).authorizeHttpRequests(requests
-                -> requests.requestMatchers("/", "/home").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/health-profiles").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/users").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/health-profiles/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/users/**").permitAll()
+                -> requests.requestMatchers("/", "/home").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/health-profiles").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/users").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/health-profiles/**").hasAnyRole("USER", "ADMIN", "TRAINER")
+                        .requestMatchers(HttpMethod.GET, "/users/**").hasAnyRole("USER", "ADMIN", "TRAINER")
 //                        hasAnyRole("USER", "ADMIN", "TRAINER")
                         .anyRequest().authenticated())
                 .formLogin(form -> form.loginPage("/login")
