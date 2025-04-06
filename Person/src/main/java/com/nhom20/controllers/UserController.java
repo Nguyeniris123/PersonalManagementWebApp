@@ -17,15 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class UserController {
 
-    @Autowired
-    private UserService userService;
-
-    @GetMapping("/users")
-    public String userList(Model model) {
-        model.addAttribute("users", userService.getAllUsers());
-        return "users";
-    }
-
+    
     @GetMapping("/login")
     public String loginView() {
         return "login";

@@ -9,7 +9,7 @@
 
     <main class="container">
         <h1 class="text-center mt-2 mb-2">Danh sách User</h1>
-        <form th:action="@{/}" method="get">
+        <form th:action="@{/users}" method="get">
             <div class="row">
                 <div class="col-6">
                     <div class="mb-3 mt-3">
@@ -21,28 +21,43 @@
                 <button class="btn btn-info" type="submit">Tìm kiếm</button>
             </div>
         </form>
-        <a th:href="@{/health-profiles}" class="btn btn-success mt-2 mb-2">Thêm Profile</a>
+        <a th:href="@{/health-profiles}" class="btn btn-success mt-2 mb-2">Thêm User mới</a>
 
-        <table class="table table-bordered table-hover">
-            <thead class="table-light text-center">
-                <tr>
-                    <th>ID</th>
-                    <th>Tên đầy đủ</th>
-                    <th>Tên đăng nhập</th>
-                    <th>Email</th>
-                    <th>Quyền</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="u : ${users}">
-                    <td th:text="${u.id}"></td>
-                    <td th:text="${u.fullName}"></td>
-                    <td th:text="${u.username}"></td>
-                    <td th:text="${u.email}"></td>
-                    <td th:text="${u.role}"></td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th>ID</th>
+                        <th>Avatar</th>
+                        <th>Full name</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Phone</th>
+                        <th>Birthday</th>
+                        <th>HÀNH ĐỘNG</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    <tr th:each="u : ${users}">
+                        <td th:text="${u.id}"></td>
+                        <td>
+                            <img th:src="${u.avatar}" alt="avatar" width="50" class="rounded-circle" />
+                        </td>
+                        <td th:text="${u.fullName}"></td>
+                        <td th:text="${u.username}"></td>
+                        <td th:text="${u.email}"></td>
+                        <td th:text="${u.role}"></td>                        
+                        <td th:text="${u.phone}"></td>
+                        <td th:text="${#dates.format(u.dateOfBirth, 'dd-MM-yyyy')}"></td>
+                        <td>
+                            <button class="btn btn-danger">&times;</button>
+                            <a class="btn btn-success">&#128296;️</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </main>
 
     <div th:replace="base :: footer"></div>

@@ -23,10 +23,20 @@ public class indexController {
 
     @Autowired
     private HealthProfileService healthProfileService;
+    
+    @Autowired
+    private UserService userService;
+    
 
     @RequestMapping("/")
     public String index(Model model, @RequestParam Map<String, String> params) {
         model.addAttribute("healthProfiles", this.healthProfileService.getHealthProfiles(params));
         return "index";
+    }
+    
+    @GetMapping("/users")
+    public String userList(Model model) {
+        model.addAttribute("users", userService.getAllUsers());
+        return "users";
     }
 }
