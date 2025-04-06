@@ -1,0 +1,54 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Health Profile</title>
+    <th:block th:replace="base :: bootstrap"></th:block>
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+
+    <main class="container">
+        <h1 class="text-center mb-2 mt-2">Người dùng</h1>
+        <form th:action="@{/users/add}" method="post" enctype="multipart/form-data">
+            <label>Username:</label><br/>
+            <input type="text" name="username" required/><br/><br/>
+
+            <label>Password:</label><br/>
+            <input type="password" name="password" required/><br/><br/>
+
+            <label>Họ tên:</label><br/>
+            <input type="text" name="full_name"/><br/><br/>
+
+            <label>Email:</label><br/>
+            <input type="email" name="email"/><br/><br/>
+
+            <label>Điện thoại:</label><br/>
+            <input type="text" name="phone"/><br/><br/>
+
+            <label>Giới tính:</label><br/>
+            <select name="gender">
+                <option value="MALE">Nam</option>
+                <option value="FEMALE">Nữ</option>
+                <option value="OTHER">Khác</option>
+            </select><br/><br/>
+
+            <label>Vai trò:</label><br/>
+            <select name="role">
+                <option value="ROLE_USER">Người dùng</option>
+                <option value="ROLE_TRAINER">Huấn luyện viên</option>
+                <option value="ROLE_ADMIN">Quản trị viên</option>
+            </select><br/><br/>
+
+            <label>Ngày sinh:</label><br/>
+            <input type="date" name="date_of_birth"/><br/><br/>
+
+            <label>Ảnh đại diện:</label><br/>
+            <input type="file" name="avatar"/><br/><br/>
+
+            <button type="submit">Thêm người dùng</button>
+        </form>
+    </main>
+
+    <div th:replace="base :: footer"></div>
+</body>
+</html>

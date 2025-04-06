@@ -39,10 +39,10 @@ public class WebAppContextConfigs implements WebMvcConfigurer {
 //        registry.addFormatter(new CategoryFormatter());
 //    }
     
-//    @Bean
-//    public StandardServletMultipartResolver multipartResolver() {
-//        return new StandardServletMultipartResolver();
-//    }
+    @Bean
+    public StandardServletMultipartResolver multipartResolver() {
+        return new StandardServletMultipartResolver();
+    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

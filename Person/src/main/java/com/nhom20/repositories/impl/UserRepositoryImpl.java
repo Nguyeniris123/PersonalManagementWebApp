@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.nhom20.repositories.impl;
+
 import com.nhom20.pojo.UserAccount;
 import com.nhom20.repositories.UserRepository;
 import jakarta.persistence.NoResultException;
@@ -18,8 +19,6 @@ import java.util.List;
  *
  * @author nguyenho
  */
-
-
 @Repository
 @Transactional
 public class UserRepositoryImpl implements UserRepository {
@@ -53,6 +52,14 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public List<UserAccount> searchUsersByUsername(String username) {
+        Session session = sessionFactory.getCurrentSession();
+        Query<UserAccount> query = session.createQuery("FROM UserAccount u WHERE u.username LIKE :username", UserAccount.class);
+        query.setParameter("username", "%" + username + "%");
+        return query.getResultList();
+    }
+
+    @Override
     public UserAccount addUser(UserAccount user) {
         Session session = sessionFactory.getCurrentSession();
         session.persist(user);
@@ -77,4 +84,3 @@ public class UserRepositoryImpl implements UserRepository {
         return false;
     }
 }
-

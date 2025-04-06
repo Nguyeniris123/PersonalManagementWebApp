@@ -4,8 +4,10 @@
  */
 package com.nhom20.controllers;
 
+import com.nhom20.pojo.UserAccount;
 import com.nhom20.services.HealthProfileService;
 import com.nhom20.services.UserService;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,20 +25,25 @@ public class indexController {
 
     @Autowired
     private HealthProfileService healthProfileService;
-    
+
     @Autowired
     private UserService userService;
-    
 
     @RequestMapping("/")
     public String index(Model model, @RequestParam Map<String, String> params) {
         model.addAttribute("healthProfiles", this.healthProfileService.getHealthProfiles(params));
         return "index";
     }
-    
+
     @GetMapping("/users")
-    public String userList(Model model) {
-        model.addAttribute("users", userService.getAllUsers());
+    public String userList(@RequestParam(name = "username", required = false) String username, Model model) {
+        List<UserAccount> users;
+        if (username != null && !username.isEmpty()) {
+            users = userService.searchUsersByUsername(username);
+        } else {
+            users = userService.getAllUsers();
+        }
+        model.addAttribute("users", users);
         return "users";
     }
 }
