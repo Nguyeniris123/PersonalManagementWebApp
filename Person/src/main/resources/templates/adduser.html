@@ -1,54 +1,89 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>Health Profile</title>
+        <title>User Acount</title>
     <th:block th:replace="base :: bootstrap"></th:block>
 </head>
 <body>
     <div th:replace="base :: header"></div>
 
     <main class="container">
-        <h1 class="text-center mb-2 mt-2">Người dùng</h1>
-        <form th:action="@{/users/add}" method="post" enctype="multipart/form-data">
-            <label>Username:</label><br/>
-            <input type="text" name="username" required/><br/><br/>
+        <div class="card p-4 shadow-sm">
+            <h1 class="text-center mb-4">Thêm Người Dùng</h1>
+            <form th:action="@{/users/add}" method="post" enctype="multipart/form-data">
+                <!-- Username -->
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" required />
+                </div>
 
-            <label>Password:</label><br/>
-            <input type="password" name="password" required/><br/><br/>
+                <!-- Password -->
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required />
+                </div>
 
-            <label>Họ tên:</label><br/>
-            <input type="text" name="full_name"/><br/><br/>
+                <!-- Full Name -->
+                <div class="mb-3">
+                    <label for="full_name" class="form-label">Họ tên</label>
+                    <input type="text" class="form-control" id="full_name" name="full_name" />
+                </div>
 
-            <label>Email:</label><br/>
-            <input type="email" name="email"/><br/><br/>
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" />
+                </div>
 
-            <label>Điện thoại:</label><br/>
-            <input type="text" name="phone"/><br/><br/>
+                <!-- Phone -->
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Điện thoại</label>
+                    <input type="text" class="form-control" id="phone" name="phone" />
+                </div>
 
-            <label>Giới tính:</label><br/>
-            <select name="gender">
-                <option value="MALE">Nam</option>
-                <option value="FEMALE">Nữ</option>
-                <option value="OTHER">Khác</option>
-            </select><br/><br/>
+                <!-- Gender -->
+                <div class="mb-3">
+                    <label for="gender" class="form-label">Giới tính</label>
+                    <select class="form-select" name="gender" id="gender">
+                        <option value="MALE">Nam</option>
+                        <option value="FEMALE">Nữ</option>
+                        <option value="OTHER">Khác</option>
+                    </select>
+                </div>
 
-            <label>Vai trò:</label><br/>
-            <select name="role">
-                <option value="ROLE_USER">Người dùng</option>
-                <option value="ROLE_TRAINER">Huấn luyện viên</option>
-                <option value="ROLE_ADMIN">Quản trị viên</option>
-            </select><br/><br/>
+                <!-- Role -->
+                <div class="mb-3">
+                    <label for="role" class="form-label">Vai trò</label>
+                    <select class="form-select" name="role" id="role">
+                        <option value="ROLE_USER">Người dùng</option>
+                        <option value="ROLE_TRAINER">Huấn luyện viên</option>
+                        <option value="ROLE_ADMIN">Quản trị viên</option>
+                    </select>
+                </div>
 
-            <label>Ngày sinh:</label><br/>
-            <input type="date" name="date_of_birth"/><br/><br/>
+                <!-- Date of Birth -->
+                <div class="mb-3">
+                    <label for="date_of_birth" class="form-label">Ngày sinh</label>
+                    <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" />
+                </div>
 
-            <label>Ảnh đại diện:</label><br/>
-            <input type="file" name="avatar"/><br/><br/>
+                <!-- Avatar -->
+                <div class="mb-3">
+                    <label for="avatar" class="form-label">Ảnh đại diện</label>
+                    <input type="file" class="form-control" id="avatar" name="avatar" />
+                </div>
 
-            <button type="submit">Thêm người dùng</button>
-        </form>
+                <!-- Submit Button -->
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary w-100">Thêm người dùng</button>
+                </div>
+            </form>
+        </div>
+
+
+
     </main>
-
     <div th:replace="base :: footer"></div>
+
 </body>
 </html>

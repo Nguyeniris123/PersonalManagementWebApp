@@ -4,6 +4,8 @@
  */
 package com.nhom20.configs;
 
+import jakarta.servlet.MultipartConfigElement;
+import jakarta.servlet.ServletRegistration;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /**
@@ -14,22 +16,34 @@ public class DispatcherServletInit extends AbstractAnnotationConfigDispatcherSer
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[] {
+        return new Class[]{
             ThymeleafConfig.class,
             HibernateConfigs.class,
             SpringSecurityConfigs.class
-        }; 
+        };
     }
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[] {
+        return new Class[]{
             WebAppContextConfigs.class
         };
     }
 
     @Override
     protected String[] getServletMappings() {
-        return new String[] {"/"};
+        return new String[]{"/"};
+    }
+
+    @Override
+    protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+        String location = "/tmp"; // hoặc bất kỳ thư mục nào máy chủ có quyền ghi
+        long maxFileSize = 5242880; // 5MB
+        long maxRequestSize = 20971520; // 20MB
+        int fileSizeThreshold = 0;
+
+        registration.setMultipartConfig(
+                new MultipartConfigElement(location, maxFileSize, maxRequestSize, fileSizeThreshold)
+        );
     }
 }

@@ -10,6 +10,7 @@ import com.nhom20.pojo.UserAccount;
 import com.nhom20.repositories.UserRepository;
 import com.nhom20.services.UserService;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -64,28 +65,44 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserAccount addUser(Map<String, String> params, MultipartFile avatar) {
-        UserAccount u = new UserAccount();
-        u.setUsername(params.get("username"));
-        u.setFullName(params.get("full_name"));
-        u.setEmail(params.get("email"));
-        u.setPhone(params.get("phone"));
-        u.setRole("role");
-        u.setGender("gender");
-        u.setPassword(this.passwordEncoder.encode(params.get("password")));
-        
-        
-        if (!avatar.isEmpty()) {
-            try {
-                Map res = cloudinary.uploader().upload(avatar.getBytes(), ObjectUtils.asMap("resource_type", "auto"));
-                u.setAvatar(res.get("secure_url").toString());
-            } catch (IOException ex) {
-                Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            }
+public UserAccount addUser(Map<String, String> params, MultipartFile avatar) {
+    UserAccount u = new UserAccount();
+    u.setUsername(params.get("username"));
+    u.setFullName(params.get("full_name"));
+    u.setEmail(params.get("email"));
+    u.setPhone(params.get("phone"));
+
+    // Lấy role và gender từ params thay vì hardcode
+    u.setRole(params.get("role"));
+    u.setGender(params.get("gender"));
+
+    // Mã hóa mật khẩu
+    u.setPassword(this.passwordEncoder.encode(params.get("password")));
+
+    // Parse ngày sinh
+    try {
+        String dob = params.get("date_of_birth");
+        if (dob != null && !dob.isEmpty()) {
+            LocalDate date = LocalDate.parse(dob); // yyyy-MM-dd
+            u.setDateOfBirth(java.sql.Date.valueOf(date));
         }
-        
-        return this.userRepository.addUser(u);
+    } catch (Exception e) {
+        e.printStackTrace(); // Có thể log kỹ hơn
     }
+
+    // Upload ảnh đại diện lên Cloudinary
+    if (avatar != null && !avatar.isEmpty()) {
+        try {
+            Map res = cloudinary.uploader().upload(avatar.getBytes(),
+                    ObjectUtils.asMap("resource_type", "auto"));
+            u.setAvatar(res.get("secure_url").toString());
+        } catch (IOException ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    return this.userRepository.addUser(u);
+}
 
     @Override
     public UserAccount updateUser(UserAccount user) {
