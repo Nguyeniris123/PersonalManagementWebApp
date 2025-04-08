@@ -21,6 +21,6 @@ public interface UserService extends UserDetailsService {
     List<UserAccount> getAllUsers();
     List<UserAccount> searchUsersByUsername(String username);
     UserAccount addUser(Map<String, String> params, MultipartFile avatar);
-    UserAccount updateUser(UserAccount user);
+    UserAccount updateUser(Map<String, String> params, MultipartFile avatar, int userId);
     boolean deleteUser(int id);
 }
