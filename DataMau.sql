@@ -13,3 +13,11 @@ VALUES
 (1, 170, 70, 22.9, 75, 'Maintain current health', 10000, 2.5),
 (2, 180, 60, 21.3, 80, 'Lose weight and increase fitness', 12000, 3),
 (3, 150, 85, 26.2, 70, 'Gain muscle mass', 8000, 3.5);
+
+USE persondb;
+INSERT INTO workout_plan (user_id, name, start_date, end_date)
+VALUES 
+(1, 'Kế hoạch tập tăng cơ 4 tuần', '2025-04-01', '2025-04-28'),
+(1, 'Lịch tập cardio giảm cân', '2025-04-10', '2025-05-10'),
+(2, 'Tập gym buổi sáng cho người bận rộn', '2025-04-05', '2025-05-05'),
+(3, 'Kế hoạch duy trì sức khỏe hàng ngày', '2025-04-01', '2025-04-30');

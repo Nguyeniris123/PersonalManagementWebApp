@@ -7,6 +7,7 @@ package com.nhom20.controllers;
 import com.nhom20.pojo.UserAccount;
 import com.nhom20.services.HealthProfileService;
 import com.nhom20.services.UserService;
+import com.nhom20.services.WorkoutPlanService;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class indexController {
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private WorkoutPlanService workoutPlanService;
 
     @RequestMapping("/")
     public String index(Model model, @RequestParam Map<String, String> params) {
@@ -45,5 +49,11 @@ public class indexController {
         }
         model.addAttribute("users", users);
         return "users";
+    }
+    
+    @GetMapping("/workoutplans")
+    public String workoutPlanList(Model model, @RequestParam Map<String, String> params) {
+        model.addAttribute("workoutPlans", this.workoutPlanService.getWorkOutPlan(params));
+        return "workoutplans";
     }
 }
