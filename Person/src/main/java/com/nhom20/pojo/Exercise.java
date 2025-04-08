@@ -11,18 +11,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Lob;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Set;
 
 /**
@@ -30,15 +26,15 @@ import java.util.Set;
  * @author nguyenho
  */
 @Entity
-@Table(name = "workout_plan")
+@Table(name = "exercise")
 @NamedQueries({
-    @NamedQuery(name = "WorkoutPlan.findAll", query = "SELECT w FROM WorkoutPlan w"),
-    @NamedQuery(name = "WorkoutPlan.findById", query = "SELECT w FROM WorkoutPlan w WHERE w.id = :id"),
-    @NamedQuery(name = "WorkoutPlan.findByName", query = "SELECT w FROM WorkoutPlan w WHERE w.name = :name"),
-    @NamedQuery(name = "WorkoutPlan.findByStartDate", query = "SELECT w FROM WorkoutPlan w WHERE w.startDate = :startDate"),
-    @NamedQuery(name = "WorkoutPlan.findByEndDate", query = "SELECT w FROM WorkoutPlan w WHERE w.endDate = :endDate"),
-    @NamedQuery(name = "WorkoutPlan.findByCreatedAt", query = "SELECT w FROM WorkoutPlan w WHERE w.createdAt = :createdAt")})
-public class WorkoutPlan implements Serializable {
+    @NamedQuery(name = "Exercise.findAll", query = "SELECT e FROM Exercise e"),
+    @NamedQuery(name = "Exercise.findById", query = "SELECT e FROM Exercise e WHERE e.id = :id"),
+    @NamedQuery(name = "Exercise.findByName", query = "SELECT e FROM Exercise e WHERE e.name = :name"),
+    @NamedQuery(name = "Exercise.findByMuscleGroup", query = "SELECT e FROM Exercise e WHERE e.muscleGroup = :muscleGroup"),
+    @NamedQuery(name = "Exercise.findByLevel", query = "SELECT e FROM Exercise e WHERE e.level = :level"),
+    @NamedQuery(name = "Exercise.findByCaloriesBurned", query = "SELECT e FROM Exercise e WHERE e.caloriesBurned = :caloriesBurned")})
+public class Exercise implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -51,29 +47,29 @@ public class WorkoutPlan implements Serializable {
     @Size(min = 1, max = 100)
     @Column(name = "name")
     private String name;
-    @Column(name = "start_date")
-    @Temporal(TemporalType.DATE)
-    private Date startDate;
-    @Column(name = "end_date")
-    @Temporal(TemporalType.DATE)
-    private Date endDate;
-    @Column(name = "created_at")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private UserAccount userId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "workoutPlanId")
+    @Lob
+    @Size(max = 65535)
+    @Column(name = "description")
+    private String description;
+    @Size(max = 50)
+    @Column(name = "muscle_group")
+    private String muscleGroup;
+    @Size(max = 20)
+    @Column(name = "level")
+    private String level;
+    @Column(name = "calories_burned")
+    private Integer caloriesBurned;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "exerciseId")
     private Set<WorkoutPlanExercise> workoutPlanExerciseSet;
 
-    public WorkoutPlan() {
+    public Exercise() {
     }
 
-    public WorkoutPlan(Integer id) {
+    public Exercise(Integer id) {
         this.id = id;
     }
 
-    public WorkoutPlan(Integer id, String name) {
+    public Exercise(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -94,36 +90,36 @@ public class WorkoutPlan implements Serializable {
         this.name = name;
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public String getDescription() {
+        return description;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public Date getEndDate() {
-        return endDate;
+    public String getMuscleGroup() {
+        return muscleGroup;
     }
 
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    public void setMuscleGroup(String muscleGroup) {
+        this.muscleGroup = muscleGroup;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public String getLevel() {
+        return level;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setLevel(String level) {
+        this.level = level;
     }
 
-    public UserAccount getUserId() {
-        return userId;
+    public Integer getCaloriesBurned() {
+        return caloriesBurned;
     }
 
-    public void setUserId(UserAccount userId) {
-        this.userId = userId;
+    public void setCaloriesBurned(Integer caloriesBurned) {
+        this.caloriesBurned = caloriesBurned;
     }
 
     public Set<WorkoutPlanExercise> getWorkoutPlanExerciseSet() {
@@ -144,10 +140,10 @@ public class WorkoutPlan implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof WorkoutPlan)) {
+        if (!(object instanceof Exercise)) {
             return false;
         }
-        WorkoutPlan other = (WorkoutPlan) object;
+        Exercise other = (Exercise) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -156,7 +152,7 @@ public class WorkoutPlan implements Serializable {
 
     @Override
     public String toString() {
-        return "com.nhom20.pojo.WorkoutPlan[ id=" + id + " ]";
+        return "com.nhom20.pojo.Exercise[ id=" + id + " ]";
     }
     
 }

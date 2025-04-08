@@ -10,5 +10,7 @@
     <class>com.nhom20.pojo.UserAccount</class>
     <class>com.nhom20.pojo.HealthProfile</class>
     <class>com.nhom20.pojo.WorkoutPlan</class>
+    <class>com.nhom20.pojo.WorkoutPlanExercise</class>
+    <class>com.nhom20.pojo.Exercise</class>
   </persistence-unit>
 </persistence>

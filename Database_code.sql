@@ -42,14 +42,34 @@ CREATE TABLE user_trainer (
 
 -- Bảng kế hoạch tập luyện
 CREATE TABLE workout_plan (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
-    date DATE NOT NULL,
-    exercise_name VARCHAR(100),
+    name VARCHAR(100) NOT NULL,
+    start_date DATE,
+    end_date DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user_account(id)
+);
+
+-- Bảng danh sách bài tập
+CREATE TABLE exercise (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    muscle_group VARCHAR(50), -- ví dụ: "Chest", "Legs"
+    level VARCHAR(20),        -- "Beginner", "Intermediate", "Advanced"
+    calories_burned INT
+);
+
+CREATE TABLE workout_plan_exercise (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    workout_plan_id INT NOT NULL,
+    exercise_id INT NOT NULL,
+    sets INT,
+    reps INT,
     duration_minutes INT,
-    calories_burned INT,
-    notes TEXT,
-    FOREIGN KEY (user_id) REFERENCES user_account(id) ON DELETE CASCADE
+    FOREIGN KEY (workout_plan_id) REFERENCES workout_plan(id),
+    FOREIGN KEY (exercise_id) REFERENCES exercise(id)
 );
 
 -- Bảng thực đơn dinh dưỡng
