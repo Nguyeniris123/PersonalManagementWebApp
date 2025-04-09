@@ -17,7 +17,7 @@
                 <input type="hidden" th:field="*{id}" />
                 <div class="mb-3">
                     <label for="user" class="form-label">Người dùng</label>
-                    <select th:field="*{userId}" class="form-control" required>
+                    <select th:field="*{userId.id}" class="form-control" required>
                         <option th:each="u : ${users}" 
                                 th:value="${u.id}" 
                                 th:text="${u.fullName + ' (' + u.username + ')'}">

@@ -9,8 +9,10 @@ import com.nhom20.pojo.WorkoutPlan;
 import com.nhom20.services.UserService;
 import com.nhom20.services.WorkoutPlanService;
 import java.beans.PropertyEditorSupport;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -24,12 +26,12 @@ import org.springframework.web.bind.annotation.PostMapping;
  *
  * @author nguyenho
  */
-
 @Controller
 public class WorkoutPlanController {
+
     @Autowired
     private WorkoutPlanService workoutPlanService;
-    
+
     @Autowired
     private UserService userService;
 
@@ -39,29 +41,24 @@ public class WorkoutPlanController {
         model.addAttribute("users", userService.getAllUsers());
         return "addupdateworkoutplans";
     }
-    
-    // Sử dụng InitBinder để chuyển đổi String thành UserAccount
+
+    // Định nghĩa cách chuyển đổi chuỗi ngày thành đối tượng Date
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(UserAccount.class, new PropertyEditorSupport() {
-            @Override
-            public void setAsText(String text) throws IllegalArgumentException {
-                UserAccount user = userService.getUserById(Integer.parseInt(text));
-                setValue(user);
-            }
-        });
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
     }
     
     @PostMapping("/workout-plan/add")
     public String addWorkoutPlan(@ModelAttribute("workoutPlan") WorkoutPlan wp, Model model) {
         try {
+        
             wp.setCreatedAt(new Date()); // Đặt thời gian hiện tại
             workoutPlanService.addOrUpdateWorkOutPlan(wp);
-            return "redirect:/";
+            return "redirect:/workout-plans";
         } catch (RuntimeException ex) {
             model.addAttribute("error", ex.getMessage()); // gắn thông báo lỗi
             model.addAttribute("users", userService.getAllUsers());
-            return "healthprofiles"; // giữ lại form
+            return "addupdateworkoutplans"; // giữ lại form
         }
     }
 //

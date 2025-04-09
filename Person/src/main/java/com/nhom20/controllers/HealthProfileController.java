@@ -40,17 +40,17 @@ public class HealthProfileController {
         return "healthprofiles";
     }
     
-    // Sử dụng InitBinder để chuyển đổi String thành UserAccount
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(UserAccount.class, new PropertyEditorSupport() {
-            @Override
-            public void setAsText(String text) throws IllegalArgumentException {
-                UserAccount user = userService.getUserById(Integer.parseInt(text));
-                setValue(user);
-            }
-        });
-    }
+//    // Sử dụng InitBinder để chuyển đổi String thành UserAccount
+//    @InitBinder
+//    public void initBinder(WebDataBinder binder) {
+//        binder.registerCustomEditor(UserAccount.class, new PropertyEditorSupport() {
+//            @Override
+//            public void setAsText(String text) throws IllegalArgumentException {
+//                UserAccount user = userService.getUserById(Integer.parseInt(text));
+//                setValue(user);
+//            }
+//        });
+//    }
     
     @PostMapping("/health-profile/add")
     public String addHealthProfile(@ModelAttribute("healthProfile") HealthProfile hp, Model model) {

@@ -15,8 +15,8 @@
             </div>
             <form th:action="@{/workout-plan/add}" th:object="${workoutPlan}" method="post">
                 <div class="mb-3">
-                    <label class="form-label">Người dùng</label>
-                    <select th:field="*{userId}" class="form-control" required>
+                    <label for="user" class="form-label">Người dùng</label>
+                    <select th:field="*{userId.id}" class="form-control" required>
                         <option th:each="u : ${users}"
                                 th:value="${u.id}"
                                 th:text="${u.fullName + ' (' + u.username + ')'}">
@@ -31,12 +31,12 @@
 
                 <div class="mb-3">
                     <label class="form-label">Ngày bắt đầu</label>
-                    <input type="date" th:field="*{startDate}" class="form-control" />
+                    <input type="date" th:field="*{startDate}" class="form-control" required/>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Ngày kết thúc</label>
-                    <input type="date" th:field="*{endDate}" class="form-control" />
+                    <input type="date" th:field="*{endDate}" class="form-control" required/>
                 </div>
 
                 <div>
