@@ -16,5 +16,5 @@ public interface WorkoutPlanRepository {
     List<WorkoutPlan> getWorkOutPlan(Map<String, String> params);
     WorkoutPlan getWorkOutPlanById(int id);
     WorkoutPlan addOrUpdateWorkOutPlan(WorkoutPlan workoutPlan);
-    void deletegetWorkOutPlan(int id);
+    void deleteWorkOutPlan(int id);
 }

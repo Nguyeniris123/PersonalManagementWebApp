@@ -94,11 +94,10 @@ public class WorkoutPlanRepositoryImpl implements WorkoutPlanRepository {
     }
 
     @Override
-    public void deletegetWorkOutPlan(int id) {
+    public void deleteWorkOutPlan(int id) {
         Session s = this.factory.getObject().getCurrentSession();
         WorkoutPlan wp = this.getWorkOutPlanById(id);
         if (wp != null) {
-            s.evict(wp.getUserId()); // tách đối tượng UserAccount khỏi session
             s.remove(wp);
         }
     }

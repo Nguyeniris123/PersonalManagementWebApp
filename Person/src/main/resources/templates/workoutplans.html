@@ -45,14 +45,11 @@
                         <td th:text="${#dates.format(wp.endDate, 'dd-MM-yyyy')}"></td>
                         <td th:text="${#dates.format(wp.createdAt, 'dd-MM-yyyy HH:mm')}"></td>
                         <td>
-                            <button class="btn btn-danger">
+                            <button class="btn btn-danger" th:onclick="'deleteWorkoutPlan(' + ${wp.id} + ')'">
                                 &times;
                             </button>
                             <a class="btn btn-success">&#128296;️</a>
-<!--                            <button class="btn btn-danger" th:onclick="'deleteWorkoutPlan(' + ${wp.id} + ')'">
-                                &times;
-                            </button>
-                            <a th:href="@{'/workout-plans/' + ${wp.id}}" class="btn btn-success">&#128296;️</a>-->
+                            <!--<a th:href="@{'/workout-plans/' + ${wp.id}}" class="btn btn-success">&#128296;️</a>-->
                         </td>
                     </tr>
                 </tbody>

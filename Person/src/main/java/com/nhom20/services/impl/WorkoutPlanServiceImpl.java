@@ -39,9 +39,9 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
     }
 
     @Override
-    public boolean deletegetWorkOutPlan(int id) {
+    public boolean deleteWorkOutPlan(int id) {
         try {
-            this.workoutPlanRepository.deletegetWorkOutPlan(id);
+            this.workoutPlanRepository.deleteWorkOutPlan(id);
             return true;
         } catch (Exception e) {
             return false;

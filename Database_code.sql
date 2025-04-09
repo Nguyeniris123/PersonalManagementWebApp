@@ -48,7 +48,7 @@ CREATE TABLE workout_plan (
     start_date DATE,
     end_date DATE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES user_account(id)
+    FOREIGN KEY (user_id) REFERENCES user_account(id) ON DELETE CASCADE
 );
 
 -- Bảng danh sách bài tập
