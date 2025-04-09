@@ -51,7 +51,7 @@ public class indexController {
         return "users";
     }
     
-    @GetMapping("/workoutplans")
+    @GetMapping("/workout-plans")
     public String workoutPlanList(Model model, @RequestParam Map<String, String> params) {
         model.addAttribute("workoutPlans", this.workoutPlanService.getWorkOutPlan(params));
         return "workoutplans";

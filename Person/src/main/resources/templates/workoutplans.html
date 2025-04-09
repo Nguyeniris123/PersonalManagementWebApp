@@ -9,7 +9,7 @@
 
     <main class="container">
         <h1 class="text-center mt-2 mb-2">Danh sách kế hoạch tập luyện</h1>
-        <form th:action="@{/workoutplans}" method="get">
+        <form th:action="@{/workout-plans}" method="get">
             <div class="row">
                 <div class="col-6">
                     <div class="mb-3 mt-3">
@@ -21,7 +21,7 @@
                 <button class="btn btn-info" type="submit">Tìm kiếm</button>
             </div>
         </form>
-        <a th:href="@{/user-add-view}" class="btn btn-success mt-2 mb-2">Thêm kế hoạch mới</a>
+        <a th:href="@{/workout-plans-view}" class="btn btn-success mt-2 mb-2">Thêm kế hoạch mới</a>
 
         <div class="table-responsive">
             <table class="table table-bordered table-hover">

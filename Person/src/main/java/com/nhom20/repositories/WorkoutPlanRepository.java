@@ -15,6 +15,6 @@ import java.util.Map;
 public interface WorkoutPlanRepository {
     List<WorkoutPlan> getWorkOutPlan(Map<String, String> params);
     WorkoutPlan getWorkOutPlanById(int id);
-    WorkoutPlan addOrUpdategetWorkOutPlan(WorkoutPlan workoutPlan);
+    WorkoutPlan addOrUpdateWorkOutPlan(WorkoutPlan workoutPlan);
     void deletegetWorkOutPlan(int id);
 }

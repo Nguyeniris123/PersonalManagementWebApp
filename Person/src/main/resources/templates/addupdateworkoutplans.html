@@ -1,0 +1,54 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Workout Plan</title>
+    <th:block th:replace="base :: bootstrap"></th:block>
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+
+    <main class="container">
+        <div class="card p-4 shadow-sm">
+            <h1 class="text-center mb-2 mt-2">Kế hoạch tập luyện</h1>  
+            <div th:if="${error}" class="alert alert-danger text-center">
+                <p th:text="${error}"></p>
+            </div>
+            <form th:action="@{/workout-plan/add}" th:object="${workoutPlan}" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Người dùng</label>
+                    <select th:field="*{userId}" class="form-control" required>
+                        <option th:each="u : ${users}"
+                                th:value="${u.id}"
+                                th:text="${u.fullName + ' (' + u.username + ')'}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Tên kế hoạch</label>
+                    <input type="text" th:field="*{name}" class="form-control" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Ngày bắt đầu</label>
+                    <input type="date" th:field="*{startDate}" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Ngày kết thúc</label>
+                    <input type="date" th:field="*{endDate}" class="form-control" />
+                </div>
+
+                <div>
+                    <button class="btn btn-success mt-1 mb-3" type="submit">
+                        <span th:if="${workoutPlan.id == null}">Thêm kế hoạch</span>
+                        <span th:unless="${workoutPlan.id == null}">Cập nhật kế hoạch</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <div th:replace="base :: footer"></div>
+</body>
+</html>

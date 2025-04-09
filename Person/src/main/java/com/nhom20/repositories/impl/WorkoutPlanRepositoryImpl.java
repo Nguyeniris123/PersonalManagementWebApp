@@ -83,7 +83,7 @@ public class WorkoutPlanRepositoryImpl implements WorkoutPlanRepository {
     }
 
     @Override
-    public WorkoutPlan addOrUpdategetWorkOutPlan(WorkoutPlan workoutPlan) {
+    public WorkoutPlan addOrUpdateWorkOutPlan(WorkoutPlan workoutPlan) {
         Session s = this.factory.getObject().getCurrentSession();
         if (workoutPlan.getId() == null) {
             s.persist(workoutPlan);

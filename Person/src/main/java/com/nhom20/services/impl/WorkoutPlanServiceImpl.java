@@ -34,8 +34,8 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
     }
 
     @Override
-    public boolean addOrUpdategetWorkOutPlan(WorkoutPlan workoutPlan) {
-        return workoutPlanRepository.addOrUpdategetWorkOutPlan(workoutPlan) != null;
+    public boolean addOrUpdateWorkOutPlan(WorkoutPlan workoutPlan) {
+        return workoutPlanRepository.addOrUpdateWorkOutPlan(workoutPlan) != null;
     }
 
     @Override
