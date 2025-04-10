@@ -61,12 +61,12 @@ public class WorkoutPlanController {
             return "addupdateworkoutplans"; // giữ lại form
         }
     }
-//
-//    
-//    @GetMapping("/health-profiles/{id}")
-//    public String updateView(Model model, @PathVariable(value = "id") int id) {
-//        model.addAttribute("healthProfile", this.healthProfileService.getHealthProfileById(id));
-//        model.addAttribute("users", userService.getAllUsers());
-//        return "healthprofiles";
-//    }
+
+    
+    @GetMapping("/workout-plans/{id}")
+    public String updateView(Model model, @PathVariable(value = "id") int id) {
+        model.addAttribute("workoutPlan", this.workoutPlanService.getWorkOutPlanById(id));
+        model.addAttribute("users", userService.getAllUsers());
+        return "addupdateworkoutplans";
+    }
 }

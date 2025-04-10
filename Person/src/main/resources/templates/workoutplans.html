@@ -48,8 +48,7 @@
                             <button class="btn btn-danger" th:onclick="'deleteWorkoutPlan(' + ${wp.id} + ')'">
                                 &times;
                             </button>
-                            <a class="btn btn-success">&#128296;️</a>
-                            <!--<a th:href="@{'/workout-plans/' + ${wp.id}}" class="btn btn-success">&#128296;️</a>-->
+                            <a th:href="@{'/workout-plans/' + ${wp.id}}" class="btn btn-success">&#128296;️</a>
                         </td>
                     </tr>
                 </tbody>
