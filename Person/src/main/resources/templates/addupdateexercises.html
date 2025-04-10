@@ -1,0 +1,70 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Thêm/Cập nhật Bài tập</title>
+    <th:block th:replace="base :: bootstrap"></th:block>
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+
+    <main class="container">
+        <div class="card p-4 shadow-sm">
+            <h1 class="text-center mb-2 mt-2">Thêm / Cập nhật Bài tập</h1>
+
+            <div th:if="${error}" class="alert alert-danger text-center">
+                <p th:text="${error}"></p>
+            </div>
+
+            <form th:action="@{/exercises/add}" th:object="${exercise}" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Tên bài tập</label>
+                    <input type="text" th:field="*{name}" class="form-control" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Mô tả</label>
+                    <textarea th:field="*{description}" class="form-control" rows="4" required></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Nhóm cơ</label>
+                    <select th:field="*{muscleGroup}" class="form-control" required>
+                        <option value="">-- Chọn nhóm cơ --</option>
+                        <option value="Chest">Ngực</option>
+                        <option value="Legs">Chân</option>
+                        <option value="Back">Lưng</option>
+                        <option value="Abs">Bụng</option>
+                        <option value="Hand">Tay</option>
+                        <option value="Full Body">Toàn thân</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Trình độ</label>
+                    <select th:field="*{level}" class="form-control" required>
+                        <option value="">-- Chọn trình độ --</option>
+                        <option value="Beginner">Mới bắt đầu</option>
+                        <option value="Intermediate">Trung bình</option>
+                        <option value="Advanced">Nâng cao</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Calories tiêu hao</label>
+                    <input type="number" th:field="*{caloriesBurned}" class="form-control" required min="1" />
+                </div>
+
+                <div>
+                    <button class="btn btn-success mt-1 mb-3" type="submit">
+                        <span th:if="${exercise.id == null}">Thêm bài tập</span>
+                        <span th:unless="${exercise.id == null}">Cập nhật bài tập</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <div th:replace="base :: footer"></div>
+</body>
+</html>
+
