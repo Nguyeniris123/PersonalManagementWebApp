@@ -86,8 +86,14 @@ public class WorkoutPlanExerciseRepositoryImpl implements WorkoutPlanExerciseRep
     }
 
     @Override
-    public WorkoutPlanExercise addOrUpdateWorkOutPlan(WorkoutPlanExercise workoutPlanExercise) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public WorkoutPlanExercise addOrUpdateWorkOutPlanExercise(WorkoutPlanExercise workoutPlanExercise) {
+        Session s = this.factory.getObject().getCurrentSession();
+        if (workoutPlanExercise.getId() == null) {
+            s.persist(workoutPlanExercise);
+        } else {
+            s.merge(workoutPlanExercise);
+        }
+        return workoutPlanExercise;
     }
 
     @Override

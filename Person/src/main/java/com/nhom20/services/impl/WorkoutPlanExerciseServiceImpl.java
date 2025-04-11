@@ -35,8 +35,8 @@ public class WorkoutPlanExerciseServiceImpl implements WorkoutPlanExerciseServic
     }
 
     @Override
-    public boolean addOrUpdateWorkOutPlan(WorkoutPlanExercise workoutPlanExercise) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean addOrUpdateWorkOutPlanExercise(WorkoutPlanExercise workoutPlanExercise) {
+        return workoutPlanExerciseRepository.addOrUpdateWorkOutPlanExercise(workoutPlanExercise) != null;
     }
 
     @Override
