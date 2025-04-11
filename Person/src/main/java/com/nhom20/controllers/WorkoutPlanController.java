@@ -4,11 +4,9 @@
  */
 package com.nhom20.controllers;
 
-import com.nhom20.pojo.UserAccount;
 import com.nhom20.pojo.WorkoutPlan;
 import com.nhom20.services.UserService;
 import com.nhom20.services.WorkoutPlanService;
-import java.beans.PropertyEditorSupport;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
