@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author nguyenho
  */
-
 @Repository
 @Transactional
 public class WorkoutPlanExerciseRepositoryImpl implements WorkoutPlanExerciseRepository {
@@ -37,7 +36,7 @@ public class WorkoutPlanExerciseRepositoryImpl implements WorkoutPlanExerciseRep
 
     @Autowired
     private LocalSessionFactoryBean factory;
-    
+
     @Override
     public List<WorkoutPlanExercise> getWorkOutPlanExercise(Map<String, String> params) {
         Session s = this.factory.getObject().getCurrentSession();
@@ -82,7 +81,8 @@ public class WorkoutPlanExerciseRepositoryImpl implements WorkoutPlanExerciseRep
 
     @Override
     public WorkoutPlanExercise getWorkoutPlanExerciseById(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Session s = this.factory.getObject().getCurrentSession();
+        return s.get(WorkoutPlanExercise.class, id);
     }
 
     @Override
@@ -92,7 +92,10 @@ public class WorkoutPlanExerciseRepositoryImpl implements WorkoutPlanExerciseRep
 
     @Override
     public void deleteWorkoutPlanExercise(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Session s = this.factory.getObject().getCurrentSession();
+        WorkoutPlanExercise wpe = this.getWorkoutPlanExerciseById(id);
+        if (wpe != null) {
+            s.remove(wpe);
+        }
     }
-    
 }

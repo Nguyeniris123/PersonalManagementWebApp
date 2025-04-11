@@ -31,7 +31,7 @@ public class WorkoutPlanExerciseServiceImpl implements WorkoutPlanExerciseServic
 
     @Override
     public WorkoutPlanExercise getWorkoutPlanExerciseById(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return workoutPlanExerciseRepository.getWorkoutPlanExerciseById(id);
     }
 
     @Override
@@ -41,7 +41,11 @@ public class WorkoutPlanExerciseServiceImpl implements WorkoutPlanExerciseServic
 
     @Override
     public boolean deleteWorkoutPlanExercise(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-    
+        try {
+            this.workoutPlanExerciseRepository.deleteWorkoutPlanExercise(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }   
 }
