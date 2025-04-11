@@ -21,3 +21,11 @@ VALUES
 (1, 'Lịch tập cardio giảm cân', '2025-04-10', '2025-05-10'),
 (2, 'Tập gym buổi sáng cho người bận rộn', '2025-04-05', '2025-05-05'),
 (3, 'Kế hoạch duy trì sức khỏe hàng ngày', '2025-04-01', '2025-04-30');
+
+USE persondb;
+INSERT INTO exercise (name, description, muscle_group, level, calories_burned) VALUES
+('Hít đất', 'Bài tập đơn giản giúp phát triển cơ ngực và tay sau.', 'Chest', 'Beginner', 100),
+('Gập bụng', 'Tăng cường cơ bụng, dễ thực hiện tại nhà.', 'Abs', 'Beginner', 80),
+('Squat', 'Phát triển cơ đùi, mông và cải thiện sức mạnh chân.', 'Legs', 'Intermediate', 150),
+('Plank', 'Giúp siết cơ bụng và cải thiện sức bền.', 'Core', 'Beginner', 60),
+('Deadlift', 'Tác động toàn thân, đặc biệt là lưng và chân.', 'Back', 'Advanced', 250);
