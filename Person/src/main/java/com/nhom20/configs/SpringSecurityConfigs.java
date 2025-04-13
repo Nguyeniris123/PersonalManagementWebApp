@@ -6,6 +6,7 @@ package com.nhom20.configs;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,6 +18,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 /**
@@ -32,27 +36,27 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
     "com.nhom20.services"
 })
 public class SpringSecurityConfigs {
-    
+
     @Autowired
     private UserDetailsService userDetailsService;
-    
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    
-    
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws
             Exception {
-        http.csrf(c -> c.disable()).authorizeHttpRequests(requests
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(c -> c.disable()).authorizeHttpRequests(requests
                 -> requests.requestMatchers("/", "/home").authenticated()
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/health-profiles").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/users").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/health-profiles/**").hasAnyRole("USER", "ADMIN", "TRAINER")
                         .requestMatchers(HttpMethod.GET, "/users/**").hasAnyRole("USER", "ADMIN", "TRAINER")
-//                        hasAnyRole("USER", "ADMIN", "TRAINER")
+                        //                        hasAnyRole("USER", "ADMIN", "TRAINER")
                         .anyRequest().authenticated())
                 .formLogin(form -> form.loginPage("/login")
                 .loginProcessingUrl("/login")
@@ -76,5 +80,22 @@ public class SpringSecurityConfigs {
                         "api_secret", "tjXbrfktUPN8lYMmE9SN-33QXjc",
                         "secure", true));
         return cloudinary;
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+
+        CorsConfiguration config = new CorsConfiguration();
+
+        config.setAllowedOrigins(List.of("http://localhost:3000/")); // frontend origin
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        config.setExposedHeaders(List.of("Authorization"));
+        config.setAllowCredentials(true); // Nếu dùng cookie/session
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+
+        return source;
     }
 }
