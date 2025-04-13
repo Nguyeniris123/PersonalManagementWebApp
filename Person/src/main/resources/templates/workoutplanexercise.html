@@ -44,7 +44,7 @@
                         <td th:text="${wpe.reps}"></td>
                         <td th:text="${wpe.durationMinutes}"></td>
                         <td>
-                            <button class="btn btn-danger" th:onclick="'deleteWorkoutPlanExercise(' + ${wpe.id} + ')'">&times;</button>                            
+                            <button class="btn btn-danger" th:onclick="'deleteWorkoutPlanExercise(\''+@{/api/workout-plans-exercise/}+'\','+${wpe.id}+')'">&times;</button>                            
                             <a th:href="@{'/workout-plans-exercise/' + ${wpe.id}}" class="btn btn-success">&#128296;️</a>
                         </td>
                     </tr>

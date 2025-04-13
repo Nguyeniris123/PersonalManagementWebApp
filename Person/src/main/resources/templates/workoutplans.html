@@ -45,7 +45,7 @@
                         <td th:text="${#dates.format(wp.endDate, 'dd-MM-yyyy')}"></td>
                         <td th:text="${#dates.format(wp.createdAt, 'dd-MM-yyyy HH:mm')}"></td>
                         <td>
-                            <button class="btn btn-danger" th:onclick="'deleteWorkoutPlan(' + ${wp.id} + ')'">
+                            <button class="btn btn-danger" th:onclick="'deleteWorkoutPlan(\''+@{/api/workout-plans/}+'\','+${wp.id}+')'">
                                 &times;
                             </button>
                             <a th:href="@{'/workout-plans/' + ${wp.id}}" class="btn btn-success">&#128296;️</a>

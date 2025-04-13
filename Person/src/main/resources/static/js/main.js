@@ -1,6 +1,6 @@
-function deleteHealthProfile(id) {
+function deleteHealthProfile(endpoint, id) {
     if (confirm("Bạn có chắc chắn muốn xoá không?")) {
-        fetch(`/Person/api/health-profiles/${id}`, {
+        fetch(endpoint + id, {
             method: "DELETE"
         }).then(res => {
             if (res.status === 204) {
@@ -13,9 +13,9 @@ function deleteHealthProfile(id) {
     }
 }
 
-function deleteUser(id) {
+function deleteUser(endpoint, id) {
     if (confirm("Bạn có chắc chắn muốn xoá không?")) {
-        fetch(`/Person/api/users/${id}`, {
+        fetch(endpoint + id, {
             method: "DELETE"
         }).then(res => {
             if (res.status === 204) {
@@ -28,9 +28,9 @@ function deleteUser(id) {
     }
 }
 
-function deleteWorkoutPlan(id) {
+function deleteWorkoutPlan(endpoint, id) {
     if (confirm("Bạn có chắc chắn muốn xoá không?")) {
-        fetch(`/Person/api/workout-plans/${id}`, {
+        fetch(endpoint + id, {
             method: "DELETE"
         }).then(res => {
             if (res.status === 204) {
@@ -43,9 +43,9 @@ function deleteWorkoutPlan(id) {
     }
 }
 
-function deleteExercise(id) {
+function deleteExercise(endpoint, id) {
     if (confirm("Bạn có chắc chắn muốn xoá không?")) {
-        fetch(`/Person/api/exercises/${id}`, {
+        fetch(endpoint + id, {
             method: "DELETE"
         }).then(res => {
             if (res.status === 204) {
@@ -58,9 +58,9 @@ function deleteExercise(id) {
     }
 }
 
-function deleteWorkoutPlanExercise(id) {
+function deleteWorkoutPlanExercise(endpoint, id) {
     if (confirm("Bạn có chắc chắn muốn xoá không?")) {
-        fetch(`/Person/api/workout-plans-exercise/${id}`, {
+        fetch(endpoint + id, {
             method: "DELETE"
         }).then(res => {
             if (res.status === 204) {

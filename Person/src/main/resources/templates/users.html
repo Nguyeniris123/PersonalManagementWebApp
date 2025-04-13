@@ -51,7 +51,7 @@
                         <td th:text="${u.phone}"></td>
                         <td th:text="${#dates.format(u.dateOfBirth, 'dd-MM-yyyy')}"></td>
                         <td>
-                            <button class="btn btn-danger" th:onclick="'deleteUser(' + ${u.id} + ')'">&times;</button>
+                            <button class="btn btn-danger" th:onclick="'deleteUser(\''+@{/api/users/}+'\','+${u.id}+')'">&times;</button>
                             <a th:href="@{'/users/' + ${u.id}}" class="btn btn-success">&#128296;️</a>                       
                         </td>
                     </tr>

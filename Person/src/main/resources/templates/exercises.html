@@ -47,7 +47,7 @@
                         <td th:text="${e.level}"></td>
                         <td th:text="${e.caloriesBurned}"></td>
                         <td>
-                            <button class="btn btn-danger" th:onclick="'deleteExercise(' + ${e.id} + ')'">&times;</button>
+                            <button class="btn btn-danger" th:onclick="'deleteExercise(\''+@{/api/exercises/}+'\','+${e.id}+')'">&times;</button>
                             <a th:href="@{'/exercises/' + ${e.id}}" class="btn btn-success">&#128296;</a>
                         </td>
                     </tr>

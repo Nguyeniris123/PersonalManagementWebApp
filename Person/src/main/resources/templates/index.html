@@ -65,7 +65,7 @@
                 <td th:text="${profile.target}"></td>
                 <td th:text="${profile.updatedAt}"></td>
                 <td>
-                    <button class="btn btn-danger" th:onclick="'deleteHealthProfile(' + ${profile.id} + ')'">&times;</button>
+                    <button class="btn btn-danger" th:onclick="'deleteHealthProfile(\''+@{/api/health-profiles/}+'\','+${profile.id}+')'">&times;</button>
                     <a th:href="@{'/health-profiles/' + ${profile.id}}" class="btn btn-success">&#128296;️</a>
                 </td>
             </tr>
