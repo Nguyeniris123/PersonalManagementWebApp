@@ -4,6 +4,7 @@
  */
 package com.nhom20.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -88,22 +89,31 @@ public class UserAccount implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    @JsonIgnore
     private Set<UserTrainer> userTrainerSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "trainerId")
+    @JsonIgnore
     private Set<UserTrainer> userTrainerSet1;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    @JsonIgnore
     private Set<WorkoutPlan> workoutPlanSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    @JsonIgnore
     private Set<MealPlan> mealPlanSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    @JsonIgnore
     private Set<Reminder> reminderSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    @JsonIgnore
     private Set<HealthJournal> healthJournalSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "senderId")
+    @JsonIgnore
     private Set<ChatMessage> chatMessageSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "receiverId")
+    @JsonIgnore
     private Set<ChatMessage> chatMessageSet1;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "userId")
+    @JsonIgnore
     private HealthProfile healthProfile;
 
     public UserAccount() {

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  *
@@ -25,6 +26,9 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Autowired
     private SessionFactory sessionFactory;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public UserAccount getUserById(int id) {
@@ -82,5 +86,12 @@ public class UserRepositoryImpl implements UserRepository {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean authenticate(String username, String password) {
+        UserAccount u = this.getUserByUsername(username);
+
+        return this.passwordEncoder.matches(password, u.getPassword());
     }
 }
