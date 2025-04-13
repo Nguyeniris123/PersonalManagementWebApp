@@ -47,6 +47,7 @@ public class SpringSecurityConfigs {
             Exception {
         http.csrf(c -> c.disable()).authorizeHttpRequests(requests
                 -> requests.requestMatchers("/", "/home").authenticated()
+                        .requestMatchers("/api/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/health-profiles").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/users").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/health-profiles/**").hasAnyRole("USER", "ADMIN", "TRAINER")

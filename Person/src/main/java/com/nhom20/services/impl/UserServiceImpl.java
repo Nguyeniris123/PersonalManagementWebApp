@@ -11,6 +11,7 @@ import com.nhom20.repositories.UserRepository;
 import com.nhom20.services.UserService;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +79,9 @@ public class UserServiceImpl implements UserService {
 
         // Mã hóa mật khẩu
         u.setPassword(this.passwordEncoder.encode(params.get("password")));
+        
+        u.setCreatedAt(new Date()); // Gán thủ công
+
 
         // Parse ngày sinh
         try {
