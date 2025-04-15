@@ -40,7 +40,8 @@ const Login = () => {
                 "type": "login",
                 "payload": u.data
             });
-            nav("/");
+            nav("/", { replace: true });
+
         } catch (err) {
             console.error(err);
         } finally {
