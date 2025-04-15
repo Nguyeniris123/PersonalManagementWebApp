@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Button, Container, FloatingLabel, Form } from "react-bootstrap";
+import { Alert, Button, Container, FloatingLabel, Form } from "react-bootstrap";
 import MySpinner from "./layout/MySpinner";
 import Apis, { authApis, endpoints } from "../configs/Apis";
 import cookie from 'react-cookies'
@@ -18,7 +18,7 @@ const Login = () => {
     }];
     const dispatch = useContext(MyDispatchContext);
     const nav = useNavigate();
-
+    const [msg, setMsg] = useState("");
     const [user, setUser] = useState({});
     const [loading, setLoading] = useState(false);
 
@@ -34,16 +34,16 @@ const Login = () => {
             cookie.save('token', res.data.token);
 
             let u = await authApis().get(endpoints['profile']);
-            console.info(u.data)
 
             dispatch({
                 "type": "login",
                 "payload": u.data
             });
-            nav("/", { replace: true });
+            nav("/");
 
         } catch (err) {
             console.error(err);
+            setMsg("Có lỗi xảy ra khi đăng nhập (sai username hay password!");
         } finally {
             setLoading(false);
         }
@@ -58,6 +58,7 @@ const Login = () => {
         <>
             <Container>
                 <h1 className="text-center text-success mt-1">ĐĂNG NHẬP NGƯỜI DÙNG</h1>
+                {msg && <Alert variant="danger">{msg}</Alert>}
                 <Form onSubmit={login}>
                     {info.map(f => <FloatingLabel key={f.field} controlId="floatingInput" label={f.label} className="mb-3">
                         <Form.Control type={f.type} placeholder={f.label} required value={user[f.field]} onChange={e => setState(e.target.value, f.field)} />

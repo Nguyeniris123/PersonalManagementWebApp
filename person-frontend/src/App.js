@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import Home from "./components/Home";
+import Profile from "./components/Profile";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from "react-bootstrap";
 import Register from "./components/Register";
@@ -24,6 +25,7 @@ const App = () => {
                   <Route path="/" element={<Home />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/login" element={<Login />} />
+                  <Route path="/profile" element={<Profile />} />
                 </Routes>
               </Container>
 
