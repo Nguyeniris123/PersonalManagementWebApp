@@ -28,11 +28,11 @@ const Profile = () => {
                                     style={{ objectFit: "cover" }}
                                 />
                             </div>
-                            <p><strong>Họ và tên:</strong> {user.full_name}</p>
+                            <p><strong>Họ và tên:</strong> {user.fullName}</p>
                             <p><strong>Tên đăng nhập:</strong> {user.username}</p>
                             <p><strong>Email:</strong> {user.email}</p>
                             <p><strong>Số điện thoại:</strong> {user.phone}</p>
-                            <p><strong>Ngày sinh:</strong> {user.date_of_birth}</p>
+                            <p><strong>Ngày sinh:</strong> {user.dateOfBirth}</p>
                             <p><strong>Giới tính:</strong> {user.gender === "MALE" ? "Nam" : user.gender === "FEMALE" ? "Nữ" : "Khác"}</p>
                             <p><strong>Vai trò:</strong> {user.role === "ROLE_USER" ? "Người dùng" : "Chuyên gia"}</p>
                         </Card.Body>
