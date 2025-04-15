@@ -15,6 +15,7 @@ import java.util.Map;
 public interface HealthProfileService {
     List<HealthProfile> getHealthProfiles(Map<String, String> params);
     HealthProfile getHealthProfileById(int id);
-    boolean saveHealthProfile(HealthProfile healthProfile);
+    HealthProfile saveHealthProfile(HealthProfile healthProfile);
     boolean deleteHealthProfile(int id);
+    HealthProfile getHealthProfileByUserId(int userId);
 }

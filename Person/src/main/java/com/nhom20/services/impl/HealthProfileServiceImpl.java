@@ -31,10 +31,15 @@ public class HealthProfileServiceImpl implements HealthProfileService {
     public HealthProfile getHealthProfileById(int id) {
         return healthProfileRepository.getHealthProfileById(id);
     }
+    
+    @Override
+    public HealthProfile getHealthProfileByUserId(int userId) {
+        return healthProfileRepository.getHealthProfileByUserId(userId);
+    }
 
     @Override
-    public boolean saveHealthProfile(HealthProfile healthProfile) {
-        return healthProfileRepository.addOrUpdateHealthProfile(healthProfile) != null;
+    public HealthProfile saveHealthProfile(HealthProfile healthProfile) {
+        return healthProfileRepository.addOrUpdateHealthProfile(healthProfile);
     }
 
     @Override

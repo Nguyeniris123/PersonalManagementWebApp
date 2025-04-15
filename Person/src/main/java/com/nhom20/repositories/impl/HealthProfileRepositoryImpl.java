@@ -93,6 +93,24 @@ public class HealthProfileRepositoryImpl implements HealthProfileRepository {
     }
 
     @Override
+    public HealthProfile getHealthProfileByUserId(int userId) {
+        // Tạo một session và sử dụng Criteria API để truy vấn
+        Session session = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<HealthProfile> cq = cb.createQuery(HealthProfile.class);
+        Root<HealthProfile> root = cq.from(HealthProfile.class);
+
+        // Thực hiện join với bảng UserAccount
+        Join<HealthProfile, UserAccount> userJoin = root.join("userId", JoinType.INNER);
+
+        // Điều kiện WHERE userId.id = :userId
+        cq.select(root).where(cb.equal(userJoin.get("id"), userId));
+
+        org.hibernate.query.Query<HealthProfile> query = session.createQuery(cq);
+        return query.uniqueResult();
+    }
+
+    @Override
     public HealthProfile getHealthProfileById(int id) {
         Session s = this.factory.getObject().getCurrentSession();
         return s.get(HealthProfile.class, id);

@@ -15,6 +15,8 @@ import java.util.Map;
 public interface HealthProfileRepository {
     List<HealthProfile> getHealthProfiles(Map<String, String> params);
     HealthProfile getHealthProfileById(int id);
+    HealthProfile getHealthProfileByUserId(int userId);
     HealthProfile addOrUpdateHealthProfile(HealthProfile healthProfile);
     void deleteHealthProfile(int id);
+    
 }

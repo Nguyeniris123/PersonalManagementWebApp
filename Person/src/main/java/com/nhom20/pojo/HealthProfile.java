@@ -181,5 +181,9 @@ public class HealthProfile implements Serializable {
     public String toString() {
         return "com.nhom20.pojo.HealthProfile[ id=" + id + " ]";
     }
+
+    public void setBmi(int i) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     
 }
