@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react";
 import { Container, Row, Col, Card, Button, Spinner } from "react-bootstrap";
 import { MyUserContext } from "../configs/MyContexts";
-import { authApis } from "../configs/Apis";
+import { authApis, endpoints } from "../configs/Apis";
 
 const HealthProfile = () => {
     const user = useContext(MyUserContext);
@@ -16,18 +16,15 @@ const HealthProfile = () => {
             return;
         }
 
-        const userId = user.id;
-
         const fetchHealthProfile = async () => {
             try {
-                const res = await authApis().get(`secure/health-profiles/user/${userId}`);
+                const res = await authApis().get(endpoints['health_profile']);
                 setHealthProfile(res.data);
             } catch (err) {
-                if (err.response && err.response.status === 404) {
-                    setError("Chưa có hồ sơ sức khỏe.");
-                } else {
+                if (err.response && err.response.status === 404)
+                    setError("Chưa có hồ sơ sức khỏe. Vui lòng thêm mới.");
+                else
                     setError("Không thể tải hồ sơ sức khỏe.");
-                }
             } finally {
                 setLoading(false);
             }
@@ -49,11 +46,9 @@ const HealthProfile = () => {
         return (
             <Container className="mt-4 text-center">
                 <p className="text-danger">{error}</p>
-                {error === "Chưa có hồ sơ sức khỏe." && (
-                    <Button variant="success" onClick={() => window.location.href = "/add-health-profile"}>
-                        Thêm hồ sơ
-                    </Button>
-                )}
+                <Button variant="success" onClick={() => window.location.href = "/add-health-profile"}>
+                    Thêm hồ sơ sức khỏe
+                </Button>
             </Container>
         );
     }
@@ -75,9 +70,9 @@ const HealthProfile = () => {
                             <p><strong>Lượng nước uống mỗi ngày:</strong> {healthProfile.waterIntake} lít</p>
                             <p><strong>Mục tiêu:</strong> {healthProfile.target}</p>
                             <p><strong>Ngày cập nhật:</strong> {new Date(healthProfile.updatedAt).toLocaleString()}</p>
-                            <Button variant="primary" onClick={() => {
-                                window.location.href = "/update-health-profile";
-                            }}>Cập nhật hồ sơ</Button>
+                            <Button variant="primary" onClick={() => window.location.href = "/update-health-profile"}>
+                                Cập nhật hồ sơ
+                            </Button>
                         </Card.Body>
                     </Card>
                 </Col>
