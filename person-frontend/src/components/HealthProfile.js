@@ -2,6 +2,7 @@ import { useContext, useState, useEffect } from "react";
 import { Container, Row, Col, Card, Button, Spinner } from "react-bootstrap";
 import { MyUserContext } from "../configs/MyContexts";
 import { authApis, endpoints } from "../configs/Apis";
+import { Link } from "react-router-dom";
 
 const HealthProfile = () => {
     const user = useContext(MyUserContext);
@@ -46,9 +47,9 @@ const HealthProfile = () => {
         return (
             <Container className="mt-4 text-center">
                 <p className="text-danger">{error}</p>
-                <Button variant="success" onClick={() => window.location.href = "/add-health-profile"}>
-                    Thêm hồ sơ sức khỏe
-                </Button>
+                <Link to="/add_health_profile">
+                    <Button variant="success">Thêm hồ sơ sức khoẻ</Button>
+                </Link>
             </Container>
         );
     }
@@ -56,23 +57,61 @@ const HealthProfile = () => {
     return (
         <Container className="mt-4">
             <Row className="justify-content-center">
-                <Col md={8}>
-                    <Card className="shadow">
+                <Col md={10}>
+                    <Card className="shadow mb-4">
                         <Card.Header className="bg-success text-white text-center">
                             <h4>Hồ sơ sức khỏe</h4>
                         </Card.Header>
                         <Card.Body>
-                            <p><strong>Chiều cao:</strong> {healthProfile.height} cm</p>
-                            <p><strong>Cân nặng:</strong> {healthProfile.weight} kg</p>
-                            <p><strong>BMI:</strong> {healthProfile.bmi}</p>
-                            <p><strong>Nhịp tim:</strong> {healthProfile.heartRate} bpm</p>
-                            <p><strong>Số bước đi mỗi ngày:</strong> {healthProfile.stepsPerDay} bước</p>
-                            <p><strong>Lượng nước uống mỗi ngày:</strong> {healthProfile.waterIntake} lít</p>
-                            <p><strong>Mục tiêu:</strong> {healthProfile.target}</p>
-                            <p><strong>Ngày cập nhật:</strong> {new Date(healthProfile.updatedAt).toLocaleString()}</p>
-                            <Button variant="primary" onClick={() => window.location.href = "/update-health-profile"}>
-                                Cập nhật hồ sơ
-                            </Button>
+                            <Row>
+                                <Col md={6}>
+                                    <p><strong>Chiều cao:</strong> {healthProfile.height} cm</p>
+                                    <p><strong>Cân nặng:</strong> {healthProfile.weight} kg</p>
+                                    <p><strong>Mục tiêu:</strong> {healthProfile.target}</p>
+                                    <p><strong>Ngày cập nhật:</strong> {new Date(healthProfile.updatedAt).toLocaleString()}</p>
+                                </Col>
+                                <Col md={6}>
+                                    <Row>
+                                        <Col xs={6} className="mb-3">
+                                            <Card className="text-center border-info">
+                                                <Card.Body>
+                                                    <h6>BMI</h6>
+                                                    <h4 className="text-info">{healthProfile.bmi}</h4>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>
+                                        <Col xs={6} className="mb-3">
+                                            <Card className="text-center border-primary">
+                                                <Card.Body>
+                                                    <h6>Nhịp tim</h6>
+                                                    <h4 className="text-primary">{healthProfile.heartRate} bpm</h4>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>
+                                        <Col xs={6} className="mb-3">
+                                            <Card className="text-center border-warning">
+                                                <Card.Body>
+                                                    <h6>Bước đi</h6>
+                                                    <h4 className="text-warning">{healthProfile.stepsPerDay} bước</h4>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>
+                                        <Col xs={6} className="mb-3">
+                                            <Card className="text-center border-success">
+                                                <Card.Body>
+                                                    <h6>Nước uống</h6>
+                                                    <h4 className="text-success">{healthProfile.waterIntake} lít</h4>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>
+                                    </Row>
+                                </Col>
+                            </Row>
+                            <div className="text-center mt-3">
+                                <Button variant="primary" onClick={() => window.location.href = "/update-health-profile"}>
+                                    Cập nhật hồ sơ
+                                </Button>
+                            </div>
                         </Card.Body>
                     </Card>
                 </Col>

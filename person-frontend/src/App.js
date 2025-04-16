@@ -11,6 +11,7 @@ import {MyDispatchContext, MyUserContext } from "./configs/MyContexts";
 import { useReducer } from "react";
 import MyUserReducer from "./reducers/MyUserReducer";
 import HealthProfile from "./components/HealthProfile";
+import AddHealthProfile from "./components/AddHealthProfile";
 
 const App = () => {
   const [user, dispatch] = useReducer(MyUserReducer, null);
@@ -28,6 +29,7 @@ const App = () => {
                   <Route path="/login" element={<Login />} />
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/health_profile" element={<HealthProfile />} />
+                  <Route path="/add_health_profile" element={<AddHealthProfile />} />
                 </Routes>
               </Container>
 
