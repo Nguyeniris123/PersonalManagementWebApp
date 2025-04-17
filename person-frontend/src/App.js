@@ -14,6 +14,7 @@ import HealthProfile from "./components/HealthProfile";
 import AddHealthProfile from "./components/AddHealthProfile";
 import HealthProfileReducer from "./reducers/HealthProfileReducer";
 import UpdateHealthProfile from "./components/UpdateHealthProfile";
+import WorkoutPlan from "./components/WorkoutPlan";
 
 const App = () => {
   const [user, dispatch] = useReducer(MyUserReducer, null);
@@ -36,6 +37,7 @@ const App = () => {
                   <Route path="/health_profile" element={<HealthProfile />} />
                   <Route path="/add_health_profile" element={<AddHealthProfile />} />
                   <Route path="/update_health_profile" element={<UpdateHealthProfile />} />
+                  <Route path="/workout_plan" element={<WorkoutPlan />} />
                 </Routes>
               </Container>
 
