@@ -21,30 +21,6 @@ const AddHealthProfile = () => {
         { label: "Mục tiêu", type: "text", field: "target" }
     ];
 
-    const setState = (value, field) => {
-        setHealthProfile({ ...healthProfile, [field]: value });
-    };
-
-    const addHealthProfile = async (e) => {
-        e.preventDefault();
-
-        try {
-            setLoading(true);
-
-            // Gửi dữ liệu dưới dạng JSON thay vì FormData
-            const res = await authApis.post(endpoints['add_health_profile']);
-
-            if (res.status === 201)
-                nav("/health_profile");
-
-        } catch (err) {
-            console.error(err);
-            setMsg("Có lỗi xảy ra khi thêm hồ sơ sức khỏe!");
-        } finally {
-            setLoading(false);
-        }
-    };
-
     // Kiểm tra xem người dùng đã đăng nhập chưa
     if (!user) {
         return (
@@ -55,6 +31,41 @@ const AddHealthProfile = () => {
             </Container>
         );
     }
+
+    const setState = (value, field) => {
+        setHealthProfile({ ...healthProfile, [field]: value });
+    };
+
+    const addHealthProfile = async (e) => {
+        e.preventDefault();
+    
+        try {
+            setLoading(true);
+    
+            // Chuyển dữ liệu thành kiểu phù hợp trước khi gửi
+            const data = {
+                height: parseFloat(healthProfile.height),
+                weight: parseFloat(healthProfile.weight),
+                heartRate: parseInt(healthProfile.heartRate),
+                stepsPerDay: parseInt(healthProfile.stepsPerDay),
+                waterIntake: parseFloat(healthProfile.waterIntake),
+                target: healthProfile.target
+            };
+    
+            console.log("Gửi đi:", data); // Debug
+            const res = await authApis().post(endpoints['add_health_profile'], data);
+    
+            if (res.status === 201)
+                nav("/health_profile");
+        } catch (err) {
+            console.error(err);
+            setMsg("Có lỗi xảy ra khi thêm hồ sơ sức khỏe!");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    
 
     return (
         <Container className="mt-5">
