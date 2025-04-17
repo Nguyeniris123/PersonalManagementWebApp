@@ -1,12 +1,14 @@
-import { useContext, useState, useEffect } from "react";
-import { Container, Row, Col, Card, Button, Spinner } from "react-bootstrap";
-import { MyUserContext } from "../configs/MyContexts";
+import { useContext, useEffect, useState } from "react";
+import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { MyUserContext, HealthProfileContext, HealthProfileDispatchContext } from "../configs/MyContexts";
 import { authApis, endpoints } from "../configs/Apis";
 import { Link } from "react-router-dom";
+import MySpinner from "./layout/MySpinner";
 
 const HealthProfile = () => {
     const user = useContext(MyUserContext);
-    const [healthProfile, setHealthProfile] = useState(null);
+    const healthProfile = useContext(HealthProfileContext);
+    const healthDispatch = useContext(HealthProfileDispatchContext);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -20,7 +22,7 @@ const HealthProfile = () => {
         const fetchHealthProfile = async () => {
             try {
                 const res = await authApis().get(endpoints['health_profile']);
-                setHealthProfile(res.data);
+                healthDispatch({ type: "set", payload: res.data });
             } catch (err) {
                 if (err.response && err.response.status === 404)
                     setError("Chưa có hồ sơ sức khỏe. Vui lòng thêm mới.");
@@ -32,12 +34,12 @@ const HealthProfile = () => {
         };
 
         fetchHealthProfile();
-    }, [user]);
+    }, [user, healthDispatch]);
 
     if (loading) {
         return (
             <Container className="mt-4 text-center">
-                <Spinner animation="border" variant="primary" />
+                <MySpinner />
                 <p>Đang tải hồ sơ sức khỏe...</p>
             </Container>
         );
@@ -108,9 +110,9 @@ const HealthProfile = () => {
                                 </Col>
                             </Row>
                             <div className="text-center mt-3">
-                                <Button variant="primary" onClick={() => window.location.href = "/update-health-profile"}>
-                                    Cập nhật hồ sơ
-                                </Button>
+                                <Link to="/update_health_profile">
+                                    <Button variant="primary">Cập nhật hồ sơ sức khoẻ</Button>
+                                </Link>
                             </div>
                         </Card.Body>
                     </Card>

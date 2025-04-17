@@ -7,21 +7,26 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from "react-bootstrap";
 import Register from "./components/Register";
 import Login from "./components/Login";
-import {MyDispatchContext, MyUserContext } from "./configs/MyContexts";
+import { HealthProfileContext, HealthProfileDispatchContext, MyDispatchContext, MyUserContext } from "./configs/MyContexts";
 import { useReducer } from "react";
 import MyUserReducer from "./reducers/MyUserReducer";
 import HealthProfile from "./components/HealthProfile";
 import AddHealthProfile from "./components/AddHealthProfile";
+import HealthProfileReducer from "./reducers/HealthProfileReducer";
+import UpdateHealthProfile from "./components/UpdateHealthProfile";
 
 const App = () => {
   const [user, dispatch] = useReducer(MyUserReducer, null);
+  const [health_profile, healthProfiledispatch] = useReducer(HealthProfileReducer, null);
 
   return (
     <MyUserContext.Provider value={user}>
       <MyDispatchContext.Provider value={dispatch}>
+        <HealthProfileContext.Provider value={health_profile}>
+          <HealthProfileDispatchContext.Provider value={healthProfiledispatch}>
             <BrowserRouter>
               <Header />
-            
+
               <Container>
                 <Routes>
                   <Route path="/" element={<Home />} />
@@ -30,11 +35,14 @@ const App = () => {
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/health_profile" element={<HealthProfile />} />
                   <Route path="/add_health_profile" element={<AddHealthProfile />} />
+                  <Route path="/update_health_profile" element={<UpdateHealthProfile />} />
                 </Routes>
               </Container>
 
               <Footer />
             </BrowserRouter>
+          </HealthProfileDispatchContext.Provider>
+        </HealthProfileContext.Provider>
       </MyDispatchContext.Provider>
     </MyUserContext.Provider>
   );

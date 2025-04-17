@@ -9,7 +9,8 @@ export const endpoints = {
     'login': '/login',
     'profile': '/secure/profile',
     'health_profile': '/secure/health-profiles',
-    'add_health_profile': '/secure/health-profile/add'
+    'add_health_profile': '/secure/health-profile/add',
+    'update_health_profile': '/secure/health-profile/update'
 }
 
 export const authApis = () => {

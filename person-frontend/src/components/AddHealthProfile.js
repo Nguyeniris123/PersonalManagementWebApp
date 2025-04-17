@@ -38,10 +38,10 @@ const AddHealthProfile = () => {
 
     const addHealthProfile = async (e) => {
         e.preventDefault();
-    
+
         try {
             setLoading(true);
-    
+
             // Chuyển dữ liệu thành kiểu phù hợp trước khi gửi
             const data = {
                 height: parseFloat(healthProfile.height),
@@ -51,10 +51,10 @@ const AddHealthProfile = () => {
                 waterIntake: parseFloat(healthProfile.waterIntake),
                 target: healthProfile.target
             };
-    
+
             console.log("Gửi đi:", data); // Debug
             const res = await authApis().post(endpoints['add_health_profile'], data);
-    
+
             if (res.status === 201)
                 nav("/health_profile");
         } catch (err) {
@@ -64,8 +64,6 @@ const AddHealthProfile = () => {
             setLoading(false);
         }
     };
-
-    
 
     return (
         <Container className="mt-5">
