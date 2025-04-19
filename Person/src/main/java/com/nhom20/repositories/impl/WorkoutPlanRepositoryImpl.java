@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author nguyenho
  */
-
 @Repository
 @Transactional
 public class WorkoutPlanRepositoryImpl implements WorkoutPlanRepository {
@@ -100,5 +99,19 @@ public class WorkoutPlanRepositoryImpl implements WorkoutPlanRepository {
         if (wp != null) {
             s.remove(wp);
         }
+    }
+
+    @Override
+    public List<WorkoutPlan> getWorkoutPlansByUserId(int userId) {
+        Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<WorkoutPlan> q = b.createQuery(WorkoutPlan.class);
+        Root<WorkoutPlan> root = q.from(WorkoutPlan.class);
+
+        q.select(root);
+        q.where(b.equal(root.get("userId").get("id"), userId));  // Lọc theo userId
+
+        Query query = s.createQuery(q);
+        return query.getResultList();
     }
 }

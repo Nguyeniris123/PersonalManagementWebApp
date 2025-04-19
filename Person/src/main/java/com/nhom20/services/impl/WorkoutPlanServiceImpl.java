@@ -16,13 +16,12 @@ import org.springframework.stereotype.Service;
  *
  * @author nguyenho
  */
-
 @Service
 public class WorkoutPlanServiceImpl implements WorkoutPlanService {
 
     @Autowired
     private WorkoutPlanRepository workoutPlanRepository;
-    
+
     @Override
     public List<WorkoutPlan> getWorkOutPlan(Map<String, String> params) {
         return workoutPlanRepository.getWorkOutPlan(params);
@@ -34,8 +33,8 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
     }
 
     @Override
-    public boolean addOrUpdateWorkOutPlan(WorkoutPlan workoutPlan) {
-        return workoutPlanRepository.addOrUpdateWorkOutPlan(workoutPlan) != null;
+    public WorkoutPlan addOrUpdateWorkOutPlan(WorkoutPlan workoutPlan) {
+        return workoutPlanRepository.addOrUpdateWorkOutPlan(workoutPlan);
     }
 
     @Override
@@ -47,5 +46,9 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
             return false;
         }
     }
-    
+
+    @Override
+    public List<WorkoutPlan> getWorkoutPlansByUserId(int userId) {
+        return this.workoutPlanRepository.getWorkoutPlansByUserId(userId);
+    }
 }

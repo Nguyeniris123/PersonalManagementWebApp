@@ -4,6 +4,7 @@
  */
 package com.nhom20.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -63,6 +64,7 @@ public class WorkoutPlan implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private UserAccount userId;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "workoutPlanId")
     private Set<WorkoutPlanExercise> workoutPlanExerciseSet;
 
