@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { MyUserContext} from "../configs/MyContexts";
 import { Button, Card, Container, Row, Col, Alert } from "react-bootstrap";
 import { authApis, endpoints } from "../configs/Apis";
 import { Link } from "react-router-dom";
@@ -7,6 +8,7 @@ import MySpinner from "./layout/MySpinner";
 const WorkoutPlanPage = () => {
     const [plans, setPlans] = useState(null);
     const [loading, setLoading] = useState(true);
+    const user = useContext(MyUserContext);
 
     useEffect(() => {
         const loadPlans = async () => {
@@ -22,7 +24,18 @@ const WorkoutPlanPage = () => {
         };
 
         loadPlans();
-    }, []);
+    }, [user]);
+
+    if (!user) {
+        return (
+            <Container className="mt-4 text-center">
+                <p className="text-danger">Bạn cần đăng nhập để xem danh sách kế hoạch</p>
+                <Link to="/login">
+                    <Button variant="success">Đăng nhập</Button>
+                </Link>
+            </Container>
+        );
+    }
 
     if (loading) return <MySpinner />;
 
@@ -30,7 +43,7 @@ const WorkoutPlanPage = () => {
         <Container className="mt-4">
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h3>Kế hoạch tập luyện của bạn</h3>
-                <Link to="/workout_plan/add">
+                <Link to="/add_workout_plan">
                     <Button variant="success">+ Tạo kế hoạch mới</Button>
                 </Link>
             </div>

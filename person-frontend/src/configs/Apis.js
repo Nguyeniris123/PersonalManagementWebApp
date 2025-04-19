@@ -11,7 +11,8 @@ export const endpoints = {
     'health_profile': '/secure/health-profiles',
     'add_health_profile': '/secure/health-profile/add',
     'update_health_profile': '/secure/health-profile/update',
-    'workout_plan': '/secure/workout-plans'
+    'workout_plan': '/secure/workout-plans',
+    'add_workout_plan': 'secure/workout-plan/add'
 }
 
 export const authApis = () => {

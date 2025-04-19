@@ -1,12 +1,20 @@
 import { useContext } from "react";
-import { Container, Row, Col, Image, Card } from "react-bootstrap";
+import { Container, Row, Col, Image, Card, Button } from "react-bootstrap";
 import { MyUserContext } from "../configs/MyContexts";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
     const user = useContext(MyUserContext);
 
     if (!user) {
-        return <p className="text-center text-danger">Bạn chưa đăng nhập!</p>;
+        return (
+            <Container className="mt-4 text-center">
+                <p className="text-danger">Bạn cần đăng nhập để xem danh sách kế hoạch</p>
+                <Link to="/login">
+                    <Button variant="success">Đăng nhập</Button>
+                </Link>
+            </Container>
+        );
     }
 
     return (

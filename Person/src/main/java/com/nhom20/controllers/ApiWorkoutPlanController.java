@@ -53,6 +53,10 @@ public class ApiWorkoutPlanController {
                 return new ResponseEntity<>("Không tìm thấy người dùng!", HttpStatus.BAD_REQUEST);
             }
 
+            if (wp.getEndDate().before(wp.getStartDate())) {
+                return ResponseEntity.badRequest().body("Ngày kết thúc không được nhỏ hơn ngày bắt đầu!");
+            }
+
             wp.setUserId(user); // Gán user vào health profile
             wp.setCreatedAt(new Date()); // Đặt thời gian hiện tại
 
@@ -83,6 +87,6 @@ public class ApiWorkoutPlanController {
         } catch (Exception ex) {
             ex.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Có lỗi xảy ra khi lấy kế hoạch tập luyện");
-        }   
+        }
     }
 }

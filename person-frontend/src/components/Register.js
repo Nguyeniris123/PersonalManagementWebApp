@@ -81,7 +81,7 @@ const Register = () => {
                 ))}
 
                 <FloatingLabel label="Giới tính" className="mb-3">
-                    <Form.Select value={user.gender || "OTHER"} onChange={e => setState(e.target.value, "gender")}>
+                    <Form.Select value={user.gender || "MALE"} onChange={e => setState(e.target.value, "gender")}>
                         <option value="MALE">Nam</option>
                         <option value="FEMALE">Nữ</option>
                         <option value="OTHER">Khác</option>

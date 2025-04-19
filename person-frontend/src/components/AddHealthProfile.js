@@ -95,9 +95,7 @@ const AddHealthProfile = () => {
                         {loading ? (
                             <MySpinner />
                         ) : (
-                            <Button type="submit" variant="success" className="btn-lg mt-3 px-4">
-                                Thêm hồ sơ
-                            </Button>
+                            <Button type="submit" variant="success" className="btn-lg mt-3 px-4">Thêm hồ sơ</Button>
                         )}
                     </div>
                 </Form>
