@@ -4,6 +4,7 @@
  */
 package com.nhom20.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -59,6 +60,7 @@ public class Exercise implements Serializable {
     private String level;
     @Column(name = "calories_burned")
     private Integer caloriesBurned;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "exerciseId")
     private Set<WorkoutPlanExercise> workoutPlanExerciseSet;
 

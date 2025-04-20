@@ -6,17 +6,18 @@ import { Container, Button, Card, Row, Col, Alert, Modal, Form } from "react-boo
 import MySpinner from "./layout/MySpinner";
 
 const WorkoutPlanDetail = () => {
-    const { id } = useParams(); // Lấy ID kế hoạch từ URL
+    const { id } = useParams();
     const user = useContext(MyUserContext);
-    const [exercises, setExercises] = useState([]); // Bài tập trong kế hoạch
-    const [allExercises, setAllExercises] = useState([]); // Danh sách bài tập có sẵn
+    const [exercises, setExercises] = useState([]);
+    const [allExercises, setAllExercises] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [newExercise, setNewExercise] = useState({});
-    const [selectedExercise, setSelectedExercise] = useState(null); // Bài tập được chọn
+    const [selectedExercise, setSelectedExercise] = useState(null);
     const [sets, setSets] = useState(0);
     const [reps, setReps] = useState(0);
     const [duration, setDuration] = useState(0);
+    const [visibleCount, setVisibleCount] = useState(6); //số bài hiển thị ban đầu
 
     useEffect(() => {
         const loadExercises = async () => {
@@ -121,13 +122,16 @@ const WorkoutPlanDetail = () => {
 
             <h4 className="mt-5">Danh sách bài tập có sẵn</h4>
             <Row>
-                {allExercises.map((e) => (
+                {allExercises.slice(0, visibleCount).map((e) => (
                     <Col key={e.id} md={6} lg={4} className="mb-4">
-                        <Card>
-                            <Card.Body>
+                        <Card className="h-100">
+                            <Card.Body className="d-flex flex-column">
                                 <Card.Title>{e.name}</Card.Title>
-                                <Card.Text>
-                                    <strong>Mô tả:</strong> {e.description}
+                                <Card.Text className="flex-grow-1">
+                                    <div><strong>Mô tả:</strong> {e.description}</div>
+                                    <div><strong>Nhóm cơ:</strong> {e.muscleGroup}</div>
+                                    <div><strong>Cấp độ:</strong> {e.level}</div>
+                                    <div><strong>Calories đốt cháy:</strong> {e.caloriesBurned}</div>
                                 </Card.Text>
                                 <Button variant="primary" onClick={() => setSelectedExercise(e.id)}>Chọn bài tập</Button>
                             </Card.Body>
@@ -135,6 +139,14 @@ const WorkoutPlanDetail = () => {
                     </Col>
                 ))}
             </Row>
+
+            {visibleCount < allExercises.length && (
+                <div className="text-center mt-3">
+                    <Button variant="outline-primary" onClick={() => setVisibleCount(visibleCount + 6)}>
+                        Xem thêm
+                    </Button>
+                </div>
+            )}
 
             {selectedExercise && (
                 <div className="mt-4">
@@ -157,7 +169,6 @@ const WorkoutPlanDetail = () => {
                 </div>
             )}
 
-            {/* Modal để tạo bài tập mới */}
             <Modal show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Tạo bài tập mới</Modal.Title>

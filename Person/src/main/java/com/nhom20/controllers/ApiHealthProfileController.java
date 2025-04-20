@@ -79,7 +79,7 @@ public class ApiHealthProfileController {
         return ResponseEntity.ok(healthProfile);
     }
 
-    @PostMapping("secure/health-profile/add")
+    @PostMapping("/secure/health-profile/add")
     public ResponseEntity<?> addHealthProfile(@RequestBody HealthProfile hp, Principal principal) {
         try {
             String username = principal.getName(); // Lấy username từ người dùng đang đăng nhập

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { MyUserContext} from "../configs/MyContexts";
+import { MyUserContext } from "../configs/MyContexts";
 import { Button, Card, Container, Row, Col, Alert } from "react-bootstrap";
 import { authApis, endpoints } from "../configs/Apis";
 import { Link } from "react-router-dom";
@@ -26,6 +26,20 @@ const WorkoutPlanPage = () => {
         loadPlans();
     }, [user]);
 
+    const deletePlan = async (planId) => {
+        if (window.confirm("Bạn có chắc chắn muốn xoá kế hoạch này không?")) {
+            try {
+                await authApis().delete(endpoints.delete_workout_plan(planId));
+                alert("Đã xoá thành công!");
+                // Gọi lại API để cập nhật danh sách
+                setPlans(plans.filter(p => p.id !== planId));
+            } catch (err) {
+                console.error("Lỗi khi xoá:", err);
+                alert("Có lỗi xảy ra khi xoá!");
+            }
+        }
+    };
+
     if (!user) {
         return (
             <Container className="mt-4 text-center">
@@ -36,6 +50,7 @@ const WorkoutPlanPage = () => {
             </Container>
         );
     }
+
 
     if (loading) return <MySpinner />;
 
@@ -63,6 +78,9 @@ const WorkoutPlanPage = () => {
                                     <Link to={`/workout_plan/${p.id}`}>
                                         <Button variant="primary" size="sm">Xem chi tiết</Button>
                                     </Link>
+                                    <Button variant="danger" size="sm" className="ms-2" onClick={() => deletePlan(p.id)}>
+                                        Xoá
+                                    </Button>
                                 </Card.Body>
                             </Card>
                         </Col>
