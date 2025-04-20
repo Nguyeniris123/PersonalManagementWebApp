@@ -48,8 +48,12 @@ public class ApiUserController {
     @PostMapping(path = "/users",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserAccount> create(@RequestParam Map<String, String> params, @RequestParam(value = "avatar") MultipartFile avatar) {
-        return new ResponseEntity<>(this.userDetailsService.addUser(params, avatar), HttpStatus.CREATED);
+    public ResponseEntity<?> create(@RequestParam Map<String, String> params, @RequestParam(value = "avatar") MultipartFile avatar) {
+        try {
+            return new ResponseEntity<>(this.userDetailsService.addUser(params, avatar), HttpStatus.CREATED);
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", ex.getMessage()));
+        }
     }
 
     @PostMapping("/login")

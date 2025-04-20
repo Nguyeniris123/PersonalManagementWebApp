@@ -14,6 +14,7 @@ import java.util.List;
 public interface UserRepository {
     UserAccount getUserById(int id);
     UserAccount getUserByUsername(String username);
+    UserAccount getUserByEmail(String email);
     List<UserAccount> getAllUsers();
     List<UserAccount> searchUsersByUsername(String username);
     UserAccount addUser(UserAccount user);

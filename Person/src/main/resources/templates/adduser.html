@@ -10,6 +10,9 @@
     <main class="container">
         <div class="card p-4 shadow-sm">
             <h1 class="text-center mb-4">Thêm Người Dùng</h1>
+            <div th:if="${error}" class="alert alert-danger text-center">
+                <p th:text="${error}"></p>
+            </div>
             <form th:action="@{/users/add}" method="post" enctype="multipart/form-data">
                 <!-- Username -->
                 <div class="mb-3">

@@ -9,7 +9,10 @@
 
     <main class="container">
         <div class="card p-4 shadow-sm">
-            <h1 class="text-center mb-2 mt-2">Cập nhật thông tin người dùng</h1>
+            <div th:if="${error}" class="alert alert-danger text-center">
+                <p th:text="${error}"></p>
+            </div>
+            <h1 class="text-center mb-2 mt-2">Cập nhật thông tin người dùng</h1>        
             <form th:action="@{'/users/update/' + ${user.id}}" method="post" enctype="multipart/form-data">
                 <div class="mb-3 mt-3">
                     <label for="username">Username:</label><br/>

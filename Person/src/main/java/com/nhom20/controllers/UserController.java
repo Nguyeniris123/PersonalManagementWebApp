@@ -45,16 +45,14 @@ public class UserController {
     public String addUser(@RequestParam Map<String, String> params,
             @RequestParam("avatar") MultipartFile avatar,
             Model model) {
-
+        
         try {
             userService.addUser(params, avatar);
-            model.addAttribute("message", "Thêm người dùng thành công!");
-        } catch (Exception e) {
-            model.addAttribute("error", "Có lỗi xảy ra khi thêm người dùng.");
-            e.printStackTrace();
+            return "redirect:/users";
+        } catch (RuntimeException ex) {
+            model.addAttribute("error", ex.getMessage()); // gắn thông báo lỗi
+            return "adduser"; // giữ lại form
         }
-
-        return "redirect:/users"; // hoặc return "add-user" nếu muốn hiển thị lại form
     }
 
     // Hiển thị trang sửa thông tin người dùng
@@ -71,15 +69,13 @@ public class UserController {
     @PostMapping("/users/update/{id}")
     public String updateUser(@PathVariable("id") int id,
             @RequestParam Map<String, String> params,
-            @RequestParam(value = "avatar", required = false) MultipartFile avatar) {
+            @RequestParam(value = "avatar", required = false) MultipartFile avatar, Model model) {
         try {
             userService.updateUser(params, avatar, id);
             return "redirect:/users";  // Chuyển hướng về danh sách người dùng sau khi cập nhật thành công
-        } catch (Exception e) {
-            // Xử lý lỗi (log lỗi, thông báo cho người dùng...)
-            e.printStackTrace();
-            return "error";  // Hiển thị trang lỗi nếu có vấn đề
+        } catch (RuntimeException ex) {
+            model.addAttribute("error", ex.getMessage()); // gắn thông báo lỗi
+            return "adduser"; // giữ lại form
         }
     }
-
 }

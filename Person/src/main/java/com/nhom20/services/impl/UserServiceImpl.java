@@ -65,21 +65,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserAccount addUser(Map<String, String> params, MultipartFile avatar) {
-        UserAccount u = new UserAccount();
-        u.setUsername(params.get("username"));
-        u.setFullName(params.get("full_name"));
-        u.setEmail(params.get("email"));
-        u.setPhone(params.get("phone"));
+        String username = params.get("username");
+        String email = params.get("email");
 
-        // Lấy role và gender từ params thay vì hardcode
+        // Kiểm tra username đã tồn tại
+        if (userRepository.getUserByUsername(username) != null) {
+            throw new RuntimeException("Tên đăng nhập đã tồn tại");
+        }
+
+        // Kiểm tra email đã tồn tại
+        if (userRepository.getUserByEmail(email) != null) {
+            throw new RuntimeException("Email đã tồn tại");
+        }
+
+        UserAccount u = new UserAccount();
+        u.setUsername(username);
+        u.setFullName(params.get("full_name"));
+        u.setEmail(email);
+        u.setPhone(params.get("phone"));
         u.setRole(params.get("role"));
         u.setGender(params.get("gender"));
-
-        // Mã hóa mật khẩu
         u.setPassword(this.passwordEncoder.encode(params.get("password")));
-        
-        u.setCreatedAt(new Date()); // Gán thủ công
-
+        u.setCreatedAt(new Date());
 
         // Parse ngày sinh
         try {
@@ -89,7 +96,7 @@ public class UserServiceImpl implements UserService {
                 u.setDateOfBirth(java.sql.Date.valueOf(date));
             }
         } catch (Exception e) {
-            e.printStackTrace(); // Có thể log kỹ hơn
+            e.printStackTrace();
         }
 
         // Upload ảnh đại diện lên Cloudinary
@@ -111,13 +118,28 @@ public class UserServiceImpl implements UserService {
         // Lấy thông tin người dùng hiện tại
         UserAccount u = userRepository.getUserById(userId);
         if (u == null) {
-            throw new IllegalArgumentException("User not found");
+            throw new IllegalArgumentException("Người dùng không tồn tại");
         }
 
-        // Cập nhật thông tin người dùng từ params
-        u.setUsername(params.get("username"));
+        String newUsername = params.get("username");
+        String newEmail = params.get("email");
+
+        // Kiểm tra trùng username (không phải của chính user đang sửa)
+        UserAccount existingUser = userRepository.getUserByUsername(newUsername);
+        if (existingUser != null && existingUser.getId() != userId) {
+            throw new RuntimeException("Tên đăng nhập đã tồn tại");
+        }
+
+        // Kiểm tra trùng email
+        existingUser = userRepository.getUserByEmail(newEmail);
+        if (existingUser != null && existingUser.getId() != userId) {
+            throw new RuntimeException("Email đã tồn tại");
+        }
+
+        // Cập nhật thông tin người dùng
+        u.setUsername(newUsername);
         u.setFullName(params.get("full_name"));
-        u.setEmail(params.get("email"));
+        u.setEmail(newEmail);
         u.setPhone(params.get("phone"));
         u.setRole(params.get("role"));
         u.setGender(params.get("gender"));
@@ -125,7 +147,7 @@ public class UserServiceImpl implements UserService {
         // Mã hóa mật khẩu nếu có thay đổi
         String password = params.get("password");
         if (password != null && !password.isEmpty()) {
-            u.setPassword(this.passwordEncoder.encode(password));
+            u.setPassword(passwordEncoder.encode(password));
         }
 
         // Cập nhật ngày sinh
@@ -136,24 +158,20 @@ public class UserServiceImpl implements UserService {
                 u.setDateOfBirth(java.sql.Date.valueOf(date));
             }
         } catch (Exception e) {
-            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, "Invalid date format", e);
-            throw new IllegalArgumentException("Invalid date format");
+            throw new IllegalArgumentException("Định dạng ngày sinh không hợp lệ");
         }
 
-        // Cập nhật ảnh đại diện nếu có
+        // Cập nhật avatar nếu có file mới
         if (avatar != null && !avatar.isEmpty()) {
             try {
-                // Upload ảnh lên Cloudinary
                 Map res = cloudinary.uploader().upload(avatar.getBytes(),
                         ObjectUtils.asMap("resource_type", "auto"));
                 u.setAvatar(res.get("secure_url").toString());
             } catch (IOException ex) {
-                Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, "Error uploading avatar", ex);
-                throw new RuntimeException("Error uploading avatar");
+                throw new RuntimeException("Lỗi khi tải ảnh đại diện");
             }
         }
 
-        // Cập nhật thông tin người dùng vào cơ sở dữ liệu
         return userRepository.updateUser(u);
     }
 
@@ -180,5 +198,5 @@ public class UserServiceImpl implements UserService {
     public boolean authenticate(String username, String password) {
         return this.userRepository.authenticate(username, password);
     }
-    
+
 }

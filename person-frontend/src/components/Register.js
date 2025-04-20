@@ -53,8 +53,12 @@ const Register = () => {
                 if (res.status === 201)
                     nav("/login");
             } catch (err) {
-                console.error(err);
-                setMsg("Có lỗi xảy ra khi đăng ký (username hay email đã tồn tại!");
+                const resData = err.response.data;
+                if (resData.error) {
+                    setMsg(resData.error);
+                } else {
+                    setMsg("Có lỗi xảy ra khi đăng ký!");
+                }
             } finally {
                 setLoading(false);
             }
@@ -96,7 +100,7 @@ const Register = () => {
                 </FloatingLabel>
 
                 <FloatingLabel controlId="avatar" label="Ảnh đại diện" className="mb-3">
-                    <Form.Control type="file" ref={avatar} required/>
+                    <Form.Control type="file" ref={avatar} required />
                 </FloatingLabel>
 
                 {loading ? <MySpinner /> : <Button type="submit" variant="success" className="mt-1 mb-1">Đăng ký</Button>}

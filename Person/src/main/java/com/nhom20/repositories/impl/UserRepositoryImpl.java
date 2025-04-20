@@ -47,6 +47,18 @@ public class UserRepositoryImpl implements UserRepository {
             return null;  // Trả về null nếu không tìm thấy
         }
     }
+    
+    @Override
+    public UserAccount getUserByEmail(String email) {
+        try {
+            Session session = sessionFactory.getCurrentSession();
+            Query<UserAccount> query = session.createNamedQuery("UserAccount.findByEmail", UserAccount.class);
+            query.setParameter("email", email);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;  // Trả về null nếu không tìm thấy
+        }
+    }
 
     @Override
     public List<UserAccount> getAllUsers() {
