@@ -16,6 +16,8 @@ export const endpoints = {
     'delete_workout_plan': (planId) => `/workout-plans/${planId}`,
     'exercise': '/exercises',
     'workout_plan_exercises': (workoutPlanId) => `/secure/workout-plan-exercise/${workoutPlanId}`,
+    'add_workout_plan_exercises': (workoutPlanId) => `/secure/workout-plan-exercise/add/${workoutPlanId}`,
+    'delete_workout_plan_exercises': (workoutPlanExerciseId) => `/workout-plans-exercise/${workoutPlanExerciseId}`,
 }
 
 export const authApis = () => {

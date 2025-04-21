@@ -4,8 +4,11 @@
  */
 package com.nhom20.controllers;
 
+import com.nhom20.pojo.Exercise;
 import com.nhom20.pojo.UserAccount;
 import com.nhom20.pojo.WorkoutPlan;
+import com.nhom20.pojo.WorkoutPlanExercise;
+import com.nhom20.services.ExerciseService;
 import com.nhom20.services.UserService;
 import com.nhom20.services.WorkoutPlanExerciseService;
 import com.nhom20.services.WorkoutPlanService;
@@ -18,6 +21,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,9 +38,12 @@ public class ApiWorkoutPlanExerciseController {
 
     @Autowired
     private WorkoutPlanExerciseService workoutPlanExerciseService;
-    
+
     @Autowired
     private WorkoutPlanService workoutPlanService;
+    
+    @Autowired
+    private ExerciseService exerciseService;
 
     @Autowired
     private UserService userService;
@@ -69,6 +77,41 @@ public class ApiWorkoutPlanExerciseController {
 
         // Trả danh sách bài tập của kế hoạch
         return ResponseEntity.ok(workoutPlanExerciseService.getWorkoutPlanExercisesByWorkoutPlanId(workoutPlanId));
+    }
+
+    @PostMapping("/secure/workout-plan-exercise/add/{workoutPlanId}")
+    public ResponseEntity<?> addWorkoutPlanExercise(
+            @PathVariable("workoutPlanId") int workoutPlanId,
+            @RequestBody WorkoutPlanExercise workoutPlanExercise,
+            Principal user) {
+
+        String username = user.getName();
+        UserAccount currentUser = userService.getUserByUsername(username);
+
+        WorkoutPlan plan = workoutPlanService.getWorkOutPlanById(workoutPlanId);
+        if (plan == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Không tìm thấy kế hoạch tập luyện!");
+        }
+
+        if (plan.getUserId() == null || !plan.getUserId().getId().equals(currentUser.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Bạn không có quyền truy cập kế hoạch này!");
+        }
+
+        // Lấy exercise từ DB
+        Exercise exercise = exerciseService.getExerciseById(workoutPlanExercise.getExerciseId().getId());
+        if (exercise == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy bài tập!");
+        }
+
+        // Gán lại các thông tin
+        workoutPlanExercise.setWorkoutPlanId(plan);
+        workoutPlanExercise.setExerciseId(exercise); // Gán đối tượng đầy đủ
+
+        WorkoutPlanExercise added = workoutPlanExerciseService.addOrUpdateWorkOutPlanExercise(workoutPlanExercise);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(added);
     }
 
 }
