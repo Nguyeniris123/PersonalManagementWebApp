@@ -104,4 +104,18 @@ public class WorkoutPlanExerciseRepositoryImpl implements WorkoutPlanExerciseRep
             s.remove(wpe);
         }
     }
+
+    @Override
+    public List<WorkoutPlanExercise> getWorkoutPlanExercisesByWorkoutPlanId(int workoutPlanId) {
+        Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<WorkoutPlanExercise> q = b.createQuery(WorkoutPlanExercise.class);
+        Root<WorkoutPlanExercise> root = q.from(WorkoutPlanExercise.class);
+
+        // Tham chiếu tới khóa ngoại workoutPlanId (tên phải đúng trong entity)
+        q.select(root).where(b.equal(root.get("workoutPlanId").get("id"), workoutPlanId));
+
+        Query query = s.createQuery(q);
+        return query.getResultList();
+    }
 }

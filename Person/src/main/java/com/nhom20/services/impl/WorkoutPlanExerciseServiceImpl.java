@@ -6,7 +6,6 @@ package com.nhom20.services.impl;
 
 import com.nhom20.pojo.WorkoutPlanExercise;
 import com.nhom20.repositories.WorkoutPlanExerciseRepository;
-import com.nhom20.repositories.WorkoutPlanRepository;
 import com.nhom20.services.WorkoutPlanExerciseService;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +34,8 @@ public class WorkoutPlanExerciseServiceImpl implements WorkoutPlanExerciseServic
     }
 
     @Override
-    public boolean addOrUpdateWorkOutPlanExercise(WorkoutPlanExercise workoutPlanExercise) {
-        return workoutPlanExerciseRepository.addOrUpdateWorkOutPlanExercise(workoutPlanExercise) != null;
+    public WorkoutPlanExercise addOrUpdateWorkOutPlanExercise(WorkoutPlanExercise workoutPlanExercise) {
+        return workoutPlanExerciseRepository.addOrUpdateWorkOutPlanExercise(workoutPlanExercise);
     }
 
     @Override
@@ -48,4 +47,9 @@ public class WorkoutPlanExerciseServiceImpl implements WorkoutPlanExerciseServic
             return false;
         }
     }   
+    
+    @Override
+    public List<WorkoutPlanExercise> getWorkoutPlanExercisesByWorkoutPlanId(int workoutPlanId) {
+        return workoutPlanExerciseRepository.getWorkoutPlanExercisesByWorkoutPlanId(workoutPlanId);
+    }
 }

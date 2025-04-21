@@ -8,6 +8,7 @@ import MySpinner from "./layout/MySpinner";
 const WorkoutPlanPage = () => {
     const [plans, setPlans] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [msg, setMsg] = useState("");
     const user = useContext(MyUserContext);
 
     useEffect(() => {
@@ -16,7 +17,8 @@ const WorkoutPlanPage = () => {
                 const res = await authApis().get(endpoints["workout_plan"]);
                 setPlans(res.data);
             } catch (err) {
-                console.error("Lỗi khi tải kế hoạch tập luyện: ", err);
+                console.error(err);
+                setMsg("Lỗi khi tải kế hoạch tập luyện");
                 setPlans([]);
             } finally {
                 setLoading(false);
@@ -30,15 +32,22 @@ const WorkoutPlanPage = () => {
         if (window.confirm("Bạn có chắc chắn muốn xoá kế hoạch này không?")) {
             try {
                 await authApis().delete(endpoints.delete_workout_plan(planId));
-                alert("Đã xoá thành công!");
+                setMsg("Đã xoá thành công");
                 // Gọi lại API để cập nhật danh sách
                 setPlans(plans.filter(p => p.id !== planId));
             } catch (err) {
-                console.error("Lỗi khi xoá:", err);
-                alert("Có lỗi xảy ra khi xoá!");
+                console.error(err);
+                setMsg("Có lỗi xảy ra khi xoá!");
             }
         }
     };
+
+    useEffect(() => {
+        if (msg) {
+            const timer = setTimeout(() => setMsg(""), 1000); // Tự động xóa thông báo sau 1 giây
+            return () => clearTimeout(timer); // Dọn dẹp timer khi component unmount hoặc msg thay đổi
+        }
+    }, [msg]);
 
     if (!user) {
         return (
@@ -60,16 +69,17 @@ const WorkoutPlanPage = () => {
                 <h3>Kế hoạch tập luyện của bạn</h3>
                 <Link to="/add_workout_plan">
                     <Button variant="success">+ Tạo kế hoạch mới</Button>
-                </Link>
+                </Link>               
             </div>
 
             {plans.length === 0 ? (
                 <Alert variant="info">Bạn chưa có kế hoạch tập luyện nào.</Alert>
             ) : (
                 <Row>
+                    {msg && <Alert variant="danger">{msg}</Alert>}
                     {plans.map((p) => (
                         <Col key={p.id} md={6} lg={4} className="mb-4">
-                            <Card>
+                            <Card style={{ backgroundColor: "#ffe4b5", border: "1px solid #ffa500" }}>
                                 <Card.Body>
                                     <Card.Title>{p.name}</Card.Title>
                                     <Card.Text>

@@ -6,10 +6,10 @@ import { Container, Button, Card, Row, Col, Alert, Modal, Form } from "react-boo
 import MySpinner from "./layout/MySpinner";
 
 const WorkoutPlanDetail = () => {
-    const { id } = useParams();
+    const { id } = useParams(); // Lấy workoutPlanId từ URL
     const user = useContext(MyUserContext);
-    const [exercises, setExercises] = useState([]);
-    const [allExercises, setAllExercises] = useState([]);
+    const [exercises, setExercises] = useState([]); // Danh sách bài tập trong kế hoạch
+    const [allExercises, setAllExercises] = useState([]); // Danh sách bài tập có sẵn
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [newExercise, setNewExercise] = useState({});
@@ -17,15 +17,16 @@ const WorkoutPlanDetail = () => {
     const [sets, setSets] = useState(0);
     const [reps, setReps] = useState(0);
     const [duration, setDuration] = useState(0);
-    const [visibleCount, setVisibleCount] = useState(6); //số bài hiển thị ban đầu
+    const [visibleCount, setVisibleCount] = useState(6); // Số bài tập hiển thị ban đầu
 
+    // Tải danh sách bài tập trong kế hoạch và bài tập có sẵn
     useEffect(() => {
         const loadExercises = async () => {
             try {
-                const res = await authApis().get(`${endpoints["workout_plan"]}/${id}/exercises`);
+                const res = await authApis().get(endpoints.workout_plan_exercises(id));
                 setExercises(res.data);
             } catch (err) {
-                console.error("Lỗi khi tải danh sách bài tập: ", err);
+                console.error("Lỗi khi tải danh sách bài tập trong kế hoạch:", err);
                 setExercises([]);
             } finally {
                 setLoading(false);
@@ -34,10 +35,10 @@ const WorkoutPlanDetail = () => {
 
         const loadAllExercises = async () => {
             try {
-                const res = await authApis().get(endpoints["exercise"]);
+                const res = await authApis().get(endpoints.exercise);
                 setAllExercises(res.data);
             } catch (err) {
-                console.error("Lỗi khi tải danh sách bài tập có sẵn: ", err);
+                console.error("Lỗi khi tải danh sách bài tập có sẵn:", err);
             }
         };
 
@@ -45,11 +46,12 @@ const WorkoutPlanDetail = () => {
         loadAllExercises();
     }, [id]);
 
+    // Thêm bài tập vào kế hoạch
     const handleAddExercise = async () => {
         if (!selectedExercise) return;
 
         try {
-            const res = await authApis().post(`${endpoints["workout_plan"]}/${id}/exercises`, {
+            const res = await authApis().post(`${endpoints.workout_plan}/${id}/exercises`, {
                 exerciseId: selectedExercise,
                 sets,
                 reps,
@@ -63,19 +65,20 @@ const WorkoutPlanDetail = () => {
                 setDuration(0);
             }
         } catch (err) {
-            console.error("Lỗi khi thêm bài tập vào kế hoạch: ", err);
+            console.error("Lỗi khi thêm bài tập vào kế hoạch:", err);
         }
     };
 
+    // Tạo bài tập mới
     const handleCreateExercise = async () => {
         try {
-            const res = await authApis().post(endpoints["exercise"], newExercise);
+            const res = await authApis().post(endpoints.exercise, newExercise);
             if (res.status === 201) {
                 setAllExercises([...allExercises, res.data]);
                 setShowModal(false);
             }
         } catch (err) {
-            console.error("Lỗi khi tạo bài tập mới: ", err);
+            console.error("Lỗi khi tạo bài tập mới:", err);
         }
     };
 
@@ -105,10 +108,14 @@ const WorkoutPlanDetail = () => {
                 <Row>
                     {exercises.map((e) => (
                         <Col key={e.id} md={6} lg={4} className="mb-4">
-                            <Card>
+                            <Card className="h-100 border border-success" style={{ backgroundColor: "#e8f5e9" }}>
                                 <Card.Body>
-                                    <Card.Title>{e.name}</Card.Title>
+                                    <Card.Title>{e.exerciseId.name}</Card.Title>
                                     <Card.Text>
+                                        <strong>Mô tả:</strong> {e.exerciseId.description} <br />
+                                        <strong>Nhóm cơ</strong> {e.exerciseId.muscleGroup} <br />
+                                        <strong>Cấp độ:</strong> {e.exerciseId.level} <br />
+                                        <strong>Calories đốt cháy:</strong> {e.exerciseId.caloriesBurned} <br />
                                         <strong>Sets:</strong> {e.sets} <br />
                                         <strong>Reps:</strong> {e.reps} <br />
                                         <strong>Thời gian:</strong> {e.duration_minutes} phút
@@ -120,11 +127,11 @@ const WorkoutPlanDetail = () => {
                 </Row>
             )}
 
-            <h4 className="mt-5">Danh sách bài tập có sẵn</h4>
+            <h3 className="mt-5 mb-3">Danh sách bài tập có sẵn</h3>
             <Row>
                 {allExercises.slice(0, visibleCount).map((e) => (
                     <Col key={e.id} md={6} lg={4} className="mb-4">
-                        <Card className="h-100">
+                        <Card className="h-100 border border-success" style={{ backgroundColor: "#f0f8ff" }}>
                             <Card.Body className="d-flex flex-column">
                                 <Card.Title>{e.name}</Card.Title>
                                 <Card.Text className="flex-grow-1">

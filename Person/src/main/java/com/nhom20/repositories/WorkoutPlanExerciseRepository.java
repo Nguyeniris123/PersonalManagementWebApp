@@ -17,4 +17,6 @@ public interface WorkoutPlanExerciseRepository {
     WorkoutPlanExercise getWorkoutPlanExerciseById(int id);
     WorkoutPlanExercise addOrUpdateWorkOutPlanExercise(WorkoutPlanExercise workoutPlanExercise);
     void deleteWorkoutPlanExercise(int id);
+    List<WorkoutPlanExercise> getWorkoutPlanExercisesByWorkoutPlanId(int workoutPlanId);
+
 }
