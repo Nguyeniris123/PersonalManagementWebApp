@@ -6,29 +6,29 @@ import { Container, Button, Card, Row, Col, Alert, Modal, Form } from "react-boo
 import MySpinner from "./layout/MySpinner";
 
 const WorkoutPlanDetail = () => {
-    const { id } = useParams(); // Lấy workoutPlanId từ URL
-    const [msg, setMsg] = useState("");
+    const { id } = useParams();
     const user = useContext(MyUserContext);
-    const [exercises, setExercises] = useState([]); // Danh sách bài tập trong kế hoạch
-    const [allExercises, setAllExercises] = useState([]); // Danh sách bài tập có sẵn
+    const [exercises, setExercises] = useState([]);
+    const [allExercises, setAllExercises] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [msg, setMsg] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [newExercise, setNewExercise] = useState({});
+    const [sets, setSets] = useState(10);
+    const [reps, setReps] = useState(1);
+    const [duration, setDuration] = useState(10);
     const [selectedExercise, setSelectedExercise] = useState(null);
-    const [sets, setSets] = useState(0);
-    const [reps, setReps] = useState(0);
-    const [duration, setDuration] = useState(0);
-    const [visibleCount, setVisibleCount] = useState(6); // Số bài tập hiển thị ban đầu
+    const [visibleCount, setVisibleCount] = useState(6);
+    const [searchTerm, setSearchTerm] = useState(""); // Tìm kiếm bài tập gợi ý
 
     const exerciseFields = [
         { label: "Tên bài tập", type: "text", key: "name", placeholder: "Tên bài tập" },
         { label: "Mô tả", type: "textarea", key: "description", placeholder: "Mô tả bài tập" },
-        { label: "Nhóm cơ", type: "select", key: "muscle_group", options: ["Ngực", "Chân", "Lưng", "Bụng", "Tay", "Toàn thân"], },
-        { label: "Trình độ", type: "select", key: "level", options: ["Mới bắt đầu", "Trung bình", "Nâng cao"], },
+        { label: "Nhóm cơ", type: "select", key: "muscle_group", options: ["Ngực", "Chân", "Lưng", "Bụng", "Tay", "Toàn thân"] },
+        { label: "Trình độ", type: "select", key: "level", options: ["Mới bắt đầu", "Trung bình", "Nâng cao"] },
         { label: "Calories Burned", type: "number", key: "calories_burned", placeholder: "Calories Burned" },
     ];
 
-    // Tải danh sách bài tập trong kế hoạch và bài tập có sẵn
     useEffect(() => {
         const loadExercises = async () => {
             try {
@@ -56,7 +56,6 @@ const WorkoutPlanDetail = () => {
         loadAllExercises();
     }, [id]);
 
-    // Thêm bài tập vào kế hoạch
     const handleAddExercise = async () => {
         if (!selectedExercise) return;
 
@@ -70,9 +69,10 @@ const WorkoutPlanDetail = () => {
             if (res.status === 201) {
                 setExercises([...exercises, res.data]);
                 setSelectedExercise(null);
-                setSets(0);
-                setReps(0);
-                setDuration(0);
+                setSets(10);
+                setReps(1);
+                setDuration(10);
+                setMsg("Đã thêm bài tập vào kế hoạch!");
             }
         } catch (err) {
             console.error(err);
@@ -85,7 +85,7 @@ const WorkoutPlanDetail = () => {
 
         try {
             await authApis().delete(endpoints.delete_workout_plan_exercises(exerciseId));
-            setExercises(exercises.filter((e) => e.id !== exerciseId)); // Cập nhật danh sách bài tập sau khi xóa
+            setExercises(exercises.filter((e) => e.id !== exerciseId));
             setMsg("Xóa bài tập thành công!");
         } catch (err) {
             console.error(err);
@@ -93,13 +93,29 @@ const WorkoutPlanDetail = () => {
         }
     };
 
-    // Tạo bài tập mới
     const handleCreateExercise = async () => {
         try {
-            const res = await authApis().post(endpoints.exercise, newExercise);
+            const res = await authApis().post(endpoints.add_exercise, newExercise);
             if (res.status === 201) {
-                setAllExercises([...allExercises, res.data]);
-                setShowModal(false);
+                const createdExercise = res.data;
+                setAllExercises([...allExercises, createdExercise]);
+
+                const addRes = await authApis().post(endpoints.add_workout_plan_exercises(id), {
+                    exerciseId: createdExercise.id,
+                    sets,
+                    reps,
+                    duration_minutes: duration,
+                });
+
+                if (addRes.status === 201) {
+                    setExercises([...exercises, addRes.data]);
+                    setShowModal(false);
+                    setNewExercise({});
+                    setSets(10);
+                    setReps(1);
+                    setDuration(10);
+                    setMsg("Đã tạo và thêm bài tập vào kế hoạch!");
+                }
             }
         } catch (err) {
             console.error(err);
@@ -107,10 +123,22 @@ const WorkoutPlanDetail = () => {
         }
     };
 
+    const handleSearchExercises = async () => {
+        try {
+            const res = await authApis().get(endpoints.exercise, {
+                params: { kw: searchTerm },
+            });
+            setAllExercises(res.data);
+        } catch (err) {
+            console.error("Lỗi khi tìm kiếm bài tập:", err);
+            setMsg("Có lỗi xảy ra khi tìm kiếm bài tập!");
+        }
+    };
+
     useEffect(() => {
         if (msg) {
-            const timer = setTimeout(() => setMsg(""), 1000); // Tự động xóa thông báo sau 1 giây
-            return () => clearTimeout(timer); // Dọn dẹp timer khi component unmount hoặc msg thay đổi
+            const timer = setTimeout(() => setMsg(""), 2000);
+            return () => clearTimeout(timer);
         }
     }, [msg]);
 
@@ -133,22 +161,23 @@ const WorkoutPlanDetail = () => {
                 <h3>Chi tiết kế hoạch tập luyện</h3>
                 <Button variant="success" onClick={() => setShowModal(true)}>+ Tạo bài tập mới</Button>
             </div>
-            {msg && <Alert variant="danger">{msg}</Alert>}
+
+            {msg && <Alert variant="info">{msg}</Alert>}
 
             {exercises.length === 0 ? (
-                <Alert variant="info">Kế hoạch này chưa có bài tập nào.</Alert>
+                <Alert variant="warning">Kế hoạch này chưa có bài tập nào.</Alert>
             ) : (
                 <Row>
                     {exercises.map((e) => (
                         <Col key={e.id} md={6} lg={4} className="mb-4">
                             <Card className="h-100 border border-success" style={{ backgroundColor: "#e8f5e9" }}>
-                                <Card.Body>
+                                <Card.Body className="d-flex flex-column">
                                     <Card.Title className="bg-success text-white text-center">{e.exerciseId.name}</Card.Title>
                                     <Card.Text>
                                         <strong>Mô tả:</strong> {e.exerciseId.description} <br />
                                         <strong>Nhóm cơ:</strong> {e.exerciseId.muscleGroup} <br />
                                         <strong>Cấp độ:</strong> {e.exerciseId.level} <br />
-                                        <strong>Calories đốt cháy:</strong> {e.exerciseId.caloriesBurned} <br />
+                                        <strong>Calories:</strong> {e.exerciseId.caloriesBurned} <br />
                                         <strong>Sets:</strong> {e.sets} <br />
                                         <strong>Reps:</strong> {e.reps} <br />
                                         <strong>Thời gian:</strong> {e.durationMinutes} phút
@@ -156,6 +185,7 @@ const WorkoutPlanDetail = () => {
                                     <Button
                                         variant="danger"
                                         size="sm"
+                                        className="mt-auto"
                                         onClick={() => handleDeleteExercise(e.id)}
                                     >
                                         Xóa
@@ -167,7 +197,22 @@ const WorkoutPlanDetail = () => {
                 </Row>
             )}
 
-            <h3 className="mt-5 mb-3">Danh sách bài tập gợi ý</h3>
+            <h4 className="mt-5 mb-3">Danh sách bài tập gợi ý</h4>
+            <Form className="mb-4">
+                <Form.Control
+                    type="text"
+                    placeholder="Tìm kiếm bài tập gợi ý..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            e.preventDefault();
+                            handleSearchExercises();
+                        }
+                    }}
+                />
+            </Form>
+
             <Row>
                 {allExercises.slice(0, visibleCount).map((e) => (
                     <Col key={e.id} md={6} lg={4} className="mb-4">
@@ -175,10 +220,10 @@ const WorkoutPlanDetail = () => {
                             <Card.Body className="d-flex flex-column">
                                 <Card.Title>{e.name}</Card.Title>
                                 <Card.Text className="flex-grow-1">
-                                    <span><strong>Mô tả:</strong> {e.description}</span><br />
-                                    <span><strong>Nhóm cơ:</strong> {e.muscleGroup}</span><br />
-                                    <span><strong>Cấp độ:</strong> {e.level}</span><br />
-                                    <span><strong>Calories đốt cháy:</strong> {e.caloriesBurned}</span>
+                                    <strong>Mô tả:</strong> {e.description} <br />
+                                    <strong>Nhóm cơ:</strong> {e.muscleGroup} <br />
+                                    <strong>Trình độ:</strong> {e.level} <br />
+                                    <strong>Calories:</strong> {e.caloriesBurned}
                                 </Card.Text>
                                 <Button variant="primary" onClick={() => setSelectedExercise(e.id)}>Chọn bài tập</Button>
                             </Card.Body>
@@ -189,25 +234,23 @@ const WorkoutPlanDetail = () => {
 
             {visibleCount < allExercises.length && (
                 <div className="text-center mt-3">
-                    <Button variant="outline-primary" onClick={() => setVisibleCount(visibleCount + 6)}>
-                        Xem thêm
-                    </Button>
+                    <Button variant="outline-primary" onClick={() => setVisibleCount(visibleCount + 6)}>Xem thêm</Button>
                 </div>
             )}
 
             {selectedExercise && (
                 <div className="mt-4">
-                    <h5>Thêm thông tin bài tập</h5>
+                    <h5>Thêm vào kế hoạch</h5>
                     <Form>
-                        <Form.Group className="mb-3">
+                        <Form.Group className="mb-2">
                             <Form.Label>Số sets</Form.Label>
                             <Form.Control type="number" value={sets} onChange={(e) => setSets(e.target.value)} />
                         </Form.Group>
-                        <Form.Group className="mb-3">
+                        <Form.Group className="mb-2">
                             <Form.Label>Số reps</Form.Label>
                             <Form.Control type="number" value={reps} onChange={(e) => setReps(e.target.value)} />
                         </Form.Group>
-                        <Form.Group className="mb-3">
+                        <Form.Group className="mb-2">
                             <Form.Label>Thời gian (phút)</Form.Label>
                             <Form.Control type="number" value={duration} onChange={(e) => setDuration(e.target.value)} />
                         </Form.Group>
@@ -216,6 +259,7 @@ const WorkoutPlanDetail = () => {
                 </div>
             )}
 
+            {/* Modal tạo bài tập mới */}
             <Modal show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Tạo bài tập mới</Modal.Title>
@@ -233,9 +277,7 @@ const WorkoutPlanDetail = () => {
                                         onChange={(e) => setNewExercise({ ...newExercise, [field.key]: e.target.value })}
                                     />
                                 ) : field.type === "select" ? (
-                                    <Form.Select
-                                        onChange={(e) => setNewExercise({ ...newExercise, [field.key]: e.target.value })}
-                                    >
+                                    <Form.Select onChange={(e) => setNewExercise({ ...newExercise, [field.key]: e.target.value })}>
                                         <option value="">Chọn {field.label.toLowerCase()}</option>
                                         {field.options.map((opt, i) => (
                                             <option key={i} value={opt}>{opt}</option>
@@ -250,6 +292,19 @@ const WorkoutPlanDetail = () => {
                                 )}
                             </Form.Group>
                         ))}
+
+                        <Form.Group className="mb-2">
+                            <Form.Label>Số sets</Form.Label>
+                            <Form.Control type="number" value={sets} onChange={(e) => setSets(e.target.value)} />
+                        </Form.Group>
+                        <Form.Group className="mb-2">
+                            <Form.Label>Số reps</Form.Label>
+                            <Form.Control type="number" value={reps} onChange={(e) => setReps(e.target.value)} />
+                        </Form.Group>
+                        <Form.Group className="mb-2">
+                            <Form.Label>Thời gian (phút)</Form.Label>
+                            <Form.Control type="number" value={duration} onChange={(e) => setDuration(e.target.value)} />
+                        </Form.Group>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>

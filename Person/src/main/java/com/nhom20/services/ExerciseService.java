@@ -15,6 +15,6 @@ import java.util.Map;
 public interface ExerciseService {
     List<Exercise> getExercise(Map<String, String> params);
     Exercise getExerciseById(int id);
-    boolean addOrUpdateExercise(Exercise exercise);
+    Exercise addOrUpdateExercise(Exercise exercise);
     boolean deleteExercise(int id);
 }

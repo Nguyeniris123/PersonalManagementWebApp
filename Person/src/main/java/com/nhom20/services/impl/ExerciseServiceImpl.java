@@ -34,8 +34,8 @@ public class ExerciseServiceImpl implements ExerciseService {
     }
 
     @Override
-    public boolean addOrUpdateExercise(Exercise exercise) {
-        return this.exerciseRepository.addOrUpdateExercise(exercise) != null;
+    public Exercise addOrUpdateExercise(Exercise exercise) {
+        return this.exerciseRepository.addOrUpdateExercise(exercise);
     }
 
     @Override
