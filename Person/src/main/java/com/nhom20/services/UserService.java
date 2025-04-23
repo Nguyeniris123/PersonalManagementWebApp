@@ -24,4 +24,5 @@ public interface UserService extends UserDetailsService {
     UserAccount updateUser(Map<String, String> params, MultipartFile avatar, int userId);
     boolean deleteUser(int id);
     boolean authenticate(String username, String password);
+    List<UserAccount> findByRole(String role);
 }

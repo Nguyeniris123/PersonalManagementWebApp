@@ -199,4 +199,8 @@ public class UserServiceImpl implements UserService {
         return this.userRepository.authenticate(username, password);
     }
 
+    @Override
+    public List<UserAccount> findByRole(String role) {
+        return userRepository.findByRole(role);
+    }
 }

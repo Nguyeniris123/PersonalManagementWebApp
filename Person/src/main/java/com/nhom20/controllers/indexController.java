@@ -8,6 +8,7 @@ import com.nhom20.pojo.UserAccount;
 import com.nhom20.services.ExerciseService;
 import com.nhom20.services.HealthProfileService;
 import com.nhom20.services.UserService;
+import com.nhom20.services.UserTrainerService;
 import com.nhom20.services.WorkoutPlanExerciseService;
 import com.nhom20.services.WorkoutPlanService;
 import java.util.List;
@@ -40,6 +41,9 @@ public class indexController {
     
     @Autowired
     private WorkoutPlanExerciseService workoutPlanExerciseService;
+    
+    @Autowired
+    private UserTrainerService userTrainerService;
 
     @RequestMapping("/")
     public String index(Model model, @RequestParam Map<String, String> params) {
@@ -75,6 +79,12 @@ public class indexController {
     public String workoutPlanExerciseList(Model model, @RequestParam Map<String, String> params) {
         model.addAttribute("workoutPlanExercises", this.workoutPlanExerciseService.getWorkOutPlanExercise(params));
         return "workoutplanexercise";
+    }
+    
+    @GetMapping("/user-trainer")
+    public String userTrainerList(Model model, @RequestParam Map<String, String> params) {
+        model.addAttribute("userTrainers", this.userTrainerService.getUserTrainer(params));
+        return "usertrainer";
     }
     
 }

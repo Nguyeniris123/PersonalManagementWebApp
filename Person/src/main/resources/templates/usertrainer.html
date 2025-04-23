@@ -1,0 +1,59 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chi tiết bài tập trong kế hoạch</title>
+    <th:block th:replace="base :: bootstrap"></th:block>
+</head>
+<body>
+    <div th:replace="base :: header"></div>    
+    <main class="container">
+        <h1 class="text-center mt-2 mb-4">Danh sách kết nối User với Trainer</h1>
+        <form th:action="@{/user-trainer}" method="get">
+            <div class="row">
+                <div class="col-6">
+                    <div class="mb-3 mt-3">
+                        <input type="text" class="form-control" name="kw" placeholder="Tìm theo tên user hoặc trainer" />
+                    </div>
+                </div>
+            </div>
+            <div class="mb-2 mt-1">
+                <button class="btn btn-info" type="submit">Tìm kiếm</button>
+            </div>
+        </form>
+        <a th:href="@{/user-trainer-view}" class="btn btn-success mt-2 mb-2">Thêm kết nối User-Trainer</a>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên User</th>
+                        <th>Tên Trainer</th>
+                        <th>Status</th>
+                        <th>Created at</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    <tr th:each="us : ${userTrainers}">
+                        <td th:text="${us.id}"></td>
+                        <td th:text="${us.userId.username}"></td>
+                        <td th:text="${us.trainerId.username}"></td>
+                        <td th:text="${us.status}"></td>
+                        <td th:text="${us.createdAt}"></td>
+                        <td>
+                            <button class="btn btn-danger" th:onclick="'deleteUserTrainer(\''+@{/api/user-trainer/}+'\','+${us.id}+')'">&times;</button>                                  
+                            <a th:href="@{'/user-trainer/' + ${us.id}}" class="btn btn-success">&#128296;️</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <div th:replace="base :: footer"></div>
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>
+
+

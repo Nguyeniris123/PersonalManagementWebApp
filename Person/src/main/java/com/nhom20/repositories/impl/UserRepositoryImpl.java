@@ -106,4 +106,12 @@ public class UserRepositoryImpl implements UserRepository {
 
         return this.passwordEncoder.matches(password, u.getPassword());
     }
+    
+    @Override
+    public List<UserAccount> findByRole(String role) {
+        Session session = sessionFactory.getCurrentSession();
+        Query<UserAccount> query = session.createNamedQuery("UserAccount.findByRole", UserAccount.class);
+        query.setParameter("role", role);
+        return query.getResultList();
+    }
 }

@@ -1,0 +1,63 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Kết nối Người dùng & Huấn luyện viên</title>
+    <th:block th:replace="base :: bootstrap"></th:block>
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+
+    <main class="container">
+        <div class="card p-4 shadow-sm">
+            <h1 class="text-center mb-2 mt-2">Kết nối Người dùng & Huấn luyện viên</h1>
+
+            <div th:if="${error}" class="alert alert-danger text-center">
+                <p th:text="${error}"></p>
+            </div>
+
+            <form th:action="@{/user-trainer/add}" th:object="${userTrainer}" method="post">
+                <input type="hidden" th:field="*{id}" />
+
+                <div class="mb-3">
+                    <label class="form-label">Người dùng</label>
+                    <select th:field="*{userId.id}" class="form-control" required>
+                        <option th:each="u : ${users}" 
+                                th:value="${u.id}" 
+                                th:text="${u.fullName + ' (' + u.username + ') - ' + u.role}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Huấn luyện viên / Chuyên gia</label>
+                    <select th:field="*{trainerId.id}" class="form-control" required>
+                        <option th:each="t : ${trainers}" 
+                                th:value="${t.id}" 
+                                th:text="${t.fullName + ' (' + t.username + ') - ' + t.role}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Trạng thái</label>
+                    <select th:field="*{status}" class="form-control">
+                        <option value="PENDING">Chờ duyệt</option>
+                        <option value="ACCEPTED">Đã chấp nhận</option>
+                        <option value="REJECTED">Đã từ chối</option>
+                    </select>
+                </div>
+
+                <div>
+                    <button class="btn btn-success mt-1 mb-3" type="submit">
+                        <span th:if="${userTrainer.id == null}">Thêm kết nối</span>
+                        <span th:unless="${userTrainer.id == null}">Cập nhật kết nối</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <div th:replace="base :: footer"></div>
+</body>
+</html>
+

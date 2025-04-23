@@ -36,6 +36,7 @@ CREATE TABLE user_trainer (
     trainer_id INT NOT NULL,
     status ENUM('PENDING', 'ACCEPTED', 'REJECTED') DEFAULT 'PENDING',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (user_id, trainer_id),
     FOREIGN KEY (user_id) REFERENCES user_account(id) ON DELETE CASCADE,
     FOREIGN KEY (trainer_id) REFERENCES user_account(id) ON DELETE CASCADE
 );

@@ -21,4 +21,5 @@ public interface UserRepository {
     UserAccount updateUser(UserAccount user);
     boolean deleteUser(int id);
     boolean authenticate(String username, String password);
+    List<UserAccount> findByRole(String role);
 }
