@@ -60,7 +60,7 @@ const Login = () => {
                 <h1 className="text-center text-success mt-1">ĐĂNG NHẬP NGƯỜI DÙNG</h1>
                 {msg && <Alert variant="danger">{msg}</Alert>}
                 <Form onSubmit={login}>
-                    {info.map(f => <FloatingLabel key={f.field} controlId="floatingInput" label={f.label} className="mb-3">
+                    {info.map(f => <FloatingLabel key={f.field} controlId={`floating-${f.field}`} label={f.label} className="mb-3">
                         <Form.Control type={f.type} placeholder={f.label} required value={user[f.field]} onChange={e => setState(e.target.value, f.field)} />
                     </FloatingLabel>)}
                     {loading ? <MySpinner /> : <Button type="submit" variant="success" className="mt-1 mb-1">Đăng nhập</Button>}

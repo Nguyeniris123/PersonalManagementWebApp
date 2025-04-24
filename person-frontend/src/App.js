@@ -17,6 +17,7 @@ import UpdateHealthProfile from "./components/UpdateHealthProfile";
 import WorkoutPlan from "./components/WorkoutPlan";
 import AddWorkoutPlan from "./components/AddWorkoutPlan";
 import WorkoutPlanDetail from "./components/WorkoutPlanDetail";
+import UserTrainer from "./components/UserTrainer";
 
 
 const App = () => {
@@ -43,6 +44,7 @@ const App = () => {
                   <Route path="/workout_plan" element={<WorkoutPlan />} />
                   <Route path="/add_workout_plan" element={<AddWorkoutPlan />} />
                   <Route path="/workout_plan/:id" element={<WorkoutPlanDetail />} />
+                  <Route path="/user_trainer" element={<UserTrainer />} />
 
                 </Routes>
               </Container>

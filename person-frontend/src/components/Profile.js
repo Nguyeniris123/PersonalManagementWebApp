@@ -9,7 +9,7 @@ const Profile = () => {
     if (!user) {
         return (
             <Container className="mt-4 text-center">
-                <p className="text-danger">Bạn cần đăng nhập để xem danh sách kế hoạch</p>
+                <p className="text-danger">Bạn cần đăng nhập để xem Profile</p>
                 <Link to="/login">
                     <Button variant="success">Đăng nhập</Button>
                 </Link>

@@ -133,4 +133,22 @@ public class UserTrainerRepositoryImpl implements UserTrainerRepository {
             s.remove(us);
         }
     }
+
+    @Override
+    public List<UserTrainer> getUserTrainerByUserId(int userId) {
+        Session s = this.factory.getObject().getCurrentSession();
+
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<UserTrainer> q = b.createQuery(UserTrainer.class);
+        Root<UserTrainer> root = q.from(UserTrainer.class);
+
+        q.select(root);
+
+        // Điều kiện lọc theo userId
+        Predicate predicate = b.equal(root.get("userId").get("id"), userId);
+        q.where(predicate);
+
+        Query query = s.createQuery(q);
+        return query.getResultList();
+    }
 }

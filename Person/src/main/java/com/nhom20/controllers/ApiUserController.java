@@ -9,6 +9,7 @@ import com.nhom20.services.UserService;
 import com.nhom20.utils.JwtUtils;
 import java.security.Principal;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -84,5 +85,11 @@ public class ApiUserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+    
+    @GetMapping("secure/trainers")
+    public ResponseEntity<List<UserAccount>> getAllTrainers() {
+        List<UserAccount> trainers = userDetailsService.findByRole("ROLE_TRAINER");
+        return ResponseEntity.ok(trainers);
     }
 }

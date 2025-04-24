@@ -19,6 +19,11 @@ export const endpoints = {
     'workout_plan_exercises': (workoutPlanId) => `/secure/workout-plan-exercise/${workoutPlanId}`,
     'add_workout_plan_exercises': (workoutPlanId) => `/secure/workout-plan-exercise/add/${workoutPlanId}`,
     'delete_workout_plan_exercises': (workoutPlanExerciseId) => `/workout-plans-exercise/${workoutPlanExerciseId}`,
+    'trainers': '/secure/trainers',
+    'connect_trainer': '/secure/user-trainer/add',
+    'user_trainer_connections': "/secure/user-trainers",
+    'delete_user_trainer': (connectionId) => `/user-trainer/${connectionId}`
+
 }
 
 export const authApis = () => {
