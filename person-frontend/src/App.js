@@ -18,6 +18,7 @@ import WorkoutPlan from "./components/WorkoutPlan";
 import AddWorkoutPlan from "./components/AddWorkoutPlan";
 import WorkoutPlanDetail from "./components/WorkoutPlanDetail";
 import UserTrainer from "./components/UserTrainer";
+import RequestUserTrainer from "./components/RequestUserTrainer";
 
 
 const App = () => {
@@ -45,6 +46,7 @@ const App = () => {
                   <Route path="/add_workout_plan" element={<AddWorkoutPlan />} />
                   <Route path="/workout_plan/:id" element={<WorkoutPlanDetail />} />
                   <Route path="/user_trainer" element={<UserTrainer />} />
+                  <Route path="/request_user_trainer" element={<RequestUserTrainer />} />
 
                 </Routes>
               </Container>

@@ -53,4 +53,8 @@ public class UserTrainerServiceImpl implements UserTrainerService {
         return userTrainerRepository.getUserTrainerByUserId(userId);
     }
     
+    @Override
+    public List<UserTrainer> getUserTrainerByTrainerId(int trainerId) {
+        return userTrainerRepository.getUserTrainerByTrainerId(trainerId);
+    }
 }

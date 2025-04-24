@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -60,6 +61,20 @@ public class ApiUserTrainerController {
         return new ResponseEntity<>(connections, HttpStatus.OK);
     }
 
+    @GetMapping("/secure/request-user-trainers")
+    public ResponseEntity<List<UserTrainer>> getUserTrainerbyTrainer(Principal principal) {
+        String username = principal.getName();
+        UserAccount user = userService.getUserByUsername(username);
+
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        List<UserTrainer> connections = userTrainerService.getUserTrainerByTrainerId(user.getId());
+
+        return new ResponseEntity<>(connections, HttpStatus.OK);
+    }
+
     @PostMapping("/secure/user-trainer/add")
     public ResponseEntity<?> requestTrainer(@RequestBody UserTrainer userTrainer, Principal principal) {
         try {
@@ -81,6 +96,62 @@ public class ApiUserTrainerController {
             return ResponseEntity.status(HttpStatus.CREATED).body(saved);
         } catch (RuntimeException ex) {
             return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
+        }
+    }
+
+    @PutMapping("/secure/user-trainer/accept/{id}")
+    public ResponseEntity<String> updateStatusToAccepted(@PathVariable("id") int id, Principal principal) {
+        try {
+            // Lấy thông tin UserTrainer từ DB
+            UserTrainer userTrainer = userTrainerService.getUserTrainerById(id);
+            if (userTrainer == null) {
+                return new ResponseEntity<>("Yêu cầu không tồn tại.", HttpStatus.NOT_FOUND);
+            }
+
+            // Lấy tên người dùng hiện tại từ Principal
+            String currentUsername = principal.getName();
+
+            // Kiểm tra nếu người dùng hiện tại có quyền cập nhật trạng thái
+            // Giả sử người huấn luyện viên (trainer) có thể cập nhật trạng thái
+            if (!currentUsername.equals(userTrainer.getTrainerId().getUsername())) {
+                return new ResponseEntity<>("Bạn không có quyền cập nhật yêu cầu này.", HttpStatus.FORBIDDEN);
+            }
+
+            // Cập nhật trạng thái thành ACCEPTED
+            userTrainer.setStatus("ACCEPTED");
+            userTrainerService.addOrUpdateUserTrainer(userTrainer);  // Dùng service để lưu cập nhật
+
+            return new ResponseEntity<>("Trạng thái đã được cập nhật thành ACCEPTED.", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Lỗi khi cập nhật trạng thái.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @PutMapping("/secure/user-trainer/reject/{id}")
+    public ResponseEntity<String> updateStatusToRejected(@PathVariable("id") int id, Principal principal) {
+        try {
+            // Lấy thông tin UserTrainer từ DB
+            UserTrainer userTrainer = userTrainerService.getUserTrainerById(id);
+            if (userTrainer == null) {
+                return new ResponseEntity<>("Yêu cầu không tồn tại.", HttpStatus.NOT_FOUND);
+            }
+
+            // Lấy tên người dùng hiện tại từ Principal
+            String currentUsername = principal.getName();
+
+            // Kiểm tra nếu người dùng hiện tại có quyền cập nhật trạng thái
+            // Giả sử người huấn luyện viên (trainer) có thể cập nhật trạng thái
+            if (!currentUsername.equals(userTrainer.getTrainerId().getUsername())) {
+                return new ResponseEntity<>("Bạn không có quyền cập nhật yêu cầu này.", HttpStatus.FORBIDDEN);
+            }
+
+            // Cập nhật trạng thái thành ACCEPTED
+            userTrainer.setStatus("REJECTED");
+            userTrainerService.addOrUpdateUserTrainer(userTrainer);  // Dùng service để lưu cập nhật
+
+            return new ResponseEntity<>("Trạng thái đã được cập nhật thành REJECTED.", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Lỗi khi cập nhật trạng thái.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

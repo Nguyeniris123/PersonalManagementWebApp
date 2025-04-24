@@ -22,8 +22,10 @@ export const endpoints = {
     'trainers': '/secure/trainers',
     'connect_trainer': '/secure/user-trainer/add',
     'user_trainer_connections': "/secure/user-trainers",
-    'delete_user_trainer': (connectionId) => `/user-trainer/${connectionId}`
-
+    'delete_user_trainer': (connectionId) => `/user-trainer/${connectionId}`,
+    'requests_to_trainer': '/secure/request-user-trainers',
+    'accept_request': (requestId) => `/secure/user-trainer/accept/${requestId}`,
+    'reject_request': (requestId) => `/secure/user-trainer/reject/${requestId}`
 }
 
 export const authApis = () => {

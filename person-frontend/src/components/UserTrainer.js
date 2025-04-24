@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Container, Button, Card, Alert, Image } from "react-bootstrap";
+import { Container, Button, Card, Alert, Image, Form } from "react-bootstrap";
 import { authApis, endpoints } from "../configs/Apis";
 import { Link } from 'react-router-dom';
 import { MyUserContext } from '../configs/MyContexts';
@@ -11,6 +11,7 @@ const ConnectTrainer = () => {
     const [connections, setConnections] = useState([]);
     const [loading, setLoading] = useState(true);
     const [msg, setMsg] = useState("");
+    const [searchTerm, setSearchTerm] = useState(""); // Tìm kiếm
 
     // Lấy danh sách huấn luyện viên
     useEffect(() => {
@@ -31,7 +32,7 @@ const ConnectTrainer = () => {
         };
 
         if (user) loadData();
-    }, [user, msg]);
+    }, [user]);
 
     // Gửi yêu cầu kết nối
     const handleConnect = async (trainerId) => {
@@ -58,8 +59,6 @@ const ConnectTrainer = () => {
             setMsg(error);
         }
     };
-    
-
 
     useEffect(() => {
         if (msg) {
@@ -84,39 +83,39 @@ const ConnectTrainer = () => {
     // Lấy danh sách ID các trainer đã được gửi yêu cầu
     const connectedTrainerIds = connections.map(c => c.trainerId?.id);
 
+    // Lọc danh sách huấn luyện viên theo từ khóa tìm kiếm
+    const filteredTrainers = trainers.filter(trainer =>
+        trainer.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        trainer.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <Container className="mt-4">
             <h2>Kết nối với Huấn luyện viên</h2>
 
             {msg && <Alert variant="info">{msg}</Alert>}
 
+            {/* Input tìm kiếm */}
+            <Form className="mb-4">
+                <Form.Control type="text" placeholder="Tìm kiếm huấn luyện viên..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
+            </Form>
+
             <div className="d-flex flex-wrap gap-3 mt-4">
-                {trainers.length === 0 ? (
-                    <p>Không có huấn luyện viên nào.</p>
+                {filteredTrainers.length === 0 ? (
+                    <p>Không tìm thấy huấn luyện viên nào.</p>
                 ) : (
-                    trainers.map(trainer => (
+                    filteredTrainers.map(trainer => (
                         <Card key={trainer.id} style={{ width: '18rem' }}>
                             <Card.Body>
                                 <div className="text-center mb-4">
-                                    <Image
-                                        src={trainer.avatar}
-                                        roundedCircle
-                                        width="120"
-                                        height="120"
-                                        alt="Avatar"
-                                        style={{ objectFit: "cover" }}
-                                    />
+                                    <Image src={trainer.avatar} roundedCircle width="120" height="120" alt="Avatar" style={{ objectFit: "cover" }}/>
                                 </div>
                                 <Card.Title>{trainer.fullName}</Card.Title>
                                 <Card.Text>Email: {trainer.email}</Card.Text>
                                 <Card.Text>Điện thoại: {trainer.phone}</Card.Text>
                                 <Card.Text>Ngày sinh: {new Date(trainer.dateOfBirth).toLocaleDateString("vi-VN")}</Card.Text>
                                 <Card.Text>Giới tính: {trainer.gender}</Card.Text>
-                                <Button
-                                    variant="primary"
-                                    onClick={() => handleConnect(trainer.id)}
-                                    disabled={connectedTrainerIds.includes(trainer.id)}
-                                >
+                                <Button variant="primary" onClick={() => handleConnect(trainer.id)} disabled={connectedTrainerIds.includes(trainer.id)}>
                                     {connectedTrainerIds.includes(trainer.id) ? "Đã gửi" : "Gửi yêu cầu"}
                                 </Button>
                             </Card.Body>
@@ -134,21 +133,12 @@ const ConnectTrainer = () => {
                         <Card key={conn.id} style={{ width: '18rem' }}>
                             <Card.Body>
                                 <div className="text-center mb-3">
-                                    <Image
-                                        src={conn.trainerId?.avatar || "https://via.placeholder.com/120"}
-                                        roundedCircle
-                                        width="120"
-                                        height="120"
-                                        alt="Avatar"
-                                    />
+                                    <Image src={conn.trainerId?.avatar} roundedCircle width="120" height="120" alt="Avatar"/>
                                 </div>
-                                <Card.Title>{conn.trainerId?.fullName || "Ẩn danh"}</Card.Title>
-                                <Card.Text>Email: {conn.trainerId?.email || "..."}</Card.Text>
+                                <Card.Title>{conn.trainerId?.fullName}</Card.Title>
+                                <Card.Text>Email: {conn.trainerId?.email}</Card.Text>
                                 <Card.Text>Trạng thái: {conn.status}</Card.Text>
-                                <Button variant="danger" onClick={() => handleDeleteConnection(conn.id)}>
-                                    Xóa yêu cầu
-                                </Button>
-
+                                <Button variant="danger" onClick={() => handleDeleteConnection(conn.id)}>Xóa yêu cầu</Button>
                             </Card.Body>
                         </Card>
                     ))

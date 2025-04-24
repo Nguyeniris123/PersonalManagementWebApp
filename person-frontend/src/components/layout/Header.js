@@ -35,8 +35,8 @@ const Header = () => {
 
                         {user?.role === "ROLE_TRAINER" && (
                             <>
-                                <Link to="/workout_plan" className="nav-link text-success">
-                                    HLV
+                                <Link to="/request_user_trainer" className="nav-link text-success">
+                                    Danh sách yêu cầu kết nối
                                 </Link>
                                 <NavDropdown title="Dropdown" id="collapsible-nav-dropdown">
                                     <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>

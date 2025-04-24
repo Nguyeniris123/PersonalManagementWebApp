@@ -18,5 +18,6 @@ public interface UserTrainerService {
     UserTrainer addOrUpdateUserTrainer(UserTrainer userTrainer);
     boolean deleteUserTrainer(int id);
     List<UserTrainer> getUserTrainerByUserId(int userId);
+    List<UserTrainer> getUserTrainerByTrainerId(int trainerId);
 
 }

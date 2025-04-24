@@ -151,4 +151,22 @@ public class UserTrainerRepositoryImpl implements UserTrainerRepository {
         Query query = s.createQuery(q);
         return query.getResultList();
     }
+
+    @Override
+    public List<UserTrainer> getUserTrainerByTrainerId(int trainerId) {
+        Session s = this.factory.getObject().getCurrentSession();
+
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<UserTrainer> q = b.createQuery(UserTrainer.class);
+        Root<UserTrainer> root = q.from(UserTrainer.class);
+
+        q.select(root);
+
+        Predicate predicate = b.equal(root.get("trainerId").get("id"), trainerId);
+        q.where(predicate);
+
+        Query query = s.createQuery(q);
+        return query.getResultList();
+    }
+
 }

@@ -18,5 +18,5 @@ public interface UserTrainerRepository {
     UserTrainer addOrUpdateUserTrainer(UserTrainer userTrainer);
     void deleteUserTrainer(int id);
     List<UserTrainer> getUserTrainerByUserId(int userId);
-
+    List<UserTrainer> getUserTrainerByTrainerId(int trainerId);
 }
