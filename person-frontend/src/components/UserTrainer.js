@@ -39,6 +39,12 @@ const ConnectTrainer = () => {
         try {
             const res = await authApis().post(endpoints.connect_trainer, { trainerId });
             console.log(res.data);
+
+            // Cập nhật danh sách kết nối
+            // Lấy lại danh sách kết nối từ API
+            const updatedConnections = await authApis().get(endpoints.user_trainer_connections);
+            setConnections(updatedConnections.data);
+
             setMsg("Đã gửi yêu cầu kết nối!");
         } catch (err) {
             const error = err.response?.data?.error || "Đã có lỗi xảy ra.";
@@ -97,7 +103,7 @@ const ConnectTrainer = () => {
 
             {/* Input tìm kiếm */}
             <Form className="mb-4">
-                <Form.Control type="text" placeholder="Tìm kiếm huấn luyện viên..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
+                <Form.Control type="text" placeholder="Tìm kiếm huấn luyện viên..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
             </Form>
 
             <div className="d-flex flex-wrap gap-3 mt-4">
@@ -108,7 +114,7 @@ const ConnectTrainer = () => {
                         <Card key={trainer.id} style={{ width: '18rem' }}>
                             <Card.Body>
                                 <div className="text-center mb-4">
-                                    <Image src={trainer.avatar} roundedCircle width="120" height="120" alt="Avatar" style={{ objectFit: "cover" }}/>
+                                    <Image src={trainer.avatar} roundedCircle width="120" height="120" alt="Avatar" style={{ objectFit: "cover" }} />
                                 </div>
                                 <Card.Title>{trainer.fullName}</Card.Title>
                                 <Card.Text>Email: {trainer.email}</Card.Text>
@@ -133,7 +139,7 @@ const ConnectTrainer = () => {
                         <Card key={conn.id} style={{ width: '18rem' }}>
                             <Card.Body>
                                 <div className="text-center mb-3">
-                                    <Image src={conn.trainerId?.avatar} roundedCircle width="120" height="120" alt="Avatar"/>
+                                    <Image src={conn.trainerId?.avatar} roundedCircle width="120" height="120" alt="Avatar" />
                                 </div>
                                 <Card.Title>{conn.trainerId?.fullName}</Card.Title>
                                 <Card.Text>Email: {conn.trainerId?.email}</Card.Text>
