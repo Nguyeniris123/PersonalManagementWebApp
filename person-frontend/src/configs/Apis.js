@@ -8,6 +8,7 @@ export const endpoints = {
     'register': '/users',
     'login': '/login',
     'profile': '/secure/profile',
+    'update_profile': (userId) => `/secure/user/update/${userId}`,
     'health_profile': '/secure/health-profiles',
     'add_health_profile': '/secure/health-profile/add',
     'update_health_profile': '/secure/health-profile/update',

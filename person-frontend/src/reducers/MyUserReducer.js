@@ -7,6 +7,8 @@ const MyUserReducer = (current, action) => {
         case "logout":
             cookie.remove("token");
             return null;
+        case "update":
+            return { ...current, ...action.payload }; // Giữ lại các trường cũ và cập nhật trường mới
         default:
             return current;
     }

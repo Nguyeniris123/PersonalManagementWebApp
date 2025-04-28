@@ -4,11 +4,13 @@
  */
 package com.nhom20.controllers;
 
+import com.nhom20.pojo.HealthProfile;
 import com.nhom20.pojo.UserAccount;
 import com.nhom20.services.UserService;
 import com.nhom20.utils.JwtUtils;
 import java.security.Principal;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -86,10 +89,43 @@ public class ApiUserController {
         }
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
-    
+
     @GetMapping("secure/trainers")
     public ResponseEntity<List<UserAccount>> getAllTrainers() {
         List<UserAccount> trainers = userDetailsService.findByRole("ROLE_TRAINER");
         return ResponseEntity.ok(trainers);
     }
+
+    @PutMapping("/secure/user/update/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable("id") int userId,
+            @RequestParam Map<String, String> params,
+            @RequestParam(value = "avatar", required = false) MultipartFile avatar,
+            Principal principal) {
+        try {
+            // Lấy thông tin người dùng từ token (principal)
+            String username = principal.getName();
+            UserAccount currentUser = userDetailsService.getUserByUsername(username);
+
+            // Kiểm tra xem người dùng có tồn tại không
+            if (currentUser == null) {
+                return new ResponseEntity<>("Không tìm thấy người dùng!", HttpStatus.BAD_REQUEST);
+            }
+
+            // Kiểm tra quyền truy cập: Người dùng chỉ có thể sửa thông tin của mình, hoặc admin có thể sửa tất cả
+            if (!currentUser.getId().equals(userId) && !currentUser.getRole().equals("ADMIN")) {
+                return new ResponseEntity<>("Không có quyền chỉnh sửa thông tin của người khác!", HttpStatus.FORBIDDEN);
+            }
+
+            // Cập nhật thông tin người dùng qua service
+            userDetailsService.updateUser(params, avatar, userId);
+
+            // Trả về thông tin người dùng đã được cập nhật
+            return new ResponseEntity<>("Cập nhật thông tin thành công", HttpStatus.OK);
+
+        } catch (RuntimeException ex) {
+            // Trả về thông báo lỗi
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

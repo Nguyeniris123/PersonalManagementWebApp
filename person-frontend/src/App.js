@@ -19,6 +19,7 @@ import AddWorkoutPlan from "./components/AddWorkoutPlan";
 import WorkoutPlanDetail from "./components/WorkoutPlanDetail";
 import UserTrainer from "./components/UserTrainer";
 import RequestUserTrainer from "./components/RequestUserTrainer";
+import UpdateProfile from "./components/UpdateProfile";
 
 
 const App = () => {
@@ -39,6 +40,7 @@ const App = () => {
                   <Route path="/register" element={<Register />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/profile" element={<Profile />} />
+                  <Route path="/update_profile" element={<UpdateProfile />} />
                   <Route path="/health_profile" element={<HealthProfile />} />
                   <Route path="/add_health_profile" element={<AddHealthProfile />} />
                   <Route path="/update_health_profile" element={<UpdateHealthProfile />} />
