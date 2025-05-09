@@ -16,6 +16,7 @@
             </div>
 
             <form th:action="@{/health-journal/add}" th:object="${healthJournal}" method="post">
+                <input type="hidden" th:field="*{id}" />
                 <div class="mb-3">
                     <label for="user" class="form-label">Người dùng</label>
                     <select th:field="*{userId.id}" class="form-control" required>

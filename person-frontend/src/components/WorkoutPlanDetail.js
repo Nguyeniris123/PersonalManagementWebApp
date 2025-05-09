@@ -24,9 +24,9 @@ const WorkoutPlanDetail = () => {
     const exerciseFields = [
         { label: "Tên bài tập", type: "text", key: "name", placeholder: "Tên bài tập" },
         { label: "Mô tả", type: "textarea", key: "description", placeholder: "Mô tả bài tập" },
-        { label: "Nhóm cơ", type: "select", key: "muscle_group", options: ["Ngực", "Chân", "Lưng", "Bụng", "Tay", "Toàn thân"] },
+        { label: "Nhóm cơ", type: "select", key: "muscleGroup", options: ["Ngực", "Chân", "Lưng", "Bụng", "Tay", "Toàn thân"] },
         { label: "Trình độ", type: "select", key: "level", options: ["Mới bắt đầu", "Trung bình", "Nâng cao"] },
-        { label: "Calories Burned", type: "number", key: "calories_burned", placeholder: "Calories Burned" },
+        { label: "Calories Burned", type: "number", key: "caloriesBurned", placeholder: "Calories Burned" },
     ];
 
     useEffect(() => {

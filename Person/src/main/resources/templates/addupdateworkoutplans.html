@@ -14,6 +14,7 @@
                 <p th:text="${error}"></p>
             </div>
             <form th:action="@{/workout-plan/add}" th:object="${workoutPlan}" method="post">
+                <input type="hidden" th:field="*{id}" />
                 <div class="mb-3">
                     <label for="user" class="form-label">Người dùng</label>
                     <select th:field="*{userId.id}" class="form-control" required>

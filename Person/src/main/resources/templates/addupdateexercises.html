@@ -16,6 +16,7 @@
             </div>
 
             <form th:action="@{/exercises/add}" th:object="${exercise}" method="post">
+                <input type="hidden" th:field="*{id}" />
                 <div class="mb-3">
                     <label class="form-label">Tên bài tập</label>
                     <input type="text" th:field="*{name}" class="form-control" required />
@@ -30,12 +31,12 @@
                     <label class="form-label">Nhóm cơ</label>
                     <select th:field="*{muscleGroup}" class="form-control" required>
                         <option value="">-- Chọn nhóm cơ --</option>
-                        <option value="Chest">Ngực</option>
-                        <option value="Legs">Chân</option>
-                        <option value="Back">Lưng</option>
-                        <option value="Abs">Bụng</option>
-                        <option value="Hand">Tay</option>
-                        <option value="Full Body">Toàn thân</option>
+                        <option value="Ngực">Ngực</option>
+                        <option value="Chân">Chân</option>
+                        <option value="Lưng">Lưng</option>
+                        <option value="Bụng">Bụng</option>
+                        <option value="Tay">Tay</option>
+                        <option value="Toàn thân">Toàn thân</option>
                     </select>
                 </div>
 
@@ -43,9 +44,9 @@
                     <label class="form-label">Trình độ</label>
                     <select th:field="*{level}" class="form-control" required>
                         <option value="">-- Chọn trình độ --</option>
-                        <option value="Beginner">Mới bắt đầu</option>
-                        <option value="Intermediate">Trung bình</option>
-                        <option value="Advanced">Nâng cao</option>
+                        <option value="Mới bắt đầu">Mới bắt đầu</option>
+                        <option value="Trung bình">Trung bình</option>
+                        <option value="Nâng cao">Nâng cao</option>
                     </select>
                 </div>
 
