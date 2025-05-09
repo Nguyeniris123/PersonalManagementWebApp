@@ -6,6 +6,7 @@ package com.nhom20.controllers;
 
 import com.nhom20.pojo.UserAccount;
 import com.nhom20.services.ExerciseService;
+import com.nhom20.services.HealthJournalService;
 import com.nhom20.services.HealthProfileService;
 import com.nhom20.services.UserService;
 import com.nhom20.services.UserTrainerService;
@@ -44,6 +45,10 @@ public class indexController {
     
     @Autowired
     private UserTrainerService userTrainerService;
+    
+    @Autowired
+    private HealthJournalService healthJournalService;
+
 
     @RequestMapping("/")
     public String index(Model model, @RequestParam Map<String, String> params) {
@@ -87,4 +92,9 @@ public class indexController {
         return "usertrainer";
     }
     
+    @GetMapping("/health-journal")
+    public String healthJournalList(Model model, @RequestParam Map<String, String> params) {
+        model.addAttribute("healthJournals", this.healthJournalService.getHealthJournal(params));
+        return "healthjournals";
+    }   
 }

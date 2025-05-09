@@ -1,0 +1,61 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Health Journal</title>
+    <th:block th:replace="base :: bootstrap"></th:block>
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+
+    <main class="container">
+        <h1 class="text-center mt-2 mb-2">Nhật ký sức khỏe</h1>
+
+        <form th:action="@{/health-journal}" method="get">
+            <div class="row">
+                <div class="col-6">
+                    <div class="mb-3 mt-3">
+                        <input type="text" class="form-control" name="kw" placeholder="Tìm theo nội dung hoặc cảm xúc" />
+                    </div>
+                </div>
+            </div>
+            <div class="mb-2 mt-1">
+                <button class="btn btn-info" type="submit">Tìm kiếm</button>
+            </div>
+        </form>
+
+        <a th:href="@{/health-journal-view}" class="btn btn-success mt-2 mb-2">Thêm nhật ký mới</a>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Ngày</th>
+                        <th>Cảm xúc</th>
+                        <th>Nội dung</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    <tr th:each="hj : ${healthJournals}">
+                        <td th:text="${hj.id}"></td>
+                        <td th:text="${hj.userId.username}"></td> <!-- Đảm bảo entity HealthJournal có getUser().getUsername() -->
+                        <td th:text="${#dates.format(hj.date, 'dd-MM-yyyy')}"></td>
+                        <td th:text="${hj.feeling}"></td>
+                        <td th:text="${hj.content}"></td>
+                        <td>
+                            <button class="btn btn-danger" th:onclick="'deleteHealthJournal(\'' + @{/api/health-journal/} + '\',' + ${hj.id} + ')'">&times;</button>
+                            <a th:href="@{'/health-journal/' + ${hj.id}}" class="btn btn-success">&#128296;</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <div th:replace="base :: footer"></div>
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>
+

@@ -4,152 +4,130 @@
  */
 package com.nhom20.pojo;
 
+import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  *
  * @author nguyenho
  */
+@Entity
+@Table(name = "health_journal")
+@NamedQueries({
+    @NamedQuery(name = "HealthJournal.findAll", query = "SELECT h FROM HealthJournal h"),
+    @NamedQuery(name = "HealthJournal.findById", query = "SELECT h FROM HealthJournal h WHERE h.id = :id"),
+    @NamedQuery(name = "HealthJournal.findByDate", query = "SELECT h FROM HealthJournal h WHERE h.date = :date")})
 public class HealthJournal implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private int id;
-    private int userId;
-    private LocalDateTime date;
-    private String exerciseType;
-    private int duration; // in minutes
-    private int caloriesBurned;
-    private String mood; // tâm trạng sau khi tập
-    private String notes; // ghi chú, cảm nhận
-    private int energyLevel; // mức năng lượng (1-10)
-    private int difficultyLevel; // độ khó của bài tập (1-10)
-    private String achievements; // thành tựu đạt được
-    private String challenges; // thách thức gặp phải
-    private String nextGoals; // mục tiêu tiếp theo
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "date")
+    @Temporal(TemporalType.DATE)
+    private Date date;
+    @Lob
+    @Size(max = 65535)
+    @Column(name = "content")
+    private String content;
+    @Lob
+    @Size(max = 65535)
+    @Column(name = "feeling")
+    private String feeling;
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private UserAccount userId;
 
     public HealthJournal() {
     }
 
-    // Getters and Setters
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
+    public HealthJournal(Integer id) {
         this.id = id;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public LocalDateTime getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDateTime date) {
+    public HealthJournal(Integer id, Date date) {
+        this.id = id;
         this.date = date;
     }
 
-    public String getExerciseType() {
-        return exerciseType;
+    public Integer getId() {
+        return id;
     }
 
-    public void setExerciseType(String exerciseType) {
-        this.exerciseType = exerciseType;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public int getDuration() {
-        return duration;
+    public Date getDate() {
+        return date;
     }
 
-    public void setDuration(int duration) {
-        this.duration = duration;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    public int getCaloriesBurned() {
-        return caloriesBurned;
+    public String getContent() {
+        return content;
     }
 
-    public void setCaloriesBurned(int caloriesBurned) {
-        this.caloriesBurned = caloriesBurned;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public String getMood() {
-        return mood;
+    public String getFeeling() {
+        return feeling;
     }
 
-    public void setMood(String mood) {
-        this.mood = mood;
+    public void setFeeling(String feeling) {
+        this.feeling = feeling;
     }
 
-    public String getNotes() {
-        return notes;
+    public UserAccount getUserId() {
+        return userId;
     }
 
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
-    public int getEnergyLevel() {
-        return energyLevel;
-    }
-
-    public void setEnergyLevel(int energyLevel) {
-        this.energyLevel = energyLevel;
-    }
-
-    public int getDifficultyLevel() {
-        return difficultyLevel;
-    }
-
-    public void setDifficultyLevel(int difficultyLevel) {
-        this.difficultyLevel = difficultyLevel;
-    }
-
-    public String getAchievements() {
-        return achievements;
-    }
-
-    public void setAchievements(String achievements) {
-        this.achievements = achievements;
-    }
-
-    public String getChallenges() {
-        return challenges;
-    }
-
-    public void setChallenges(String challenges) {
-        this.challenges = challenges;
-    }
-
-    public String getNextGoals() {
-        return nextGoals;
-    }
-
-    public void setNextGoals(String nextGoals) {
-        this.nextGoals = nextGoals;
+    public void setUserId(UserAccount userId) {
+        this.userId = userId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != 0 ? id : 0);
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof HealthJournal)) {
             return false;
         }
         HealthJournal other = (HealthJournal) object;
-        return this.id == other.id;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
     }
 
     @Override
