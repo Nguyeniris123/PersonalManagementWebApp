@@ -5,7 +5,6 @@
 package com.nhom20.controllers;
 
 import com.nhom20.pojo.HealthJournal;
-import com.nhom20.pojo.WorkoutPlan;
 import com.nhom20.services.HealthJournalService;
 import com.nhom20.services.UserService;
 import java.text.SimpleDateFormat;

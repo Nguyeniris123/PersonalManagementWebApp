@@ -18,5 +18,5 @@ public interface HealthJournalRepository {
     HealthJournal getHealthJournalById(int id);
     HealthJournal addOrUpdateHealthJournal(HealthJournal healthJournal);
     void deleteHealthJournal(int id);
-    List<HealthJournal> getHealthJournalByUserId(int userId);
+    List<HealthJournal> getHealthJournalByUserId(int userId, Map<String, String> params);
 }

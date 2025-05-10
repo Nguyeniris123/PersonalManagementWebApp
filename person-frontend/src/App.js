@@ -20,6 +20,9 @@ import WorkoutPlanDetail from "./components/WorkoutPlanDetail";
 import UserTrainer from "./components/UserTrainer";
 import RequestUserTrainer from "./components/RequestUserTrainer";
 import UpdateProfile from "./components/UpdateProfile";
+import HealthJournal from "./components/HealthJournal";
+import HealthJournalDetails from "./components/HealthJournalDetails";
+import AddHealthJournal from "./components/AddHealthJournal";
 
 
 const App = () => {
@@ -49,7 +52,9 @@ const App = () => {
                   <Route path="/workout_plan/:id" element={<WorkoutPlanDetail />} />
                   <Route path="/user_trainer" element={<UserTrainer />} />
                   <Route path="/request_user_trainer" element={<RequestUserTrainer />} />
-
+                  <Route path="/health-journals" element={<HealthJournal />} />
+                  <Route path="/health-journal/:id" element={<HealthJournalDetails />} />
+                  <Route path="/add-health-journal" element={<AddHealthJournal />} />
                 </Routes>
               </Container>
 

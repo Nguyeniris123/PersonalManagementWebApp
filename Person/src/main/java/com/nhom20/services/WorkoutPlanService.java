@@ -17,5 +17,5 @@ public interface WorkoutPlanService {
     WorkoutPlan getWorkOutPlanById(int id);
     WorkoutPlan addOrUpdateWorkOutPlan(WorkoutPlan workoutPlan);
     boolean deleteWorkOutPlan(int id);
-    List<WorkoutPlan> getWorkoutPlansByUserId(int userId);
+    List<WorkoutPlan> getWorkoutPlanByUserId(int userId, Map<String, String> params);
 }

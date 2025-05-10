@@ -80,10 +80,13 @@ const AddWorkoutPlan = () => {
                     ))}
 
                     <div className="text-center">
+                        <Button variant="secondary" className="me-3 px-4" onClick={() => nav("/workout_plan")}>
+                            Quay lại
+                        </Button>
                         {loading ? (
                             <MySpinner />
                         ) : (
-                            <Button type="submit" variant="primary" className="btn-lg mt-3 px-4">Thêm kế hoạch</Button>
+                            <Button type="submit" variant="primary" className="me-3 px-4">Thêm kế hoạch</Button>
                         )}
                     </div>
                 </Form>

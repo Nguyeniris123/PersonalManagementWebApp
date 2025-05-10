@@ -3,7 +3,6 @@ import cookie from 'react-cookies'
 
 const BASE_URL = 'http://localhost:8080/Person/api/'
 
-
 export const endpoints = {
     'register': '/users',
     'login': '/login',
@@ -26,7 +25,13 @@ export const endpoints = {
     'delete_user_trainer': (connectionId) => `/user-trainer/${connectionId}`,
     'requests_to_trainer': '/secure/request-user-trainers',
     'accept_request': (requestId) => `/secure/user-trainer/accept/${requestId}`,
-    'reject_request': (requestId) => `/secure/user-trainer/reject/${requestId}`
+    'reject_request': (requestId) => `/secure/user-trainer/reject/${requestId}`,
+    'health_journals': '/secure/health-journals',
+    'health_journal_by_id': (journalId) => `/secure/health-journals/${journalId}`,
+    'delete_health_journal': (journalId) => `/health-journal/${journalId}`,
+    'add_health_journal': '/secure/health-journal/add',
+
+
 }
 
 export const authApis = () => {

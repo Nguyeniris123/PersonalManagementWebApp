@@ -8,9 +8,9 @@ import MySpinner from "./layout/MySpinner";
 const WorkoutPlanDetail = () => {
     const { id } = useParams();
     const user = useContext(MyUserContext);
+
     const [exercises, setExercises] = useState([]);
     const [allExercises, setAllExercises] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [msg, setMsg] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [newExercise, setNewExercise] = useState({});
@@ -18,8 +18,9 @@ const WorkoutPlanDetail = () => {
     const [reps, setReps] = useState(1);
     const [duration, setDuration] = useState(10);
     const [selectedExercise, setSelectedExercise] = useState(null);
-    const [visibleCount, setVisibleCount] = useState(6);
-    const [searchTerm, setSearchTerm] = useState(""); // Tìm kiếm bài tập gợi ý
+    const [searchTerm, setSearchTerm] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [page, setPage] = useState(1);
 
     const exerciseFields = [
         { label: "Tên bài tập", type: "text", key: "name", placeholder: "Tên bài tập" },
@@ -37,24 +38,47 @@ const WorkoutPlanDetail = () => {
             } catch (err) {
                 console.error("Lỗi khi tải danh sách bài tập trong kế hoạch:", err);
                 setExercises([]);
+            }
+        };
+
+        loadExercises();
+    }, [id]);
+
+    useEffect(() => {
+        const loadAllExercises = async () => {
+            if (page <= 0) return;
+
+            try {
+                setLoading(true);
+                const res = await authApis().get(endpoints.exercise, {
+                    params: {
+                        page: page,
+                        kw: searchTerm,
+                    }
+                });
+
+                if (res.data.length === 0)
+                    setPage(0); // hết trang
+                else {
+                    if (page === 1)
+                        setAllExercises(res.data);
+                    else
+                        setAllExercises((prev) => [...prev, ...res.data]);
+                }
+            } catch (err) {
+                console.error("Lỗi khi tải bài tập gợi ý:", err);
+                setMsg("Không thể tải bài tập!");
             } finally {
                 setLoading(false);
             }
         };
 
-        const loadAllExercises = async () => {
-            try {
-                const res = await authApis().get(endpoints.exercise);
-                setAllExercises(res.data);
-            } catch (err) {
-                console.error(err);
-                setMsg("Lỗi khi tải danh sách bài tập có sẵn");
-            }
-        };
-
-        loadExercises();
         loadAllExercises();
-    }, [id]);
+    }, [page, searchTerm]);
+
+    useEffect(() => {
+        setPage(1); // reset trang khi từ khóa đổi
+    }, [searchTerm]);
 
     const handleAddExercise = async () => {
         if (!selectedExercise) return;
@@ -66,6 +90,7 @@ const WorkoutPlanDetail = () => {
                 reps,
                 duration_minutes: duration,
             });
+
             if (res.status === 201) {
                 setExercises([...exercises, res.data]);
                 setSelectedExercise(null);
@@ -77,19 +102,6 @@ const WorkoutPlanDetail = () => {
         } catch (err) {
             console.error(err);
             setMsg("Có lỗi xảy ra khi thêm bài tập vào kế hoạch!");
-        }
-    };
-
-    const handleDeleteExercise = async (exerciseId) => {
-        if (!window.confirm("Bạn có chắc chắn muốn xóa bài tập này?")) return;
-
-        try {
-            await authApis().delete(endpoints.delete_workout_plan_exercises(exerciseId));
-            setExercises(exercises.filter((e) => e.id !== exerciseId));
-            setMsg("Xóa bài tập thành công!");
-        } catch (err) {
-            console.error(err);
-            setMsg("Có lỗi xảy ra khi xóa bài tập!");
         }
     };
 
@@ -123,15 +135,16 @@ const WorkoutPlanDetail = () => {
         }
     };
 
-    const handleSearchExercises = async () => {
+    const handleDeleteExercise = async (exerciseId) => {
+        if (!window.confirm("Bạn có chắc chắn muốn xóa bài tập này?")) return;
+
         try {
-            const res = await authApis().get(endpoints.exercise, {
-                params: { kw: searchTerm },
-            });
-            setAllExercises(res.data);
+            await authApis().delete(endpoints.delete_workout_plan_exercises(exerciseId));
+            setExercises(exercises.filter((e) => e.id !== exerciseId));
+            setMsg("Xóa bài tập thành công!");
         } catch (err) {
-            console.error("Lỗi khi tìm kiếm bài tập:", err);
-            setMsg("Có lỗi xảy ra khi tìm kiếm bài tập!");
+            console.error(err);
+            setMsg("Có lỗi xảy ra khi xóa bài tập!");
         }
     };
 
@@ -152,8 +165,6 @@ const WorkoutPlanDetail = () => {
             </Container>
         );
     }
-
-    if (loading) return <MySpinner />;
 
     return (
         <Container className="mt-4">
@@ -204,17 +215,11 @@ const WorkoutPlanDetail = () => {
                     placeholder="Tìm kiếm bài tập gợi ý..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                            e.preventDefault();
-                            handleSearchExercises();
-                        }
-                    }}
                 />
             </Form>
 
             <Row>
-                {allExercises.slice(0, visibleCount).map((e) => (
+                {allExercises.map((e) => (
                     <Col key={e.id} md={6} lg={4} className="mb-4">
                         <Card className={`h-100 border ${selectedExercise === e.id ? "border-danger shadow" : "border-success"}`} style={{ backgroundColor: selectedExercise === e.id ? "#ffe6e6" : "#f0f8ff" }}>
                             <Card.Body className="d-flex flex-column">
@@ -232,9 +237,11 @@ const WorkoutPlanDetail = () => {
                 ))}
             </Row>
 
-            {visibleCount < allExercises.length && (
+            {loading && <MySpinner />}
+
+            {page > 0 && (
                 <div className="text-center mt-3">
-                    <Button variant="outline-primary" onClick={() => setVisibleCount(visibleCount + 6)}>Xem thêm</Button>
+                    <Button variant="outline-primary" onClick={() => setPage(page + 1)}>Xem thêm</Button>
                 </div>
             )}
 
@@ -292,19 +299,6 @@ const WorkoutPlanDetail = () => {
                                 )}
                             </Form.Group>
                         ))}
-
-                        <Form.Group className="mb-2">
-                            <Form.Label>Số sets</Form.Label>
-                            <Form.Control type="number" value={sets} onChange={(e) => setSets(e.target.value)} />
-                        </Form.Group>
-                        <Form.Group className="mb-2">
-                            <Form.Label>Số reps</Form.Label>
-                            <Form.Control type="number" value={reps} onChange={(e) => setReps(e.target.value)} />
-                        </Form.Group>
-                        <Form.Group className="mb-2">
-                            <Form.Label>Thời gian (phút)</Form.Label>
-                            <Form.Control type="number" value={duration} onChange={(e) => setDuration(e.target.value)} />
-                        </Form.Group>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>

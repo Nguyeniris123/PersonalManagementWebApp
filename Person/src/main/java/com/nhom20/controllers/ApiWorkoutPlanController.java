@@ -4,6 +4,7 @@
  */
 package com.nhom20.controllers;
 
+import com.nhom20.pojo.HealthJournal;
 import com.nhom20.pojo.UserAccount;
 import com.nhom20.pojo.WorkoutPlan;
 import com.nhom20.services.UserService;
@@ -11,6 +12,7 @@ import com.nhom20.services.WorkoutPlanService;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -70,21 +73,20 @@ public class ApiWorkoutPlanController {
     }
 
     @GetMapping("/secure/workout-plans")
-    public ResponseEntity<?> getMyWorkoutPlans(Principal principal) {
+    public ResponseEntity<?> getMyWorkoutPlans(@RequestParam Map<String, String> params, Principal principal) {
         try {
             // Lấy username từ token
             String username = principal.getName();
-
-            // Tìm userId từ UserAccount
             UserAccount user = userService.getUserByUsername(username);
 
             if (user == null) {
-                return ResponseEntity.badRequest().body("Người dùng không tồn tại");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Người dùng không tồn tại");
             }
 
-            // Lấy các kế hoạch tập luyện của người dùng
-            List<WorkoutPlan> plans = this.workoutPlanService.getWorkoutPlansByUserId(user.getId());
-            return ResponseEntity.ok(plans);
+            // Gọi service: truyền userId + params (gồm kw, page, orderBy...)
+            List<WorkoutPlan> journals = workoutPlanService.getWorkoutPlanByUserId(user.getId(), params);
+
+            return ResponseEntity.ok(journals);
 
         } catch (Exception ex) {
             ex.printStackTrace();

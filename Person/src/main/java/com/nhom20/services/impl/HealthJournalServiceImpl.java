@@ -49,7 +49,7 @@ public class HealthJournalServiceImpl implements HealthJournalService {
     }
 
     @Override
-    public List<HealthJournal> getHealthJournalByUserId(int userId) {
-        return this.healthJournalRepository.getHealthJournalByUserId(userId);
+    public List<HealthJournal> getHealthJournalByUserId(int userId, Map<String, String> params) {
+        return healthJournalRepository.getHealthJournalByUserId(userId, params);
     }
 }

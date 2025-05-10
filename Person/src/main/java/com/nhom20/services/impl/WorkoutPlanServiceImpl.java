@@ -48,7 +48,7 @@ public class WorkoutPlanServiceImpl implements WorkoutPlanService {
     }
 
     @Override
-    public List<WorkoutPlan> getWorkoutPlansByUserId(int userId) {
-        return this.workoutPlanRepository.getWorkoutPlansByUserId(userId);
+    public List<WorkoutPlan> getWorkoutPlanByUserId(int userId, Map<String, String> params) {
+        return this.workoutPlanRepository.getWorkoutPlanByUserId(userId, params);
     }
 }

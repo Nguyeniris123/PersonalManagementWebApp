@@ -29,6 +29,9 @@ const Header = () => {
                                 <Link to="/user_trainer" className="nav-link text-success">
                                     Huấn luyện viên
                                 </Link>
+                                <Link to="/health-journals" className="nav-link text-success">
+                                    Nhật kí sức khoẻ
+                                </Link>
                                 
                             </>
                         )}

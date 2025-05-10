@@ -27,16 +27,15 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author nguyenho
  */
-
 @Repository
 @Transactional
-public class HealthJournalRepositoryImpl implements HealthJournalRepository{
+public class HealthJournalRepositoryImpl implements HealthJournalRepository {
 
     private static final int PAGE_SIZE = 6;
 
     @Autowired
     private LocalSessionFactoryBean factory;
-    
+
     @Override
     public List<HealthJournal> getHealthJournal(Map<String, String> params) {
         Session s = this.factory.getObject().getCurrentSession();
@@ -98,18 +97,44 @@ public class HealthJournalRepositoryImpl implements HealthJournalRepository{
         HealthJournal hj = this.getHealthJournalById(id);
         if (hj != null) {
             s.remove(hj);
-        }        
+        }
     }
 
     @Override
-    public List<HealthJournal> getHealthJournalByUserId(int userId) {
+    public List<HealthJournal> getHealthJournalByUserId(int userId, Map<String, String> params) {
         Session s = this.factory.getObject().getCurrentSession();
         CriteriaBuilder b = s.getCriteriaBuilder();
         CriteriaQuery<HealthJournal> q = b.createQuery(HealthJournal.class);
         Root<HealthJournal> root = q.from(HealthJournal.class);
         q.select(root);
-        q.where(b.equal(root.get("userId").get("id"), userId));  // Lọc theo userId
+
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(b.equal(root.get("userId").get("id"), userId)); // Luôn lọc theo user
+
+        if (params != null) {
+            // Tìm kiếm theo target
+            String kw = params.get("kw");
+            if (kw != null && !kw.isEmpty()) {
+                predicates.add(b.like(root.get("content"), String.format("%%%s%%", kw)));
+            }
+
+            q.where(predicates.toArray(Predicate[]::new));
+
+            String orderBy = params.get("orderBy");
+            if (orderBy != null && !orderBy.isEmpty()) {
+                q.orderBy(b.asc(root.get(orderBy)));
+            }
+        }
+
         Query query = s.createQuery(q);
+
+        if (params != null && params.containsKey("page")) {
+            int page = Integer.parseInt(params.get("page"));
+            int start = (page - 1) * PAGE_SIZE;
+
+            query.setMaxResults(PAGE_SIZE);
+            query.setFirstResult(start);
+        }
         return query.getResultList();
-    }  
+    }
 }
