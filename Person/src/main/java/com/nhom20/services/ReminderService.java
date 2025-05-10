@@ -17,5 +17,5 @@ public interface ReminderService {
     Reminder getReminderById(int id);
     Reminder addOrUpdateReminder(Reminder reminder);
     boolean deleteReminder(int id);
-    List<Reminder> getReminderByUserId(int userId);
+    List<Reminder> getReminderByUserId(int userId, Map<String, String> params);
 }

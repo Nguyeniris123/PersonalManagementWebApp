@@ -23,6 +23,8 @@ import UpdateProfile from "./components/UpdateProfile";
 import HealthJournal from "./components/HealthJournal";
 import HealthJournalDetails from "./components/HealthJournalDetails";
 import AddHealthJournal from "./components/AddHealthJournal";
+import Reminder from "./components/Reminder";
+import AddReminder from "./components/AddReminder";
 
 
 const App = () => {
@@ -55,6 +57,9 @@ const App = () => {
                   <Route path="/health-journals" element={<HealthJournal />} />
                   <Route path="/health-journal/:id" element={<HealthJournalDetails />} />
                   <Route path="/add-health-journal" element={<AddHealthJournal />} />
+                  <Route path="/reminders" element={<Reminder />} />,
+                  <Route path="/add-reminder" element={<AddReminder />} />
+
                 </Routes>
               </Container>
 

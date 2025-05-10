@@ -17,5 +17,5 @@ public interface ReminderRepository {
     Reminder getReminderById(int id);
     Reminder addOrUpdateReminder(Reminder reminder);
     void deleteReminder(int id);
-    List<Reminder> getReminderByUserId(int userId);
+    List<Reminder> getReminderByUserId(int userId, Map<String, String> params);
 }

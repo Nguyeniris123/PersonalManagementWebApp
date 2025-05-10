@@ -34,7 +34,7 @@ public class ReminderServiceImpl implements ReminderService{
 
     @Override
     public Reminder addOrUpdateReminder(Reminder reminder) {
-                return reminderRepository.addOrUpdateReminder(reminder);
+        return reminderRepository.addOrUpdateReminder(reminder);
     }
 
     @Override
@@ -48,8 +48,7 @@ public class ReminderServiceImpl implements ReminderService{
     }
 
     @Override
-    public List<Reminder> getReminderByUserId(int userId) {
-        return this.reminderRepository.getReminderByUserId(userId);
+    public List<Reminder> getReminderByUserId(int userId, Map<String, String> params) {
+        return this.reminderRepository.getReminderByUserId(userId, params);
     }
-    
 }

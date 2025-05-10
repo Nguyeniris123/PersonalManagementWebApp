@@ -4,15 +4,25 @@
  */
 package com.nhom20.controllers;
 
+import com.nhom20.pojo.HealthJournal;
+import com.nhom20.pojo.Reminder;
+import com.nhom20.pojo.UserAccount;
 import com.nhom20.services.ReminderService;
 import com.nhom20.services.UserService;
-import com.nhom20.services.WorkoutPlanService;
+import java.security.Principal;
+import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,5 +44,46 @@ public class ApiReminderController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void destroy(@PathVariable("id") int id) {
         this.reminderService.deleteReminder(id);
+    }
+    
+    @GetMapping("/secure/reminders")
+    public ResponseEntity<?> getMyReminders(@RequestParam Map<String, String> params, Principal principal) {
+        try {
+            // Lấy username từ token
+            String username = principal.getName();
+            UserAccount user = userService.getUserByUsername(username);
+
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Người dùng không tồn tại");
+            }
+
+            // Gọi service: truyền userId + params (gồm kw, page, orderBy...)
+            List<Reminder> reminders = reminderService.getReminderByUserId(user.getId(), params);
+
+            return ResponseEntity.ok(reminders);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Đã xảy ra lỗi khi lấy danh sách nhắc nhở");
+        }
+    }
+    
+    @PostMapping("/secure/reminder/add")
+    public ResponseEntity<?> createReminder(@RequestBody Reminder r, Principal principal) {
+        try {
+            String username = principal.getName(); // Lấy username từ người dùng đang đăng nhập
+            UserAccount user = this.userService.getUserByUsername(username); // Tìm UserAccount tương ứng
+
+            if (user == null) {
+                return new ResponseEntity<>("Không tìm thấy người dùng!", HttpStatus.BAD_REQUEST);
+            }
+
+            r.setUserId(user); // Gán user vào
+
+            return new ResponseEntity<>(this.reminderService.addOrUpdateReminder(r), HttpStatus.CREATED);
+        } catch (Exception ex) {
+            ex.printStackTrace(); // Log lỗi
+            return ResponseEntity.badRequest().body("Có lỗi xảy ra khi thêm nhắc nhở!");
+        }
     }
 }

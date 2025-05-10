@@ -4,7 +4,6 @@
  */
 package com.nhom20.controllers;
 
-import com.nhom20.pojo.HealthJournal;
 import com.nhom20.pojo.UserAccount;
 import com.nhom20.pojo.WorkoutPlan;
 import com.nhom20.services.UserService;
@@ -84,9 +83,9 @@ public class ApiWorkoutPlanController {
             }
 
             // Gọi service: truyền userId + params (gồm kw, page, orderBy...)
-            List<WorkoutPlan> journals = workoutPlanService.getWorkoutPlanByUserId(user.getId(), params);
+            List<WorkoutPlan> workoutPlans = workoutPlanService.getWorkoutPlanByUserId(user.getId(), params);
 
-            return ResponseEntity.ok(journals);
+            return ResponseEntity.ok(workoutPlans);
 
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -30,7 +30,10 @@ export const endpoints = {
     'health_journal_by_id': (journalId) => `/secure/health-journals/${journalId}`,
     'delete_health_journal': (journalId) => `/health-journal/${journalId}`,
     'add_health_journal': '/secure/health-journal/add',
-
+    'reminders': '/secure/reminders',
+    'add_reminder': '/secure/reminder/add',
+    'update_reminder': (reminderId) => `/secure/reminder/update/${reminderId}`,
+    'delete_reminder': (reminderId) => `/reminder/${reminderId}`,
 
 }
 

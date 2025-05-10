@@ -4,6 +4,7 @@
  */
 package com.nhom20.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -49,6 +50,7 @@ public class Reminder implements Serializable {
     @Size(max = 11)
     @Column(name = "reminder_type")
     private String reminderType;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     @DateTimeFormat(pattern = "HH:mm")
     @Column(name = "time")
     @Temporal(TemporalType.TIME)

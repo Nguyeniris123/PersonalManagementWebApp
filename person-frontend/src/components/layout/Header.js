@@ -32,6 +32,9 @@ const Header = () => {
                                 <Link to="/health-journals" className="nav-link text-success">
                                     Nhật kí sức khoẻ
                                 </Link>
+                                <Link to="/reminders" className="nav-link text-success">
+                                    Nhắc nhở 🔔
+                                </Link>
                                 
                             </>
                         )}
