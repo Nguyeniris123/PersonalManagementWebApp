@@ -20,6 +20,7 @@ import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *
@@ -48,6 +49,7 @@ public class Reminder implements Serializable {
     @Size(max = 11)
     @Column(name = "reminder_type")
     private String reminderType;
+    @DateTimeFormat(pattern = "HH:mm")
     @Column(name = "time")
     @Temporal(TemporalType.TIME)
     private Date time;

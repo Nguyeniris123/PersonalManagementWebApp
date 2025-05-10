@@ -8,6 +8,7 @@ import com.nhom20.pojo.UserAccount;
 import com.nhom20.services.ExerciseService;
 import com.nhom20.services.HealthJournalService;
 import com.nhom20.services.HealthProfileService;
+import com.nhom20.services.ReminderService;
 import com.nhom20.services.UserService;
 import com.nhom20.services.UserTrainerService;
 import com.nhom20.services.WorkoutPlanExerciseService;
@@ -48,6 +49,9 @@ public class indexController {
     
     @Autowired
     private HealthJournalService healthJournalService;
+    
+    @Autowired
+    private ReminderService reminderService;
 
 
     @RequestMapping("/")
@@ -96,5 +100,11 @@ public class indexController {
     public String healthJournalList(Model model, @RequestParam Map<String, String> params) {
         model.addAttribute("healthJournals", this.healthJournalService.getHealthJournal(params));
         return "healthjournals";
+    }   
+    
+    @GetMapping("/reminders")
+    public String reminderList(Model model, @RequestParam Map<String, String> params) {
+        model.addAttribute("reminders", this.reminderService.getReminder(params));
+        return "reminder";
     }   
 }
