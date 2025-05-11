@@ -45,7 +45,7 @@ const AddHealthJournal = () => {
         }
 
     return (
-        <Container className="mt-5">
+        <Container className="mt-5" style={{ maxWidth: "600px" }}>
             <Card className="shadow-lg p-4">
                 <h2 className="text-center text-primary mb-4">📝 THÊM NHẬT KÝ SỨC KHỎE</h2>
 

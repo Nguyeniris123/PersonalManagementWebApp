@@ -88,7 +88,7 @@ const WorkoutPlanDetail = () => {
                 exerciseId: selectedExercise,
                 sets,
                 reps,
-                duration_minutes: duration,
+                durationMinutes: duration,
             });
 
             if (res.status === 201) {
@@ -116,7 +116,7 @@ const WorkoutPlanDetail = () => {
                     exerciseId: createdExercise.id,
                     sets,
                     reps,
-                    duration_minutes: duration,
+                    durationMinutes: duration,
                 });
 
                 if (addRes.status === 201) {
@@ -299,6 +299,19 @@ const WorkoutPlanDetail = () => {
                                 )}
                             </Form.Group>
                         ))}
+
+                        <Form.Group className="mb-2">
+                            <Form.Label>Số sets</Form.Label>
+                            <Form.Control type="number" value={sets} onChange={(e) => setSets(e.target.value)} />
+                        </Form.Group>
+                        <Form.Group className="mb-2">
+                            <Form.Label>Số reps</Form.Label>
+                            <Form.Control type="number" value={reps} onChange={(e) => setReps(e.target.value)} />
+                        </Form.Group>
+                        <Form.Group className="mb-2">
+                            <Form.Label>Thời gian (phút)</Form.Label>
+                            <Form.Control type="number" value={duration} onChange={(e) => setDuration(e.target.value)} />
+                        </Form.Group>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>

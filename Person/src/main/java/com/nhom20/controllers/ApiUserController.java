@@ -4,13 +4,11 @@
  */
 package com.nhom20.controllers;
 
-import com.nhom20.pojo.HealthProfile;
 import com.nhom20.pojo.UserAccount;
 import com.nhom20.services.UserService;
 import com.nhom20.utils.JwtUtils;
 import java.security.Principal;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;

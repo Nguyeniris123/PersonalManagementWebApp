@@ -125,7 +125,7 @@ const ReminderList = () => {
                                         )}
                                     </Card.Text>
                                     <div className="d-flex justify-content-between mt-3">
-                                        <Button variant="primary" onClick={() => nav(`/reminders/${r.id}`)}>
+                                        <Button variant="primary" onClick={() => nav(`/update-reminder/${r.id}`)}>
                                             Chỉnh sửa
                                         </Button>
                                         <Button variant="danger" size="sm" onClick={() => deleteReminder(r.id)}>Xoá</Button>
