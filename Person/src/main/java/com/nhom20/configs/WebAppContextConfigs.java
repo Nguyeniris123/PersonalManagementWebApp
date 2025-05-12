@@ -14,6 +14,11 @@ import org.springframework.web.servlet.config.annotation.DefaultServletHandlerCo
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+
+import java.util.Properties;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  *
@@ -22,10 +27,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebMvc
 @EnableTransactionManagement
+@EnableScheduling
 @ComponentScan(basePackages = {
     "com.nhom20.controllers",
     "com.nhom20.repositories",
-    "com.nhom20.services"
+    "com.nhom20.services", 
+    "com.nhom20.schedulers"
 })
 public class WebAppContextConfigs implements WebMvcConfigurer {
 
@@ -38,7 +45,6 @@ public class WebAppContextConfigs implements WebMvcConfigurer {
 //    public void addFormatters(FormatterRegistry registry) {
 //        registry.addFormatter(new CategoryFormatter());
 //    }
-    
     @Bean
     public StandardServletMultipartResolver multipartResolver() {
         return new StandardServletMultipartResolver();
@@ -48,6 +54,24 @@ public class WebAppContextConfigs implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/");
 
+    }
+
+    @Bean
+    public JavaMailSender getJavaMailSender() {
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost("smtp.gmail.com");
+        mailSender.setPort(587);
+
+        mailSender.setUsername("nguyendeptraiiris@gmail.com");
+        mailSender.setPassword(""); // Không phải mật khẩu Gmail thường
+
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.debug", "true");
+
+        return mailSender;
     }
 
 }

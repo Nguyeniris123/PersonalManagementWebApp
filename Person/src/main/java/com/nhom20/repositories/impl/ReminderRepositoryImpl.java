@@ -7,7 +7,6 @@ package com.nhom20.repositories.impl;
 import com.nhom20.pojo.Reminder;
 import com.nhom20.pojo.UserAccount;
 import com.nhom20.repositories.ReminderRepository;
-import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
@@ -22,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.hibernate.query.Query;
 
 /**
  *
@@ -29,13 +29,13 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class ReminderRepositoryImpl implements ReminderRepository{
+public class ReminderRepositoryImpl implements ReminderRepository {
 
     private static final int PAGE_SIZE = 6;
 
     @Autowired
     private LocalSessionFactoryBean factory;
-    
+
     @Override
     public List<Reminder> getReminder(Map<String, String> params) {
         Session s = this.factory.getObject().getCurrentSession();
@@ -137,5 +137,12 @@ public class ReminderRepositoryImpl implements ReminderRepository{
         }
         return query.getResultList();
     }
-    
+
+    @Override
+    public List<Reminder> getAllActiveReminders() {
+        Session session = this.factory.getObject().getCurrentSession();
+        return session.createQuery("FROM Reminder r WHERE r.isActive = true", Reminder.class)
+                .getResultList();
+    }
+
 }

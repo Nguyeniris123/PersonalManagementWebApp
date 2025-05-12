@@ -5,6 +5,7 @@
 package com.nhom20.controllers;
 
 import com.nhom20.pojo.UserAccount;
+import com.nhom20.services.EmailService;
 import com.nhom20.services.ExerciseService;
 import com.nhom20.services.HealthJournalService;
 import com.nhom20.services.HealthProfileService;
@@ -34,25 +35,24 @@ public class indexController {
 
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     private WorkoutPlanService workoutPlanService;
-    
+
     @Autowired
     private ExerciseService exerciseService;
-    
+
     @Autowired
     private WorkoutPlanExerciseService workoutPlanExerciseService;
-    
+
     @Autowired
     private UserTrainerService userTrainerService;
-    
+
     @Autowired
     private HealthJournalService healthJournalService;
-    
+
     @Autowired
     private ReminderService reminderService;
-
 
     @RequestMapping("/")
     public String index(Model model, @RequestParam Map<String, String> params) {
@@ -71,40 +71,49 @@ public class indexController {
         model.addAttribute("users", users);
         return "users";
     }
-    
+
     @GetMapping("/workout-plans")
     public String workoutPlanList(Model model, @RequestParam Map<String, String> params) {
         model.addAttribute("workoutPlans", this.workoutPlanService.getWorkOutPlan(params));
         return "workoutplans";
     }
-    
+
     @GetMapping("/exercises")
     public String exerciseList(Model model, @RequestParam Map<String, String> params) {
         model.addAttribute("exercises", this.exerciseService.getExercise(params));
         return "exercises";
     }
-    
+
     @GetMapping("/workout-plans-exercise")
     public String workoutPlanExerciseList(Model model, @RequestParam Map<String, String> params) {
         model.addAttribute("workoutPlanExercises", this.workoutPlanExerciseService.getWorkOutPlanExercise(params));
         return "workoutplanexercise";
     }
-    
+
     @GetMapping("/user-trainer")
     public String userTrainerList(Model model, @RequestParam Map<String, String> params) {
         model.addAttribute("userTrainers", this.userTrainerService.getUserTrainer(params));
         return "usertrainer";
     }
-    
+
     @GetMapping("/health-journal")
     public String healthJournalList(Model model, @RequestParam Map<String, String> params) {
         model.addAttribute("healthJournals", this.healthJournalService.getHealthJournal(params));
         return "healthjournals";
-    }   
-    
+    }
+
     @GetMapping("/reminders")
     public String reminderList(Model model, @RequestParam Map<String, String> params) {
         model.addAttribute("reminders", this.reminderService.getReminder(params));
         return "reminder";
-    }   
+    }
+
+    @Autowired
+    private EmailService emailService;
+
+    @GetMapping("/send-email")
+    public String testSendEmail() {
+        emailService.sendSimpleMessage("2251050048nguyen@ou.edu.vn", "Test Subject", "Hello from Spring MVC!");
+        return "redirect:/"; // hoặc redirect
+    }
 }

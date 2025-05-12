@@ -91,6 +91,7 @@ const ReminderList = () => {
             </div>
 
             {msg && <Alert variant="danger">{msg}</Alert>}
+            <p className="text-muted small mt-2">📧 Nhắc nhở sẽ được gửi qua email vào thời điểm đã đặt!!!</p>
 
             {/* Ô tìm kiếm */}
             <div className="mb-3">
@@ -112,7 +113,7 @@ const ReminderList = () => {
                             <Card className="shadow w-100 h-100 d-flex flex-column">
                                 <Card.Body className="d-flex flex-column">
                                     <Card.Title className="d-flex justify-content-between align-items-center">
-                                        <span>{r.title}</span>                                       
+                                        <span>{r.title}</span>
                                     </Card.Title>
                                     <Card.Text className="flex-grow-1">
                                         🕒 <strong>{r.time}</strong><br />
@@ -124,6 +125,7 @@ const ReminderList = () => {
                                             <span className="text-muted">Đã tắt</span>
                                         )}
                                     </Card.Text>
+
                                     <div className="d-flex justify-content-between mt-3">
                                         <Button variant="primary" onClick={() => nav(`/update-reminder/${r.id}`)}>
                                             Chỉnh sửa
