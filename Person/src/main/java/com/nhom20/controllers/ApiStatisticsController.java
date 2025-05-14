@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/statistics")
-public class StatisticsController {
+public class ApiStatisticsController {
     private StatisticsService statisticsService;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    public StatisticsController(StatisticsService statisticsService) {
+    public ApiStatisticsController(StatisticsService statisticsService) {
         this.statisticsService = statisticsService;
     }
 

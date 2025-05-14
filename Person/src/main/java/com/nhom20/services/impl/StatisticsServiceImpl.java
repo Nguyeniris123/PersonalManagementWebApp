@@ -5,7 +5,9 @@ import com.nhom20.services.StatisticsService;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import org.springframework.stereotype.Service;
 
+@Service
 public class StatisticsServiceImpl implements StatisticsService {
     private StatisticsRepository statisticsRepository;
 

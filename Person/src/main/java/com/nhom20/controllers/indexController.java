@@ -116,4 +116,9 @@ public class indexController {
         emailService.sendSimpleMessage("2251050048nguyen@ou.edu.vn", "Test Subject", "Hello from Spring MVC!");
         return "redirect:/"; // hoặc redirect
     }
+    
+    @GetMapping("/statistics")
+    public String showStatisticsPage() {
+        return "statistics";
+    }
 }
