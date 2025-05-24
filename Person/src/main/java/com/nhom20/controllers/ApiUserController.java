@@ -47,10 +47,9 @@ public class ApiUserController {
         this.userDetailsService.deleteUser(id);
     }
 
-    @PostMapping(path = "/users",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> create(@RequestParam Map<String, String> params, @RequestParam(value = "avatar") MultipartFile avatar) {
+    @PostMapping(path = "/users", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> create(@RequestParam Map<String, String> params,
+            @RequestParam(value = "avatar") MultipartFile avatar) {
         try {
             return new ResponseEntity<>(this.userDetailsService.addUser(params, avatar), HttpStatus.CREATED);
         } catch (RuntimeException ex) {
@@ -109,7 +108,8 @@ public class ApiUserController {
                 return new ResponseEntity<>("Không tìm thấy người dùng!", HttpStatus.BAD_REQUEST);
             }
 
-            // Kiểm tra quyền truy cập: Người dùng chỉ có thể sửa thông tin của mình, hoặc admin có thể sửa tất cả
+            // Kiểm tra quyền truy cập: Người dùng chỉ có thể sửa thông tin của mình, hoặc
+            // admin có thể sửa tất cả
             if (!currentUser.getId().equals(userId) && !currentUser.getRole().equals("ADMIN")) {
                 return new ResponseEntity<>("Không có quyền chỉnh sửa thông tin của người khác!", HttpStatus.FORBIDDEN);
             }
@@ -123,6 +123,29 @@ public class ApiUserController {
         } catch (RuntimeException ex) {
             // Trả về thông báo lỗi
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/secure/clients-for-trainer")
+    public ResponseEntity<?> getClientsForTrainer(Principal principal) {
+        try {
+            String trainerUsername = principal.getName();
+            UserAccount trainer = userDetailsService.getUserByUsername(trainerUsername);
+
+            // Kiểm tra xem người dùng có tồn tại không và có phải là trainer không
+            if (trainer == null) {
+                return new ResponseEntity<>("Không tìm thấy người dùng!", HttpStatus.BAD_REQUEST);
+            }
+
+            if (!trainer.getRole().equals("ROLE_TRAINER")) {
+                return new ResponseEntity<>("Chỉ trainer mới có quyền xem danh sách khách hàng!", HttpStatus.FORBIDDEN);
+            }
+
+            List<UserAccount> clients = userDetailsService.getClientsForTrainer(trainerUsername);
+            return ResponseEntity.ok(clients);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Không thể lấy danh sách khách hàng: " + ex.getMessage()));
         }
     }
 

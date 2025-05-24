@@ -13,13 +13,24 @@ import java.util.List;
  */
 public interface UserRepository {
     UserAccount getUserById(int id);
+
     UserAccount getUserByUsername(String username);
+
     UserAccount getUserByEmail(String email);
+
     List<UserAccount> getAllUsers();
+
     List<UserAccount> searchUsersByUsername(String username);
+
     UserAccount addUser(UserAccount user);
+
     UserAccount updateUser(UserAccount user);
+
     boolean deleteUser(int id);
+
     boolean authenticate(String username, String password);
+
     List<UserAccount> findByRole(String role);
+
+    List<UserAccount> getClientsByTrainerId(int trainerId); // Method to get clients of a trainer
 }

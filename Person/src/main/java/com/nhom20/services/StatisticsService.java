@@ -1,12 +1,11 @@
 package com.nhom20.services;
 
+import com.nhom20.pojo.Statistics;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public interface StatisticsService {
-    List<Map<String, Object>> getWeeklyStatistics(Date startDate, Date endDate);
-    List<Map<String, Object>> getMonthlyStatistics(Date startDate, Date endDate);
-    double getTotalExerciseTime(Date startDate, Date endDate);
-    double getTotalCaloriesBurned(Date startDate, Date endDate);
+    int getTotalExerciseTime(int userId, Date startDate, Date endDate);
+    int getTotalCaloriesBurned(int userId, Date startDate, Date endDate);
+    List<Statistics> getStatisticsDetails(int userId, Date startDate, Date endDate);
 } 

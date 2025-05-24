@@ -1,37 +1,33 @@
 package com.nhom20.services.impl;
 
+import com.nhom20.pojo.Statistics;
 import com.nhom20.repositories.StatisticsRepository;
 import com.nhom20.services.StatisticsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import org.springframework.stereotype.Service;
 
 @Service
 public class StatisticsServiceImpl implements StatisticsService {
+    @Autowired
     private StatisticsRepository statisticsRepository;
 
-    public StatisticsServiceImpl(StatisticsRepository statisticsRepository) {
-        this.statisticsRepository = statisticsRepository;
+    @Override
+    public int getTotalExerciseTime(int userId, Date startDate, Date endDate) {
+        List<Statistics> stats = statisticsRepository.findByUserIdAndStartDateGreaterThanEqualAndEndDateLessThanEqual(userId, startDate, endDate);
+        return stats.stream().mapToInt(Statistics::getDurationMinutes).sum();
     }
 
     @Override
-    public List<Map<String, Object>> getWeeklyStatistics(Date startDate, Date endDate) {
-        return statisticsRepository.getWeeklyStatistics(startDate, endDate);
+    public int getTotalCaloriesBurned(int userId, Date startDate, Date endDate) {
+        List<Statistics> stats = statisticsRepository.findByUserIdAndStartDateGreaterThanEqualAndEndDateLessThanEqual(userId, startDate, endDate);
+        return stats.stream().mapToInt(Statistics::getCaloriesBurned).sum();
     }
 
     @Override
-    public List<Map<String, Object>> getMonthlyStatistics(Date startDate, Date endDate) {
-        return statisticsRepository.getMonthlyStatistics(startDate, endDate);
-    }
-
-    @Override
-    public double getTotalExerciseTime(Date startDate, Date endDate) {
-        return statisticsRepository.getTotalExerciseTime(startDate, endDate);
-    }
-
-    @Override
-    public double getTotalCaloriesBurned(Date startDate, Date endDate) {
-        return statisticsRepository.getTotalCaloriesBurned(startDate, endDate);
+    public List<Statistics> getStatisticsDetails(int userId, Date startDate, Date endDate) {
+        return statisticsRepository.findByUserIdAndStartDateGreaterThanEqualAndEndDateLessThanEqual(userId, startDate, endDate);
     }
 } 

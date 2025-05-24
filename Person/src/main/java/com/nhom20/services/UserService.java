@@ -17,12 +17,23 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService extends UserDetailsService {
     UserAccount getUserById(int id);
+
     UserAccount getUserByUsername(String username);
+
     List<UserAccount> getAllUsers();
+
     List<UserAccount> searchUsersByUsername(String username);
+
     UserAccount addUser(Map<String, String> params, MultipartFile avatar);
+
     UserAccount updateUser(Map<String, String> params, MultipartFile avatar, int userId);
+
     boolean deleteUser(int id);
+
     boolean authenticate(String username, String password);
+
     List<UserAccount> findByRole(String role);
+
+    List<UserAccount> getClientsForTrainer(String trainerUsername); // Thêm phương thức để lấy danh sách khách hàng của
+                                                                    // một trainer
 }

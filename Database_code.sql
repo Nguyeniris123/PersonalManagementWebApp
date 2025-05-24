@@ -115,3 +115,17 @@ CREATE TABLE chat_message (
     FOREIGN KEY (sender_id) REFERENCES user_account(id) ON DELETE CASCADE,
     FOREIGN KEY (receiver_id) REFERENCES user_account(id) ON DELETE CASCADE
 );
+
+
+CREATE TABLE statistics (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    duration_minutes INT,
+    calories_burned INT,
+    start_date DATETIME,
+    end_date DATETIME,
+    FOREIGN KEY (user_id) REFERENCES user_account(id) ON DELETE CASCADE
+);
+
+
+
