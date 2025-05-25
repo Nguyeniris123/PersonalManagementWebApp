@@ -23,11 +23,11 @@ const TrainerStatistics = () => {
     const [startDate, setStartDate] = useState("2025-01-01");
     const [endDate, setEndDate] = useState("2025-05-25");
     const [data, setData] = useState(null);
+    const [healthProfile, setHealthProfile] = useState(null);
     const [loadingUsers, setLoadingUsers] = useState(false);
     const [loadingStats, setLoadingStats] = useState(false);
     const [error, setError] = useState("");
 
-    // Lấy danh sách user đã kết nối khi component mount hoặc user thay đổi
     useEffect(() => {
         const fetchConnectedUsers = async () => {
             setLoadingUsers(true);
@@ -53,15 +53,21 @@ const TrainerStatistics = () => {
         setError("");
         setLoadingStats(true);
         setData(null);
+        setHealthProfile(null);
 
         try {
-            const res = await authApis().get(
-                `${endpoints.trainerStatistics}?userId=${selectedUserId}&startDate=${startDate}&endDate=${endDate}`
-            );
-            setData(res.data);
+            const [statsRes, profileRes] = await Promise.all([
+                authApis().get(
+                    `${endpoints.trainerStatistics}?userId=${selectedUserId}&startDate=${startDate}&endDate=${endDate}`
+),
+                authApis().get(`${endpoints.trainer_health_profile}?userId=${selectedUserId}`)
+            ]);
+
+            setData(statsRes.data);
+            setHealthProfile(profileRes.data);
         } catch (err) {
             setError(
-                err.response?.data || "Lỗi khi lấy thống kê. Có thể bạn không có quyền xem."
+                err.response?.data || "Lỗi khi lấy dữ liệu. Có thể bạn không có quyền xem."
             );
         } finally {
             setLoadingStats(false);
@@ -169,7 +175,21 @@ const TrainerStatistics = () => {
 
             {loadingStats && <p className="text-center">Đang tải dữ liệu...</p>}
 
+            {/* Hiển thị Health Profile */}
+            {healthProfile && (
+                <div style={{ marginBottom: 30, padding: 20, border: "1px solid #ccc", borderRadius: 10, backgroundColor: "#fafafa" }}>
+                    <h4>Thông tin hồ sơ sức khỏe</h4>
+                    <p><strong>Chiều cao:</strong> {healthProfile.height} cm</p>
+                    <p><strong>Cân nặng:</strong> {healthProfile.weight} kg</p>
+                    <p><strong>BMI:</strong> {healthProfile.bmi}</p>
+                    <p><strong>Nhịp tim:</strong> {healthProfile.heartRate} bpm</p>
+                    <p><strong>Mục tiêu:</strong> {healthProfile.target}</p>
+                    <p><strong>Số bước mỗi ngày:</strong> {healthProfile.stepsPerDay}</p>
+                    <p><strong>Lượng nước uống mỗi ngày:</strong> {healthProfile.waterIntake} lít</p>
+                </div>
+            )}
 
+            {/* Biểu đồ thống kê */}
             {data && (
                 <>
                     <div className="d-flex justify-content-center gap-4 mb-4 flex-wrap">

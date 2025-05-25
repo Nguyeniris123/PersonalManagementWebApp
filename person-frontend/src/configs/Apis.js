@@ -38,6 +38,7 @@ export const endpoints = {
     'statistics': '/secure/statistics',
     'connectedUsers': '/secure/accepted-user',
     'trainerStatistics': '/secure/trainer-statistics',
+    'trainer_health_profile': '/secure/trainer-health-profile',
 
 }
 

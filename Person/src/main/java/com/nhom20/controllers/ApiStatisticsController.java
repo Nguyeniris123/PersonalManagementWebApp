@@ -1,6 +1,8 @@
 package com.nhom20.controllers;
 
+import com.nhom20.pojo.HealthProfile;
 import com.nhom20.pojo.UserAccount;
+import com.nhom20.services.HealthProfileService;
 import com.nhom20.services.StatisticsService;
 import com.nhom20.services.UserService;
 import com.nhom20.services.UserTrainerService;
@@ -34,9 +36,12 @@ public class ApiStatisticsController {
     @Autowired
     private UserService userService;
 
-     @Autowired
+    @Autowired
     private UserTrainerService userTrainerService;
     
+    @Autowired
+    private HealthProfileService healthProfileService;
+
     @GetMapping("/secure/statistics")
     public ResponseEntity<?> getStatistics(
             @RequestParam(name = "startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
@@ -61,13 +66,13 @@ public class ApiStatisticsController {
 
         return ResponseEntity.ok(response);
     }
-    
+
     @GetMapping("/secure/trainer-statistics")
     public ResponseEntity<?> getStatistics(
-        @RequestParam(value = "userId", required = false) int userId,
-        @RequestParam(name = "startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-        @RequestParam(name = "endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-        Principal principal) {
+            @RequestParam(value = "userId", required = false) int userId,
+            @RequestParam(name = "startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(name = "endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            Principal principal) {
 
         // Lấy user hiện tại
         String username = principal.getName();
@@ -94,7 +99,7 @@ public class ApiStatisticsController {
 
         return ResponseEntity.ok(result);
     }
-    
+
     @GetMapping("/secure/accepted-user")
     public ResponseEntity<?> getConnectedUsers(Principal principal) {
         // Lấy username hiện tại
@@ -113,5 +118,38 @@ public class ApiStatisticsController {
         List<UserAccount> connectedUsers = userTrainerService.getUsersAcceptedByTrainer(trainer.getId());
 
         return ResponseEntity.ok(connectedUsers);
+    }
+
+    @GetMapping("/secure/trainer-health-profile")
+    public ResponseEntity<?> getHealthProfile(
+            @RequestParam("userId") int userId,
+            Principal principal) {
+
+        // Lấy user hiện tại
+        String username = principal.getName();
+        UserAccount currentUser = userService.getUserByUsername(username);
+
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // Kiểm tra quyền truy cập: 
+        // Cho phép xem nếu chính là user hoặc trainer có kết nối ACCEPTED với user
+        boolean canView = userId == currentUser.getId()
+                || userTrainerService.existsAcceptedConnection(userId, currentUser.getId());
+
+        if (!canView) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Bạn không có quyền xem hồ sơ sức khỏe này.");
+        }
+
+        HealthProfile profile = healthProfileService.getHealthProfileByUserId(userId);
+
+        if (profile == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Không tìm thấy hồ sơ sức khỏe.");
+        }
+
+        return ResponseEntity.ok(profile);
     }
 }
