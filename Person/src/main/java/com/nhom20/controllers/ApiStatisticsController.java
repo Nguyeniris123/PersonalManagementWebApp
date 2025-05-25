@@ -3,6 +3,7 @@ package com.nhom20.controllers;
 import com.nhom20.pojo.UserAccount;
 import com.nhom20.services.StatisticsService;
 import com.nhom20.services.UserService;
+import com.nhom20.services.UserTrainerService;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -33,6 +34,9 @@ public class ApiStatisticsController {
     @Autowired
     private UserService userService;
 
+     @Autowired
+    private UserTrainerService userTrainerService;
+    
     @GetMapping("/secure/statistics")
     public ResponseEntity<?> getStatistics(
             @RequestParam(name = "startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
@@ -56,5 +60,58 @@ public class ApiStatisticsController {
         response.put("monthlyStats", monthlyStats);
 
         return ResponseEntity.ok(response);
+    }
+    
+    @GetMapping("/secure/trainer-statistics")
+    public ResponseEntity<?> getStatistics(
+        @RequestParam(value = "userId", required = false) int userId,
+        @RequestParam(name = "startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+        @RequestParam(name = "endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+        Principal principal) {
+
+        // Lấy user hiện tại
+        String username = principal.getName();
+        UserAccount currentUser = userService.getUserByUsername(username);
+
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // Kiểm tra kết nối ACCEPTED
+        boolean connected = userTrainerService.existsAcceptedConnection(userId, currentUser.getId());
+        if (!connected) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Bạn không có quyền xem thống kê của user này.");
+        }
+
+        // Lấy thống kê tuần/tháng
+        List<Object[]> weeklyStats = statisticsService.statsByWeek(userId, startDate, endDate);
+        List<Object[]> monthlyStats = statisticsService.statsByMonth(userId, startDate, endDate);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("weeklyStats", weeklyStats);
+        result.put("monthlyStats", monthlyStats);
+
+        return ResponseEntity.ok(result);
+    }
+    
+    @GetMapping("/secure/accepted-user")
+    public ResponseEntity<?> getConnectedUsers(Principal principal) {
+        // Lấy username hiện tại
+        String username = principal.getName();
+        if (username == null || username.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Chưa đăng nhập");
+        }
+
+        // Lấy thông tin trainer theo username
+        UserAccount trainer = userService.getUserByUsername(username);
+        if (trainer == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Trainer không tồn tại");
+        }
+
+        // Lấy danh sách user đã được trainer chấp nhận kết nối
+        List<UserAccount> connectedUsers = userTrainerService.getUsersAcceptedByTrainer(trainer.getId());
+
+        return ResponseEntity.ok(connectedUsers);
     }
 }

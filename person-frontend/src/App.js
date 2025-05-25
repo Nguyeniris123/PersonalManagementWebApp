@@ -28,6 +28,7 @@ import AddReminder from "./components/AddReminder";
 import UpdateReminder from "./components/UpdateReminder";
 import Statistics from "./components/Statistics";
 import Messenger from "./components/Messenger";
+import TrainerStatistics from "./components/TrainerStatistics";
 
 
 const App = () => {
@@ -64,6 +65,7 @@ const App = () => {
                   <Route path="/update-reminder/:id" element={<UpdateReminder />} />
                   <Route path="/add-reminder" element={<AddReminder />} />
                   <Route path="/statistics" element={<Statistics />} />
+                  <Route path="/trainer-statistics" element={<TrainerStatistics />} />
                   <Route path="/Messenger" element={<Messenger />} />
 
                 </Routes>

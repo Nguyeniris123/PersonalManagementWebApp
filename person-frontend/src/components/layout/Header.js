@@ -45,6 +45,9 @@ const Header = () => {
                                 <Link to="/request_user_trainer" className="nav-link text-success">
                                     Danh sách yêu cầu kết nối
                                 </Link>
+                                <Link to="/trainer-statistics" className="nav-link text-success">
+                                    Thống kê người dùng
+                                </Link>
                                 <Link to="/Messenger" className="nav-link text-success">
                                     Nhắn tin
                                 </Link>

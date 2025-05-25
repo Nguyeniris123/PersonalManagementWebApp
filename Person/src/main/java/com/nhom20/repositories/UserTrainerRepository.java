@@ -4,6 +4,7 @@
  */
 package com.nhom20.repositories;
 
+import com.nhom20.pojo.UserAccount;
 import com.nhom20.pojo.UserTrainer;
 import java.util.List;
 import java.util.Map;
@@ -19,4 +20,6 @@ public interface UserTrainerRepository {
     void deleteUserTrainer(int id);
     List<UserTrainer> getUserTrainerByUserId(int userId);
     List<UserTrainer> getUserTrainerByTrainerId(int trainerId);
+    boolean existsAcceptedConnection(int userId, int trainerId);
+    List<UserAccount> getUsersAcceptedByTrainer(int trainerId);
 }

@@ -36,6 +36,8 @@ export const endpoints = {
     'update_reminder': (reminderId) => `/secure/update-reminder/${reminderId}`,
     'delete_reminder': (reminderId) => `/reminder/${reminderId}`,
     'statistics': '/secure/statistics',
+    'connectedUsers': '/secure/accepted-user',
+    'trainerStatistics': '/secure/trainer-statistics',
 
 }
 

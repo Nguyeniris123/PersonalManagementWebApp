@@ -7,7 +7,7 @@ package com.nhom20.repositories.impl;
 import com.nhom20.pojo.UserAccount;
 import com.nhom20.pojo.UserTrainer;
 import com.nhom20.repositories.UserTrainerRepository;
-import jakarta.persistence.Query;
+import org.hibernate.query.Query;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
@@ -166,6 +166,48 @@ public class UserTrainerRepositoryImpl implements UserTrainerRepository {
         q.where(predicate);
 
         Query query = s.createQuery(q);
+        return query.getResultList();
+    }
+
+    @Override
+    public boolean existsAcceptedConnection(int userId, int trainerId) {
+        Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder cb = s.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<UserTrainer> root = cq.from(UserTrainer.class);
+
+        // Điều kiện: userId, trainerId và status = 'ACCEPTED'
+        Predicate userPredicate = cb.equal(root.get("userId").get("id"), userId);
+        Predicate trainerPredicate = cb.equal(root.get("trainerId").get("id"), trainerId);
+        Predicate statusPredicate = cb.equal(root.get("status"), "ACCEPTED");
+
+        cq.select(cb.count(root));
+        cq.where(cb.and(userPredicate, trainerPredicate, statusPredicate));
+
+        Long count = s.createQuery(cq).getSingleResult();
+        return count != null && count > 0;
+    }
+
+    @Override
+    public List<UserAccount> getUsersAcceptedByTrainer(int trainerId) {
+        Session session = this.factory.getObject().getCurrentSession();
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<UserAccount> cq = cb.createQuery(UserAccount.class);
+
+        // Root cho UserTrainer (bảng trung gian)
+        Root<UserTrainer> root = cq.from(UserTrainer.class);
+
+        // Join tới bảng user_account lấy user (người dùng)
+        Join<UserTrainer, UserAccount> userJoin = root.join("userId"); // property userId trong UserTrainer entity
+
+        // Điều kiện status = ACCEPTED, trainerId = tham số
+        Predicate trainerPredicate = cb.equal(root.get("trainerId").get("id"), trainerId);
+        Predicate statusPredicate = cb.equal(root.get("status"), "ACCEPTED");
+
+        cq.select(userJoin).where(cb.and(trainerPredicate, statusPredicate));
+
+        Query<UserAccount> query = session.createQuery(cq);
         return query.getResultList();
     }
 

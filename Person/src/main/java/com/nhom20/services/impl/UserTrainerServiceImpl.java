@@ -4,6 +4,7 @@
  */
 package com.nhom20.services.impl;
 
+import com.nhom20.pojo.UserAccount;
 import com.nhom20.pojo.UserTrainer;
 import com.nhom20.repositories.UserTrainerRepository;
 import com.nhom20.services.UserTrainerService;
@@ -57,4 +58,14 @@ public class UserTrainerServiceImpl implements UserTrainerService {
     public List<UserTrainer> getUserTrainerByTrainerId(int trainerId) {
         return userTrainerRepository.getUserTrainerByTrainerId(trainerId);
     }
+
+    @Override
+    public boolean existsAcceptedConnection(int userId, int trainerId) {
+        return userTrainerRepository.existsAcceptedConnection(userId, trainerId);
+    }
+
+    @Override
+    public List<UserAccount> getUsersAcceptedByTrainer(int trainerId) {
+        return userTrainerRepository.getUsersAcceptedByTrainer(trainerId);
+    }  
 }
