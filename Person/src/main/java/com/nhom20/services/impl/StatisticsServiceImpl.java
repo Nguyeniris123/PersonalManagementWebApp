@@ -1,33 +1,27 @@
 package com.nhom20.services.impl;
 
-import com.nhom20.pojo.Statistics;
 import com.nhom20.repositories.StatisticsRepository;
 import com.nhom20.services.StatisticsService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public class StatisticsServiceImpl implements StatisticsService {
-    @Autowired
-    private StatisticsRepository statisticsRepository;
 
-    @Override
-    public int getTotalExerciseTime(int userId, Date startDate, Date endDate) {
-        List<Statistics> stats = statisticsRepository.findByUserIdAndStartDateGreaterThanEqualAndEndDateLessThanEqual(userId, startDate, endDate);
-        return stats.stream().mapToInt(Statistics::getDurationMinutes).sum();
+    private final StatisticsRepository statsRepo;
+
+    public StatisticsServiceImpl(StatisticsRepository statsRepo) {
+        this.statsRepo = statsRepo;
     }
 
     @Override
-    public int getTotalCaloriesBurned(int userId, Date startDate, Date endDate) {
-        List<Statistics> stats = statisticsRepository.findByUserIdAndStartDateGreaterThanEqualAndEndDateLessThanEqual(userId, startDate, endDate);
-        return stats.stream().mapToInt(Statistics::getCaloriesBurned).sum();
+    public List<Object[]> statsByWeek(int userId, LocalDate startDate, LocalDate endDate) {
+        return statsRepo.statsByWeek(userId, startDate, endDate);
     }
 
     @Override
-    public List<Statistics> getStatisticsDetails(int userId, Date startDate, Date endDate) {
-        return statisticsRepository.findByUserIdAndStartDateGreaterThanEqualAndEndDateLessThanEqual(userId, startDate, endDate);
+    public List<Object[]> statsByMonth(int userId, LocalDate startDate, LocalDate endDate) {
+        return statsRepo.statsByMonth(userId, startDate, endDate);
     }
-} 
+}

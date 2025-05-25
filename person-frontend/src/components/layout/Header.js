@@ -31,10 +31,11 @@ const Header = () => {
                                 </Link>
                                 <Link to="/health-journals" className="nav-link text-success">
                                     Nhật kí sức khoẻ
-                                </Link>                                <Link to="/reminders" className="nav-link text-success">
+                                </Link>
+                                <Link to="/reminders" className="nav-link text-success">
                                     Nhắc nhở 🔔
                                 </Link>
-                                <Link to="/statistics" className="nav-link text-success">Thống kê</Link>
+                                
                             </>
                         )}
 
@@ -42,9 +43,6 @@ const Header = () => {
                             <>
                                 <Link to="/request_user_trainer" className="nav-link text-success">
                                     Danh sách yêu cầu kết nối
-                                </Link>
-                                <Link to="/statistics" className="nav-link text-success">
-                                    Thống kê khách hàng
                                 </Link>
                                 <NavDropdown title="Dropdown" id="collapsible-nav-dropdown">
                                     <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>

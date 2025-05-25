@@ -1,77 +1,229 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Thống kê tập luyện</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Thống kê tập luyện</title>
+    <th:block th:replace="base :: bootstrap"></th:block>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        .summary-card {
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        h2 {
+            margin-top: 30px;
+            margin-bottom: 40px;
+            color: #2c3e50;
+            font-weight: 700;
+            text-align: center;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto 50px auto;
+            background-color: #fff;
+            padding: 25px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+        }
+        label {
+            font-weight: 600;
+            color: #34495e;
+        }
+        input[type="number"], input[type="date"] {
+            height: 45px;
+            font-size: 16px;
+        }
+        button.btn-primary {
+            width: 100%;
+            padding: 12px 0;
+            font-weight: 600;
+            font-size: 18px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        button.btn-primary:hover {
+            background-color: #1d3557;
+        }
+        .summary-cards {
+            max-width: 700px;
+            margin: 0 auto 50px auto;
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .card-summary {
+            flex: 1 1 300px;
+            background-color: #fff;
+            padding: 30px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgb(0 0 0 / 0.08);
+            text-align: center;
             margin-bottom: 20px;
         }
-        .exercise-table {
-            margin-top: 20px;
+        .card-summary h5 {
+            color: #6c757d;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .card-summary h3 {
+            font-weight: 700;
+            color: #007bff;
+        }
+        .card-summary.calories h3 {
+            color: #28a745;
+        }
+        .chart-container-horizontal {
+            max-width: 1000px;
+            margin: 40px auto 60px auto;
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .chart-item {
+            flex: 1 1 450px;
+            background-color: #fff;
+            padding: 30px 30px 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgb(0 0 0 / 0.1);
+            text-align: center;
+        }
+        .chart-item h3 {
+            margin-bottom: 25px;
+            font-weight: 700;
+            color: #2c3e50;
         }
     </style>
 </head>
 <body>
     <div th:replace="base :: header"></div>
-    <div class="container mt-4">
-        <h2 class="text-center mb-4">Thống kê tập luyện</h2>
-        
-        <!-- Selection Form -->
-        <div class="row">
-            <div class="col-md-10 offset-md-1">
-                <div class="card">
-                    <div class="card-body">
-                        <form id="statisticsForm" class="row g-3">
-                            <div class="col-md-3">
-                                <label for="userId" class="form-label">Chọn người dùng</label>
-                                <select class="form-select" id="userId" required>
-                                    <option value="">Chọn người dùng</option>
-                                    <option th:each="user : ${users}" 
-                                            th:value="${user.id}" 
-                                            th:text="${user.username + ' (' + user.fullName + ')'}">
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="startDate" class="form-label">Từ ngày</label>
-                                <input type="date" class="form-control" id="startDate" required>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="endDate" class="form-label">Đến ngày</label>
-                                <input type="date" class="form-control" id="endDate" required>
-                            </div>
-                            <div class="col-md-3 d-flex align-items-end">
-                                <button type="submit" class="btn btn-primary w-100">Xem thống kê</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Summary Cards -->
-        <div class="row mt-4">
-            <div class="col-md-6 offset-md-3">
-                <div class="card summary-card">
-                    <div class="card-body">
-                        <h5 class="card-title">Tổng thời gian tập luyện</h5>
-                        <h3 id="totalExerciseTime" class="text-primary">0 phút</h3>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Tổng lượng calo tiêu thụ</h5>
-                        <h3 id="totalCalories" class="text-success">0 calo</h3>
-                    </div>
-                </div>
+    <h2>Thống kê tập luyện</h2>
+
+    <div class="form-container">
+        <form th:action="@{/statistics}" method="get">
+            <div class="mb-3">
+                <label for="userId" class="form-label">User ID</label>
+                <input type="number" id="userId" name="userId" th:value="${userId}" class="form-control" required />
             </div>
+            <div class="mb-3">
+                <label for="startDate" class="form-label">Từ ngày</label>
+                <input type="date" id="startDate" name="startDate" th:value="${startDate}" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label for="endDate" class="form-label">Đến ngày</label>
+                <input type="date" id="endDate" name="endDate" th:value="${endDate}" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Xem thống kê</button>
+        </form>
+    </div>
+
+    <div class="summary-cards">
+        <div class="card-summary">
+            <h5>Tổng thời gian tập luyện</h5>
+            <h3 th:text="${totalDuration} + ' phút'">0 phút</h3>
+        </div>
+        <div class="card-summary calories">
+            <h5>Tổng calo tiêu thụ</h5>
+            <h3 th:text="${totalCalories} + ' calo'">0 calo</h3>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script th:src="@{/js/statistics.js}"></script>
+    <div class="chart-container-horizontal">
+        <div class="chart-item">
+            <h3>Thống kê theo tuần</h3>
+            <canvas id="weeklyChart"></canvas>
+        </div>
+        <div class="chart-item">
+            <h3>Thống kê theo tháng</h3>
+            <canvas id="monthlyChart"></canvas>
+        </div>
+    </div>
+
     <div th:replace="base :: footer"></div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const weeklyStats = /*[[${weeklyStats}]]*/ '[]';
+        const monthlyStats = /*[[${monthlyStats}]]*/ '[]';
+        const startDateStr = /*[[${startDate}]]*/ '2025-01-01';
+        const year = parseInt(startDateStr.substring(0, 4));
+
+        function formatWeekLabel(weekNumber, year) {
+            const simpleDate = new Date(year, 0, 1 + (weekNumber - 1) * 7);
+            const dayOfWeek = simpleDate.getDay();
+            const diffToMonday = (dayOfWeek === 0) ? -6 : 1 - dayOfWeek;
+            const monday = new Date(simpleDate);
+            monday.setDate(simpleDate.getDate() + diffToMonday);
+            const sunday = new Date(monday);
+            sunday.setDate(monday.getDate() + 6);
+            const options = {day: '2-digit', month: '2-digit'};
+            return `Tuần ${weekNumber} (${monday.toLocaleDateString('vi-VN', options)} - ${sunday.toLocaleDateString('vi-VN', options)})`;
+        }
+
+        function formatMonthLabel(monthNumber, year) {
+            return `Tháng ${monthNumber}/${year}`;
+        }
+
+        function renderChart(canvasId, data, type, year) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            const labels = data.map(item => {
+                if (type === 'week')
+                    return formatWeekLabel(item[0], year);
+                if (type === 'month')
+                    return formatMonthLabel(item[0], year);
+                return item[0];
+            });
+            const durations = data.map(item => item[1]);
+            const calories = data.map(item => item[2]);
+
+            if (ctx.chartInstance) {
+                ctx.chartInstance.destroy();
+            }
+
+            ctx.chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Thời gian (phút)',
+                            data: durations,
+                            backgroundColor: 'rgba(54, 162, 235, 0.7)'
+                        },
+                        {
+                            label: 'Calo tiêu thụ',
+                            data: calories,
+                            backgroundColor: 'rgba(255, 99, 132, 0.7)'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            ticks: {
+                                maxRotation: 0, // Bỏ xoay nhãn
+                                minRotation: 0,
+                                autoSkip: true,
+                                maxTicksLimit: 12,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        renderChart('weeklyChart', weeklyStats, 'week', year);
+        renderChart('monthlyChart', monthlyStats, 'month', year);
+        /*]]>*/
+    </script>
 </body>
-</html> 
+</html>

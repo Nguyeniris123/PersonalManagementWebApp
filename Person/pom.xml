@@ -97,16 +97,6 @@
             <artifactId>json</artifactId>
             <version>20230227</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-            <version>3.3.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-jpa</artifactId>
-            <version>2.7.0</version> <!-- hoặc version phù hợp với project của bạn -->
-        </dependency>
     </dependencies>
     
     <build>

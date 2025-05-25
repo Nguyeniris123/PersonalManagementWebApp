@@ -45,10 +45,3 @@ INSERT INTO workout_plan_exercise (workout_plan_id, exercise_id, sets, reps, dur
 (2, 4, 4, 10, 0),
 (3, 1, 2, 20, 0),
 (3, 5, 0, 0, 30);
-
-USE persondb;
-INSERT INTO statistics (user_id, duration_minutes, calories_burned, start_date, end_date)
-VALUES 
-(1, 30, 250, '2025-05-22 06:30:00', '2025-05-22 07:00:00'),
-(2, 45, 400, '2025-05-22 08:00:00', '2025-05-22 08:45:00');
-

@@ -1,5 +1,0 @@
-yarn install
-npm install
-npm audit fix --force
-yarn add react-chartjs-2 chart.js
-yarn start

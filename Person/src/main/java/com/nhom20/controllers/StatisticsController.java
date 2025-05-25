@@ -1,79 +1,62 @@
 package com.nhom20.controllers;
 
-import com.nhom20.services.StatisticService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus; // Added import
-import org.springframework.http.ResponseEntity;
+import com.nhom20.services.StatisticsService;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
-import java.util.Map;
-
-@RestController
-@RequestMapping("/api/statistics")
-@CrossOrigin
+@Controller
+@RequestMapping("/statistics")
 public class StatisticsController {
 
-    @Autowired
-    private StatisticService statisticService;
+    private final StatisticsService statisticsService;
 
-    // Endpoint for user's own exercise statistics
-    @GetMapping("/user/exercise")
-    public ResponseEntity<Map<String, Object>> getUserExerciseStats(
-            Principal principal,
-            @RequestParam String period, // "week", "month", "year"
-            @RequestParam int year,
-            @RequestParam(required = false) Integer month, // Required for "week" and "month"
-            @RequestParam(required = false) Integer week) { // Required for "week"
-        String username = principal.getName();
-        Map<String, Object> stats = statisticService.getUserExerciseStats(username, period, year, month, week);
-        return ResponseEntity.ok(stats);
+    public StatisticsController(StatisticsService statisticsService) {
+        this.statisticsService = statisticsService;
     }
 
-    // Endpoint for user's own health progress
-    @GetMapping("/user/health-progress")
-    public ResponseEntity<Map<String, Object>> getUserHealthProgress(
-            Principal principal,
-            @RequestParam String period, // "week", "month", "year"
-            @RequestParam int year,
-            @RequestParam(required = false) Integer month,
-            @RequestParam(required = false) Integer week) {
-        String username = principal.getName();
-        Map<String, Object> progress = statisticService.getUserHealthProgress(username, period, year, month, week);
-        return ResponseEntity.ok(progress);
-    }
+    @GetMapping
+    public String stats(
+            @RequestParam(value = "userId", required = false, defaultValue = "1") int userId,
+            @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            Model model) {
 
-    // Endpoint for trainer to view client's exercise statistics
-    @GetMapping("/trainer/client/{clientId}/exercise")
-    public ResponseEntity<Map<String, Object>> getClientExerciseStats(
-            Principal principal, // Trainer
-            @PathVariable int clientId,
-            @RequestParam String period,
-            @RequestParam int year,
-            @RequestParam(required = false) Integer month,
-            @RequestParam(required = false) Integer week) {
-        String trainerUsername = principal.getName();
-        if (!statisticService.isTrainerOfClient(trainerUsername, clientId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        if (startDate == null || endDate == null) {
+            // Nếu bạn muốn có giá trị mặc định
+            LocalDate now = LocalDate.now();
+            if (startDate == null) {
+                startDate = now.minusMonths(1);
+            }
+            if (endDate == null) {
+                endDate = now;
+            }
         }
-        Map<String, Object> stats = statisticService.getClientExerciseStats(clientId, period, year, month, week);
-        return ResponseEntity.ok(stats);
-    }
 
-    // Endpoint for trainer to view client's health progress
-    @GetMapping("/trainer/client/{clientId}/health-progress")
-    public ResponseEntity<Map<String, Object>> getClientHealthProgress(
-            Principal principal, // Trainer
-            @PathVariable int clientId,
-            @RequestParam String period,
-            @RequestParam int year,
-            @RequestParam(required = false) Integer month,
-            @RequestParam(required = false) Integer week) {
-        String trainerUsername = principal.getName();
-        if (!statisticService.isTrainerOfClient(trainerUsername, clientId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-        Map<String, Object> progress = statisticService.getClientHealthProgress(clientId, period, year, month, week);
-        return ResponseEntity.ok(progress);
+        List<Object[]> weeklyStats = statisticsService.statsByWeek(userId, startDate, endDate);
+        List<Object[]> monthlyStats = statisticsService.statsByMonth(userId, startDate, endDate);
+
+        int totalDuration = weeklyStats.stream()
+                .mapToInt(o -> ((Number) o[1]).intValue())
+                .sum();
+
+        int totalCalories = weeklyStats.stream()
+                .mapToInt(o -> ((Number) o[2]).intValue())
+                .sum();
+
+        model.addAttribute("weeklyStats", weeklyStats);
+        model.addAttribute("monthlyStats", monthlyStats);
+        model.addAttribute("totalDuration", totalDuration);
+        model.addAttribute("totalCalories", totalCalories);
+
+        model.addAttribute("userId", userId);
+        model.addAttribute("startDate", startDate.format(DateTimeFormatter.ISO_DATE));
+        model.addAttribute("endDate", endDate.format(DateTimeFormatter.ISO_DATE));
+
+        return "statistics";
     }
 }

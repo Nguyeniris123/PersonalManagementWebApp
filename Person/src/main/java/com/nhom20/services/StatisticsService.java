@@ -1,11 +1,14 @@
 package com.nhom20.services;
 
-import com.nhom20.pojo.Statistics;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
+/**
+ *
+ * @author nguyenho
+ */
+
 public interface StatisticsService {
-    int getTotalExerciseTime(int userId, Date startDate, Date endDate);
-    int getTotalCaloriesBurned(int userId, Date startDate, Date endDate);
-    List<Statistics> getStatisticsDetails(int userId, Date startDate, Date endDate);
+    List<Object[]> statsByWeek(int userId, LocalDate startDate, LocalDate endDate);
+    List<Object[]> statsByMonth(int userId, LocalDate startDate, LocalDate endDate);
 } 

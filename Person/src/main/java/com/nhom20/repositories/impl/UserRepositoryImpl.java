@@ -44,10 +44,10 @@ public class UserRepositoryImpl implements UserRepository {
             query.setParameter("username", username);
             return query.getSingleResult();
         } catch (NoResultException e) {
-            return null; // Trả về null nếu không tìm thấy
+            return null;  // Trả về null nếu không tìm thấy
         }
     }
-
+    
     @Override
     public UserAccount getUserByEmail(String email) {
         try {
@@ -56,7 +56,7 @@ public class UserRepositoryImpl implements UserRepository {
             query.setParameter("email", email);
             return query.getSingleResult();
         } catch (NoResultException e) {
-            return null; // Trả về null nếu không tìm thấy
+            return null;  // Trả về null nếu không tìm thấy
         }
     }
 
@@ -70,8 +70,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public List<UserAccount> searchUsersByUsername(String username) {
         Session session = sessionFactory.getCurrentSession();
-        Query<UserAccount> query = session.createQuery("FROM UserAccount u WHERE u.username LIKE :username",
-                UserAccount.class);
+        Query<UserAccount> query = session.createQuery("FROM UserAccount u WHERE u.username LIKE :username", UserAccount.class);
         query.setParameter("username", "%" + username + "%");
         return query.getResultList();
     }
@@ -107,23 +106,12 @@ public class UserRepositoryImpl implements UserRepository {
 
         return this.passwordEncoder.matches(password, u.getPassword());
     }
-
+    
     @Override
     public List<UserAccount> findByRole(String role) {
         Session session = sessionFactory.getCurrentSession();
         Query<UserAccount> query = session.createNamedQuery("UserAccount.findByRole", UserAccount.class);
         query.setParameter("role", role);
-        return query.getResultList();
-    }
-
-    @Override
-    public List<UserAccount> getClientsByTrainerId(int trainerId) {
-        Session session = sessionFactory.getCurrentSession();
-        String hql = "SELECT c FROM UserAccount c JOIN UserTrainer ut ON c.id = ut.clientId " +
-                "WHERE ut.trainerId = :trainerId AND ut.status = 'ACCEPTED'";
-
-        Query<UserAccount> query = session.createQuery(hql, UserAccount.class);
-        query.setParameter("trainerId", trainerId);
         return query.getResultList();
     }
 }

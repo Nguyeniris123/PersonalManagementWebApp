@@ -35,15 +35,10 @@ export const endpoints = {
     'reminder_by_id': (reminderId) => `/secure/reminders/${reminderId}`,
     'update_reminder': (reminderId) => `/secure/update-reminder/${reminderId}`,
     'delete_reminder': (reminderId) => `/reminder/${reminderId}`,
-    // Statistics endpoints
-    'userExerciseStats': '/statistics/user/exercise', // Corrected: Removed trailing slash and /api prefix as BASE_URL has it
-    'userHealthProgress': '/statistics/user/health-progress', // Corrected: Removed trailing slash
-    'clientExerciseStats': (clientId) => `/statistics/trainer/client/${clientId}/exercise`, // Corrected: Removed trailing slash
-    'clientHealthProgress': (clientId) => `/statistics/trainer/client/${clientId}/health-progress`, // Corrected: Removed trailing slash
-    'clients': '/secure/clients-for-trainer', // Added for fetching clients for a trainer
+
 }
 
-export const authApis = () => { // Renamed to authApis to match usage in StatisticsDashboard
+export const authApis = () => {
     console.info(cookie.load('token'));
     return axios.create({
         baseURL: BASE_URL,

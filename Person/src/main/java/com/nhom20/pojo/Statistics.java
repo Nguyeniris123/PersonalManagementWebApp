@@ -1,43 +1,41 @@
 package com.nhom20.pojo;
 
-import jakarta.persistence.*;
-import java.util.Date;
-
-@Entity
-@Table(name = "statistics")
 public class Statistics {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer totalDurationMinutes;
+    private Integer totalCaloriesBurned;
 
-    @Column(name = "user_id")
-    private Integer userId;
+    public Statistics(Integer totalDurationMinutes, Integer totalCaloriesBurned) {
+        this.totalDurationMinutes = totalDurationMinutes != null ? totalDurationMinutes : 0;
+        this.totalCaloriesBurned = totalCaloriesBurned != null ? totalCaloriesBurned : 0;
+    }
 
-    @Column(name = "duration_minutes")
-    private Integer durationMinutes;
+    /**
+     * @return the totalDurationMinutes
+     */
+    public Integer getTotalDurationMinutes() {
+        return totalDurationMinutes;
+    }
 
-    @Column(name = "calories_burned")
-    private Integer caloriesBurned;
+    /**
+     * @param totalDurationMinutes the totalDurationMinutes to set
+     */
+    public void setTotalDurationMinutes(Integer totalDurationMinutes) {
+        this.totalDurationMinutes = totalDurationMinutes;
+    }
 
-    @Column(name = "start_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date startDate;
+    /**
+     * @return the totalCaloriesBurned
+     */
+    public Integer getTotalCaloriesBurned() {
+        return totalCaloriesBurned;
+    }
 
-    @Column(name = "end_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date endDate;
+    /**
+     * @param totalCaloriesBurned the totalCaloriesBurned to set
+     */
+    public void setTotalCaloriesBurned(Integer totalCaloriesBurned) {
+        this.totalCaloriesBurned = totalCaloriesBurned;
+    }
 
-    // Getters and setters
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-    public Integer getUserId() { return userId; }
-    public void setUserId(Integer userId) { this.userId = userId; }
-    public Integer getDurationMinutes() { return durationMinutes; }
-    public void setDurationMinutes(Integer durationMinutes) { this.durationMinutes = durationMinutes; }
-    public Integer getCaloriesBurned() { return caloriesBurned; }
-    public void setCaloriesBurned(Integer caloriesBurned) { this.caloriesBurned = caloriesBurned; }
-    public Date getStartDate() { return startDate; }
-    public void setStartDate(Date startDate) { this.startDate = startDate; }
-    public Date getEndDate() { return endDate; }
-    public void setEndDate(Date endDate) { this.endDate = endDate; }
+    
 } 

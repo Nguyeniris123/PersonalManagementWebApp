@@ -11,7 +11,6 @@ import com.nhom20.repositories.UserRepository;
 import com.nhom20.services.UserService;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -203,23 +202,5 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserAccount> findByRole(String role) {
         return userRepository.findByRole(role);
-    }
-
-    @Override
-    public List<UserAccount> getClientsForTrainer(String trainerUsername) {
-        // TODO: Implement logic to get clients for a trainer
-        // 1. Get trainer ID from username
-        // 2. Query the user_trainer table to get all connected client IDs
-        // 3. Fetch and return client details
-
-        // Placeholder implementation - should be replaced with actual repository calls
-        UserAccount trainer = getUserByUsername(trainerUsername);
-        if (trainer == null || !trainer.getRole().equals("ROLE_TRAINER")) {
-            return Collections.emptyList();
-        }
-
-        // Temporary code returning sample data - replace with actual implementation
-        // Using repository to query user_trainer table and fetch connected clients
-        return this.userRepository.getClientsByTrainerId(trainer.getId());
     }
 }
