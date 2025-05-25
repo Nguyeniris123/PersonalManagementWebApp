@@ -2,7 +2,6 @@ import { Button } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom';
 import { MyDispatchContext, MyUserContext } from "../../configs/MyContexts";
 import { useContext } from "react";
@@ -35,7 +34,9 @@ const Header = () => {
                                 <Link to="/reminders" className="nav-link text-success">
                                     Nhắc nhở 🔔
                                 </Link>
-                                
+                                <Link to="/statistics" className="nav-link text-success">
+                                    Thống kê 📊
+                                </Link>
                             </>
                         )}
 
@@ -44,17 +45,9 @@ const Header = () => {
                                 <Link to="/request_user_trainer" className="nav-link text-success">
                                     Danh sách yêu cầu kết nối
                                 </Link>
-                                <NavDropdown title="Dropdown" id="collapsible-nav-dropdown">
-                                    <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                                    <NavDropdown.Item href="#action/3.2">
-                                        Another action
-                                    </NavDropdown.Item>
-                                    <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                                    <NavDropdown.Divider />
-                                    <NavDropdown.Item href="#action/3.4">
-                                        Separated link
-                                    </NavDropdown.Item>
-                                </NavDropdown>
+                                <Link to="/Messenger" className="nav-link text-success">
+                                    Nhắn tin
+                                </Link>
                             </>
                         )}
                     </Nav>

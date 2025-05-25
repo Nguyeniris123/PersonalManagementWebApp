@@ -4,22 +4,24 @@ import com.nhom20.services.StatisticsService;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+
+/**
+ *
+ * @author nguyenho
+ */
+
 @Controller
-@RequestMapping("/statistics")
 public class StatisticsController {
+    @Autowired
+    private StatisticsService statisticsService;
 
-    private final StatisticsService statisticsService;
-
-    public StatisticsController(StatisticsService statisticsService) {
-        this.statisticsService = statisticsService;
-    }
-
-    @GetMapping
+    @GetMapping("/statistics")
     public String stats(
             @RequestParam(value = "userId", required = false, defaultValue = "1") int userId,
             @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,

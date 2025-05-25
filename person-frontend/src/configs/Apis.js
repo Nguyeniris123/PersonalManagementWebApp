@@ -1,7 +1,7 @@
 import axios from "axios"
 import cookie from 'react-cookies'
 
-const BASE_URL = 'http://localhost:8080/Person/api/'
+const BASE_URL = 'http://localhost:8080/Person/api'
 
 export const endpoints = {
     'register': '/users',
@@ -35,6 +35,7 @@ export const endpoints = {
     'reminder_by_id': (reminderId) => `/secure/reminders/${reminderId}`,
     'update_reminder': (reminderId) => `/secure/update-reminder/${reminderId}`,
     'delete_reminder': (reminderId) => `/reminder/${reminderId}`,
+    'statistics': '/secure/statistics',
 
 }
 
