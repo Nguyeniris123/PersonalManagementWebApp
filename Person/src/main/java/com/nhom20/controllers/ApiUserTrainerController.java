@@ -78,16 +78,13 @@ public class ApiUserTrainerController {
     @PostMapping("/secure/user-trainer/add")
     public ResponseEntity<?> requestTrainer(@RequestBody UserTrainer userTrainer, Principal principal) {
         try {
-            // Lấy username của user đang đăng nhập
             String username = principal.getName();
 
-            // Tìm user theo username
             UserAccount user = userService.getUserByUsername(username);
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Không tìm thấy người dùng!");
             }
 
-            // Gán userId và các thông tin mặc định
             userTrainer.setUserId(user);
             userTrainer.setStatus("PENDING");
             userTrainer.setCreatedAt(new Date());
@@ -102,22 +99,17 @@ public class ApiUserTrainerController {
     @PutMapping("/secure/user-trainer/accept/{id}")
     public ResponseEntity<String> updateStatusToAccepted(@PathVariable("id") int id, Principal principal) {
         try {
-            // Lấy thông tin UserTrainer từ DB
             UserTrainer userTrainer = userTrainerService.getUserTrainerById(id);
             if (userTrainer == null) {
                 return new ResponseEntity<>("Yêu cầu không tồn tại.", HttpStatus.NOT_FOUND);
             }
 
-            // Lấy tên người dùng hiện tại từ Principal
             String currentUsername = principal.getName();
 
-            // Kiểm tra nếu người dùng hiện tại có quyền cập nhật trạng thái
-            // Giả sử người huấn luyện viên (trainer) có thể cập nhật trạng thái
             if (!currentUsername.equals(userTrainer.getTrainerId().getUsername())) {
                 return new ResponseEntity<>("Bạn không có quyền cập nhật yêu cầu này.", HttpStatus.FORBIDDEN);
             }
 
-            // Cập nhật trạng thái thành ACCEPTED
             userTrainer.setStatus("ACCEPTED");
             userTrainerService.addOrUpdateUserTrainer(userTrainer);  // Dùng service để lưu cập nhật
 
@@ -130,24 +122,19 @@ public class ApiUserTrainerController {
     @PutMapping("/secure/user-trainer/reject/{id}")
     public ResponseEntity<String> updateStatusToRejected(@PathVariable("id") int id, Principal principal) {
         try {
-            // Lấy thông tin UserTrainer từ DB
             UserTrainer userTrainer = userTrainerService.getUserTrainerById(id);
             if (userTrainer == null) {
                 return new ResponseEntity<>("Yêu cầu không tồn tại.", HttpStatus.NOT_FOUND);
             }
 
-            // Lấy tên người dùng hiện tại từ Principal
             String currentUsername = principal.getName();
 
-            // Kiểm tra nếu người dùng hiện tại có quyền cập nhật trạng thái
-            // Giả sử người huấn luyện viên (trainer) có thể cập nhật trạng thái
             if (!currentUsername.equals(userTrainer.getTrainerId().getUsername())) {
                 return new ResponseEntity<>("Bạn không có quyền cập nhật yêu cầu này.", HttpStatus.FORBIDDEN);
             }
 
-            // Cập nhật trạng thái thành ACCEPTED
             userTrainer.setStatus("REJECTED");
-            userTrainerService.addOrUpdateUserTrainer(userTrainer);  // Dùng service để lưu cập nhật
+            userTrainerService.addOrUpdateUserTrainer(userTrainer);
 
             return new ResponseEntity<>("Trạng thái đã được cập nhật thành REJECTED.", HttpStatus.OK);
         } catch (Exception e) {

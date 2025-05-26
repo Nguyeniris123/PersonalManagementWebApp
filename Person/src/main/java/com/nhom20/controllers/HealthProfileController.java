@@ -51,13 +51,13 @@ public class HealthProfileController {
     @PostMapping("/health-profile/add")
     public String addHealthProfile(@ModelAttribute("healthProfile") HealthProfile hp, Model model) {
         try {
-            hp.setUpdatedAt(new Date()); // Đặt thời gian hiện tại
+            hp.setUpdatedAt(new Date());
             healthProfileService.saveHealthProfile(hp);
             return "redirect:/";
         } catch (RuntimeException ex) {
-            model.addAttribute("error", ex.getMessage()); // gắn thông báo lỗi
+            model.addAttribute("error", ex.getMessage());
             model.addAttribute("users", userService.getAllUsers());
-            return "healthprofiles"; // giữ lại form
+            return "healthprofiles";
         }
     }
 

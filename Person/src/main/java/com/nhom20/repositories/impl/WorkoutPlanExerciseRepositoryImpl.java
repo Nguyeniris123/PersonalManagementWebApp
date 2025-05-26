@@ -50,10 +50,8 @@ public class WorkoutPlanExerciseRepositoryImpl implements WorkoutPlanExerciseRep
         if (params != null) {
             List<Predicate> predicates = new ArrayList<>();
 
-            // Tìm kiếm theo target
             String kw = params.get("kw");
             if (kw != null && !kw.isEmpty()) {
-                // tìm theo tên exercise hoặc tên workout plan
                 Predicate byExerciseName = b.like(exerciseJoin.get("name"), "%" + kw + "%");
                 Predicate byPlanName = b.like(workoutPlanJoin.get("name"), "%" + kw + "%");
                 predicates.add(b.or(byExerciseName, byPlanName));
@@ -112,7 +110,6 @@ public class WorkoutPlanExerciseRepositoryImpl implements WorkoutPlanExerciseRep
         CriteriaQuery<WorkoutPlanExercise> q = b.createQuery(WorkoutPlanExercise.class);
         Root<WorkoutPlanExercise> root = q.from(WorkoutPlanExercise.class);
 
-        // Tham chiếu tới khóa ngoại workoutPlanId (tên phải đúng trong entity)
         q.select(root).where(b.equal(root.get("workoutPlanId").get("id"), workoutPlanId));
 
         Query query = s.createQuery(q);

@@ -41,9 +41,9 @@ public class ReminderController {
             reminderService.addOrUpdateReminder(r);
             return "redirect:/reminders";
         } catch (RuntimeException ex) {
-            model.addAttribute("error", ex.getMessage()); // gắn thông báo lỗi
+            model.addAttribute("error", ex.getMessage());
             model.addAttribute("users", userService.getAllUsers());
-            return "addupdatereminder"; // giữ lại form
+            return "addupdatereminder";
         }
     }
     

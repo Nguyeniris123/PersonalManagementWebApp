@@ -44,7 +44,7 @@ public class UserRepositoryImpl implements UserRepository {
             query.setParameter("username", username);
             return query.getSingleResult();
         } catch (NoResultException e) {
-            return null;  // Trả về null nếu không tìm thấy
+            return null;
         }
     }
     
@@ -56,7 +56,7 @@ public class UserRepositoryImpl implements UserRepository {
             query.setParameter("email", email);
             return query.getSingleResult();
         } catch (NoResultException e) {
-            return null;  // Trả về null nếu không tìm thấy
+            return null;
         }
     }
 

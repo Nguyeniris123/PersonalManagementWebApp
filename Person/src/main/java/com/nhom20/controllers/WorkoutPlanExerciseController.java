@@ -48,10 +48,10 @@ public class WorkoutPlanExerciseController {
             workoutPlanExerciseService.addOrUpdateWorkOutPlanExercise(wpe);
             return "redirect:/workout-plans-exercise";
         } catch (RuntimeException ex) {
-            model.addAttribute("error", ex.getMessage()); // gắn thông báo lỗi
+            model.addAttribute("error", ex.getMessage());
             model.addAttribute("workoutPlans", workoutPlanService.getWorkOutPlan(params));
             model.addAttribute("exercises", exerciseService.getExercise(params));
-            return "addupdateworkoutplanexercise"; // giữ lại form
+            return "addupdateworkoutplanexercise";
         }
     }
 

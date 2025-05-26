@@ -50,7 +50,6 @@ public class ApiReminderController {
     @GetMapping("/secure/reminders")
     public ResponseEntity<?> getMyReminders(@RequestParam Map<String, String> params, Principal principal) {
         try {
-            // Lấy username từ token
             String username = principal.getName();
             UserAccount user = userService.getUserByUsername(username);
 
@@ -58,7 +57,6 @@ public class ApiReminderController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Người dùng không tồn tại");
             }
 
-            // Gọi service: truyền userId + params (gồm kw, page, orderBy...)
             List<Reminder> reminders = reminderService.getReminderByUserId(user.getId(), params);
 
             return ResponseEntity.ok(reminders);
@@ -72,18 +70,18 @@ public class ApiReminderController {
     @PostMapping("/secure/reminder/add")
     public ResponseEntity<?> createReminder(@RequestBody Reminder r, Principal principal) {
         try {
-            String username = principal.getName(); // Lấy username từ người dùng đang đăng nhập
-            UserAccount user = this.userService.getUserByUsername(username); // Tìm UserAccount tương ứng
+            String username = principal.getName();
+            UserAccount user = this.userService.getUserByUsername(username);
 
             if (user == null) {
                 return new ResponseEntity<>("Không tìm thấy người dùng!", HttpStatus.BAD_REQUEST);
             }
 
-            r.setUserId(user); // Gán user vào
+            r.setUserId(user);
 
             return new ResponseEntity<>(this.reminderService.addOrUpdateReminder(r), HttpStatus.CREATED);
         } catch (Exception ex) {
-            ex.printStackTrace(); // Log lỗi
+            ex.printStackTrace();
             return ResponseEntity.badRequest().body("Có lỗi xảy ra khi thêm nhắc nhở!");
         }
     }
@@ -91,7 +89,6 @@ public class ApiReminderController {
     @GetMapping("/secure/reminders/{id}")
     public ResponseEntity<?> getReminderById(@PathVariable("id") int id, Principal principal) {
         try {
-            // Lấy username từ token đăng nhập
             String username = principal.getName();
             UserAccount user = userService.getUserByUsername(username);
 
@@ -99,14 +96,12 @@ public class ApiReminderController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Người dùng không tồn tại");
             }
 
-            // Tìm nhật ký theo ID
             Reminder reminder = reminderService.getReminderById(id);
 
             if (reminder == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy nhắc nhở");
             }
 
-            // Kiểm tra quyền sở hữu
             if (!reminder.getUserId().getId().equals(user.getId())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Bạn không có quyền xem nhắc nhở này");
             }
@@ -131,18 +126,15 @@ public class ApiReminderController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Không xác thực được người dùng!");
             }
 
-            // Lấy reminder gốc từ DB
             Reminder existing = reminderService.getReminderById(id);
             if (existing == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy nhắc nhở!");
             }
 
-            // Kiểm tra quyền sở hữu
             if (!existing.getUserId().getId().equals(user.getId())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Không có quyền cập nhật nhắc nhở của người khác!");
             }
 
-            // Cập nhật từng trường cần thiết
             existing.setTitle(updatedReminder.getTitle());
             existing.setReminderType(updatedReminder.getReminderType());
             existing.setTime(updatedReminder.getTime());

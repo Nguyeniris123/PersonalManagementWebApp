@@ -68,7 +68,6 @@ public class ApiHealthProfileController {
         return new ResponseEntity<>(profile, HttpStatus.OK);
     }
 
-    // API lấy hồ sơ sức khỏe theo id
     @GetMapping("secure/health-profiles/{id}")
     public ResponseEntity<HealthProfile> getHealthProfileById(@PathVariable(value = "id") int id) {
         HealthProfile healthProfile = healthProfileService.getHealthProfileById(id);
@@ -82,37 +81,35 @@ public class ApiHealthProfileController {
     @PostMapping("/secure/health-profile/add")
     public ResponseEntity<?> addHealthProfile(@RequestBody HealthProfile hp, Principal principal) {
         try {
-            String username = principal.getName(); // Lấy username từ người dùng đang đăng nhập
-            UserAccount user = this.userService.getUserByUsername(username); // Tìm UserAccount tương ứng
+            String username = principal.getName(); 
+            UserAccount user = this.userService.getUserByUsername(username); 
 
             if (user == null) {
                 return new ResponseEntity<>("Không tìm thấy người dùng!", HttpStatus.BAD_REQUEST);
             }
 
-            hp.setUserId(user); // Gán user vào health profile
+            hp.setUserId(user); 
 
-            // Tính BMI nếu có height & weight
             if (hp.getHeight() > 0 && hp.getWeight() > 0) {
                 float heightInMeters = hp.getHeight() / 100f;
                 float bmi = hp.getWeight() / (heightInMeters * heightInMeters);
                 hp.setBmi(bmi);
             } else {
-                hp.setBmi(0); // hoặc null
+                hp.setBmi(0);
             }
 
-            hp.setUpdatedAt(new Date()); // Set thời gian cập nhật
+            hp.setUpdatedAt(new Date()); 
 
             return new ResponseEntity<>(this.healthProfileService.saveHealthProfile(hp), HttpStatus.CREATED);
         } catch (Exception ex) {
-            ex.printStackTrace(); // Log lỗi
+            ex.printStackTrace(); 
             return ResponseEntity.badRequest().body("Có lỗi xảy ra khi lưu hồ sơ!");
         }
     }
 
     @PutMapping("/secure/health-profile/update")
     public ResponseEntity<?> updateHealthProfile(@RequestBody HealthProfile hp, Principal principal) {
-        try {
-            // Lấy user từ token
+        try {       
             String username = principal.getName();
             UserAccount user = this.userService.getUserByUsername(username);
 
@@ -120,30 +117,26 @@ public class ApiHealthProfileController {
                 return new ResponseEntity<>("Không tìm thấy người dùng!", HttpStatus.BAD_REQUEST);
             }
 
-            // Tìm hồ sơ cũ theo ID
             HealthProfile existing = this.healthProfileService.getHealthProfileById(hp.getId());
 
             if (existing == null) {
                 return new ResponseEntity<>("Không tìm thấy hồ sơ sức khỏe!", HttpStatus.NOT_FOUND);
             }
 
-            // Kiểm tra quyền sở hữu: người dùng hiện tại có sở hữu hồ sơ không?
             if (!existing.getUserId().getId().equals(user.getId())) {
                 return new ResponseEntity<>("Không có quyền cập nhật hồ sơ sức khỏe của người khác!", HttpStatus.FORBIDDEN);
             }
 
-            hp.setUserId(user); // Đảm bảo rằng userId từ token sẽ được gán vào healthProfile
+            hp.setUserId(user);
 
-            // Tính BMI nếu cần
             if (hp.getHeight() > 0 && hp.getWeight() > 0) {
                 float heightInMeters = hp.getHeight() / 100f;
                 float bmi = hp.getWeight() / (heightInMeters * heightInMeters);
                 hp.setBmi(bmi);
             }
 
-            hp.setUpdatedAt(new Date()); // Cập nhật thời gian
+            hp.setUpdatedAt(new Date());
 
-            // Lưu hồ sơ sức khỏe đã được cập nhật
             HealthProfile updated = this.healthProfileService.saveHealthProfile(hp);
             return new ResponseEntity<>(updated, HttpStatus.OK);
         } catch (RuntimeException ex) {

@@ -29,7 +29,7 @@ public class ReminderScheduler {
     
     private static boolean hasRun = false;
 
-    @Scheduled(cron = "0 * * * * *") // mỗi phút
+    @Scheduled(cron = "0 * * * * *")
     public void sendReminders() {
         if (hasRun) {
             return;
@@ -37,7 +37,7 @@ public class ReminderScheduler {
         hasRun = true;
 
         String nowStr = TIME_FORMAT.format(new Date());
-        System.out.println("🕒 Looking for reminders at: " + nowStr);
+        System.out.println("Looking for reminders at: " + nowStr);
 
         List<Reminder> reminders = reminderRepository.getAllActiveReminders();
 

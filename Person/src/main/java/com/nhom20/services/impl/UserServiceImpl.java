@@ -68,12 +68,10 @@ public class UserServiceImpl implements UserService {
         String username = params.get("username");
         String email = params.get("email");
 
-        // Kiểm tra username đã tồn tại
         if (userRepository.getUserByUsername(username) != null) {
             throw new RuntimeException("Tên đăng nhập đã tồn tại");
         }
 
-        // Kiểm tra email đã tồn tại
         if (userRepository.getUserByEmail(email) != null) {
             throw new RuntimeException("Email đã tồn tại");
         }
@@ -88,18 +86,16 @@ public class UserServiceImpl implements UserService {
         u.setPassword(this.passwordEncoder.encode(params.get("password")));
         u.setCreatedAt(new Date());
 
-        // Parse ngày sinh
         try {
             String dob = params.get("date_of_birth");
             if (dob != null && !dob.isEmpty()) {
-                LocalDate date = LocalDate.parse(dob); // yyyy-MM-dd
+                LocalDate date = LocalDate.parse(dob);
                 u.setDateOfBirth(java.sql.Date.valueOf(date));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // Upload ảnh đại diện lên Cloudinary
         if (avatar != null && !avatar.isEmpty()) {
             try {
                 Map res = cloudinary.uploader().upload(avatar.getBytes(),
@@ -115,7 +111,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserAccount updateUser(Map<String, String> params, MultipartFile avatar, int userId) {
-        // Lấy thông tin người dùng hiện tại
         UserAccount u = userRepository.getUserById(userId);
         if (u == null) {
             throw new IllegalArgumentException("Người dùng không tồn tại");
@@ -124,19 +119,16 @@ public class UserServiceImpl implements UserService {
         String newUsername = params.get("username");
         String newEmail = params.get("email");
 
-        // Kiểm tra trùng username (không phải của chính user đang sửa)
         UserAccount existingUser = userRepository.getUserByUsername(newUsername);
         if (existingUser != null && existingUser.getId() != userId) {
             throw new RuntimeException("Tên đăng nhập đã tồn tại");
         }
 
-        // Kiểm tra trùng email
         existingUser = userRepository.getUserByEmail(newEmail);
         if (existingUser != null && existingUser.getId() != userId) {
             throw new RuntimeException("Email đã tồn tại");
         }
 
-        // Cập nhật thông tin người dùng
         u.setUsername(newUsername);
         u.setFullName(params.get("full_name"));
         u.setEmail(newEmail);
@@ -144,24 +136,21 @@ public class UserServiceImpl implements UserService {
         u.setRole(params.get("role"));
         u.setGender(params.get("gender"));
 
-        // Mã hóa mật khẩu nếu có thay đổi
         String password = params.get("password");
         if (password != null && !password.isEmpty()) {
             u.setPassword(passwordEncoder.encode(password));
         }
 
-        // Cập nhật ngày sinh
         try {
             String dob = params.get("date_of_birth");
             if (dob != null && !dob.isEmpty()) {
-                LocalDate date = LocalDate.parse(dob); // yyyy-MM-dd
+                LocalDate date = LocalDate.parse(dob);
                 u.setDateOfBirth(java.sql.Date.valueOf(date));
             }
         } catch (Exception e) {
             throw new IllegalArgumentException("Định dạng ngày sinh không hợp lệ");
         }
 
-        // Cập nhật avatar nếu có file mới
         if (avatar != null && !avatar.isEmpty()) {
             try {
                 Map res = cloudinary.uploader().upload(avatar.getBytes(),

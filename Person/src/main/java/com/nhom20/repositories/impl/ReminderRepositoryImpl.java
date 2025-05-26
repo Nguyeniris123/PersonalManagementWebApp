@@ -42,13 +42,12 @@ public class ReminderRepositoryImpl implements ReminderRepository {
         CriteriaBuilder b = s.getCriteriaBuilder();
         CriteriaQuery<Reminder> q = b.createQuery(Reminder.class);
         Root<Reminder> root = q.from(Reminder.class);
-        Join<Reminder, UserAccount> userJoin = root.join("userId", JoinType.INNER);  // Thêm Join với bảng UserAccount
+        Join<Reminder, UserAccount> userJoin = root.join("userId", JoinType.INNER);
         q.select(root);
 
         if (params != null) {
             List<Predicate> predicates = new ArrayList<>();
 
-            // Tìm kiếm theo target
             String kw = params.get("kw");
             if (kw != null && !kw.isEmpty()) {
                 predicates.add(b.like(root.get("title"), String.format("%%%s%%", kw)));
@@ -109,10 +108,9 @@ public class ReminderRepositoryImpl implements ReminderRepository {
         q.select(root);
 
         List<Predicate> predicates = new ArrayList<>();
-        predicates.add(b.equal(root.get("userId").get("id"), userId)); // Luôn lọc theo user
+        predicates.add(b.equal(root.get("userId").get("id"), userId));
 
         if (params != null) {
-            // Tìm kiếm theo target
             String kw = params.get("kw");
             if (kw != null && !kw.isEmpty()) {
                 predicates.add(b.like(root.get("title"), String.format("%%%s%%", kw)));

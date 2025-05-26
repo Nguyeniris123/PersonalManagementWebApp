@@ -49,7 +49,6 @@ public class ApiHealthJournalController {
     @GetMapping("/secure/health-journals")
     public ResponseEntity<?> getMyHealthJournals(@RequestParam Map<String, String> params, Principal principal) {
         try {
-            // Lấy username từ token
             String username = principal.getName();
             UserAccount user = userService.getUserByUsername(username);
 
@@ -57,7 +56,6 @@ public class ApiHealthJournalController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Người dùng không tồn tại");
             }
 
-            // Gọi service: truyền userId + params (gồm kw, page, orderBy...)
             List<HealthJournal> journals = healthJournalService.getHealthJournalByUserId(user.getId(), params);
 
             return ResponseEntity.ok(journals);
@@ -71,7 +69,6 @@ public class ApiHealthJournalController {
     @GetMapping("/secure/health-journals/{id}")
     public ResponseEntity<?> getHealthJournalById(@PathVariable("id") int id, Principal principal) {
         try {
-            // Lấy username từ token đăng nhập
             String username = principal.getName();
             UserAccount user = userService.getUserByUsername(username);
 
@@ -79,14 +76,12 @@ public class ApiHealthJournalController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Người dùng không tồn tại");
             }
 
-            // Tìm nhật ký theo ID
             HealthJournal journal = healthJournalService.getHealthJournalById(id);
 
             if (journal == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy nhật ký");
             }
 
-            // Kiểm tra quyền sở hữu
             if (!journal.getUserId().getId().equals(user.getId())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Bạn không có quyền xem nhật ký này");
             }
@@ -102,18 +97,18 @@ public class ApiHealthJournalController {
     @PostMapping("/secure/health-journal/add")
     public ResponseEntity<?> createHealthJournal(@RequestBody HealthJournal hj, Principal principal) {
         try {
-            String username = principal.getName(); // Lấy username từ người dùng đang đăng nhập
-            UserAccount user = this.userService.getUserByUsername(username); // Tìm UserAccount tương ứng
+            String username = principal.getName(); 
+            UserAccount user = this.userService.getUserByUsername(username); 
 
             if (user == null) {
                 return new ResponseEntity<>("Không tìm thấy người dùng!", HttpStatus.BAD_REQUEST);
             }
 
-            hj.setUserId(user); // Gán user vào
+            hj.setUserId(user); 
 
             return new ResponseEntity<>(this.healthJournalService.addOrUpdateHealthJournal(hj), HttpStatus.CREATED);
         } catch (Exception ex) {
-            ex.printStackTrace(); // Log lỗi
+            ex.printStackTrace(); 
             return ResponseEntity.badRequest().body("Có lỗi xảy ra khi thêm kế hoạch!");
         }
     }

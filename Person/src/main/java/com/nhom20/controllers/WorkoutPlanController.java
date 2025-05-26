@@ -40,7 +40,6 @@ public class WorkoutPlanController {
         return "addupdateworkoutplans";
     }
 
-    // Định nghĩa cách chuyển đổi chuỗi ngày thành đối tượng Date
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
@@ -50,13 +49,13 @@ public class WorkoutPlanController {
     public String addWorkoutPlan(@ModelAttribute("workoutPlan") WorkoutPlan wp, Model model) {
         try {
         
-            wp.setCreatedAt(new Date()); // Đặt thời gian hiện tại
+            wp.setCreatedAt(new Date());
             workoutPlanService.addOrUpdateWorkOutPlan(wp);
             return "redirect:/workout-plans";
         } catch (RuntimeException ex) {
-            model.addAttribute("error", ex.getMessage()); // gắn thông báo lỗi
+            model.addAttribute("error", ex.getMessage());
             model.addAttribute("users", userService.getAllUsers());
-            return "addupdateworkoutplans"; // giữ lại form
+            return "addupdateworkoutplans";
         }
     }
 

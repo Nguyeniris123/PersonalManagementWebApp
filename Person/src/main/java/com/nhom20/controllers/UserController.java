@@ -38,7 +38,6 @@ public class UserController {
         return "adduser";
     }
 
-    // Xử lý submit form
     @PostMapping(path = "/users/add",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.TEXT_HTML_VALUE)
@@ -50,8 +49,8 @@ public class UserController {
             userService.addUser(params, avatar);
             return "redirect:/users";
         } catch (RuntimeException ex) {
-            model.addAttribute("error", ex.getMessage()); // gắn thông báo lỗi
-            return "adduser"; // giữ lại form
+            model.addAttribute("error", ex.getMessage());
+            return "adduser";
         }
     }
 

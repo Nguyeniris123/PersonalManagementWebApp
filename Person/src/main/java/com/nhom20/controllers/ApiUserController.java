@@ -77,12 +77,10 @@ public class ApiUserController {
     public ResponseEntity<UserAccount> getProfile(Principal principal) {
         String username = principal.getName();
         if (username == null) {
-            // Log lỗi hoặc trả về lỗi nếu không có username hợp lệ
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         UserAccount user = this.userDetailsService.getUserByUsername(username);
         if (user == null) {
-            // Log lỗi hoặc trả về lỗi nếu không tìm thấy người dùng
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(user, HttpStatus.OK);
@@ -100,28 +98,22 @@ public class ApiUserController {
             @RequestParam(value = "avatar", required = false) MultipartFile avatar,
             Principal principal) {
         try {
-            // Lấy thông tin người dùng từ token (principal)
             String username = principal.getName();
             UserAccount currentUser = userDetailsService.getUserByUsername(username);
 
-            // Kiểm tra xem người dùng có tồn tại không
             if (currentUser == null) {
                 return new ResponseEntity<>("Không tìm thấy người dùng!", HttpStatus.BAD_REQUEST);
             }
 
-            // Kiểm tra quyền truy cập: Người dùng chỉ có thể sửa thông tin của mình, hoặc admin có thể sửa tất cả
             if (!currentUser.getId().equals(userId) && !currentUser.getRole().equals("ADMIN")) {
                 return new ResponseEntity<>("Không có quyền chỉnh sửa thông tin của người khác!", HttpStatus.FORBIDDEN);
             }
 
-            // Cập nhật thông tin người dùng qua service
             userDetailsService.updateUser(params, avatar, userId);
 
-            // Trả về thông tin người dùng đã được cập nhật
             return new ResponseEntity<>("Cập nhật thông tin thành công", HttpStatus.OK);
 
         } catch (RuntimeException ex) {
-            // Trả về thông báo lỗi
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

@@ -40,7 +40,6 @@ public class HealthJournalController {
         return "addupdatehealthjournal";
     }
     
-    // Định nghĩa cách chuyển đổi chuỗi ngày thành đối tượng Date
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
@@ -52,9 +51,9 @@ public class HealthJournalController {
             healthJournalService.addOrUpdateHealthJournal(hj);
             return "redirect:/health-journal";
         } catch (RuntimeException ex) {
-            model.addAttribute("error", ex.getMessage()); // gắn thông báo lỗi
+            model.addAttribute("error", ex.getMessage());
             model.addAttribute("users", userService.getAllUsers());
-            return "addupdatehealthjournal"; // giữ lại form
+            return "addupdatehealthjournal";
         }
     }
     

@@ -74,7 +74,6 @@ public class ApiStatisticsController {
             @RequestParam(name = "endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             Principal principal) {
 
-        // Lấy user hiện tại
         String username = principal.getName();
         UserAccount currentUser = userService.getUserByUsername(username);
 
@@ -82,14 +81,12 @@ public class ApiStatisticsController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        // Kiểm tra kết nối ACCEPTED
         boolean connected = userTrainerService.existsAcceptedConnection(userId, currentUser.getId());
         if (!connected) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body("Bạn không có quyền xem thống kê của user này.");
         }
 
-        // Lấy thống kê tuần/tháng
         List<Object[]> weeklyStats = statisticsService.statsByWeek(userId, startDate, endDate);
         List<Object[]> monthlyStats = statisticsService.statsByMonth(userId, startDate, endDate);
 
@@ -102,19 +99,16 @@ public class ApiStatisticsController {
 
     @GetMapping("/secure/accepted-user")
     public ResponseEntity<?> getConnectedUsers(Principal principal) {
-        // Lấy username hiện tại
         String username = principal.getName();
         if (username == null || username.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Chưa đăng nhập");
         }
 
-        // Lấy thông tin trainer theo username
         UserAccount trainer = userService.getUserByUsername(username);
         if (trainer == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Trainer không tồn tại");
         }
 
-        // Lấy danh sách user đã được trainer chấp nhận kết nối
         List<UserAccount> connectedUsers = userTrainerService.getUsersAcceptedByTrainer(trainer.getId());
 
         return ResponseEntity.ok(connectedUsers);
@@ -125,7 +119,6 @@ public class ApiStatisticsController {
             @RequestParam("userId") int userId,
             Principal principal) {
 
-        // Lấy user hiện tại
         String username = principal.getName();
         UserAccount currentUser = userService.getUserByUsername(username);
 
@@ -133,8 +126,6 @@ public class ApiStatisticsController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        // Kiểm tra quyền truy cập: 
-        // Cho phép xem nếu chính là user hoặc trainer có kết nối ACCEPTED với user
         boolean canView = userId == currentUser.getId()
                 || userTrainerService.existsAcceptedConnection(userId, currentUser.getId());
 

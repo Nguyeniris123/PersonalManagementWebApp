@@ -40,9 +40,9 @@ public class DispatcherServletInit extends AbstractAnnotationConfigDispatcherSer
 
     @Override
     protected void customizeRegistration(ServletRegistration.Dynamic registration) {
-        String location = "/tmp"; // hoặc bất kỳ thư mục nào máy chủ có quyền ghi
-        long maxFileSize = 5242880; // 5MB
-        long maxRequestSize = 20971520; // 20MB
+        String location = "/tmp"; 
+        long maxFileSize = 5242880; 
+        long maxRequestSize = 20971520;
         int fileSizeThreshold = 0;
 
         registration.setMultipartConfig(
@@ -52,6 +52,6 @@ public class DispatcherServletInit extends AbstractAnnotationConfigDispatcherSer
     
     @Override
     protected Filter[] getServletFilters() {
-        return new Filter[] { new JwtFilter() }; // Filter sẽ áp dụng cho mọi request
+        return new Filter[] { new JwtFilter() };
     }
 }

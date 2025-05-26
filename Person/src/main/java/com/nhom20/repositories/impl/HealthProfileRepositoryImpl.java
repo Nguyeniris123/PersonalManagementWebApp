@@ -42,19 +42,17 @@ public class HealthProfileRepositoryImpl implements HealthProfileRepository {
         CriteriaBuilder b = s.getCriteriaBuilder();
         CriteriaQuery<HealthProfile> q = b.createQuery(HealthProfile.class);
         Root<HealthProfile> root = q.from(HealthProfile.class);
-        Join<HealthProfile, UserAccount> userJoin = root.join("userId", JoinType.INNER);  // Thêm Join với bảng UserAccount
+        Join<HealthProfile, UserAccount> userJoin = root.join("userId", JoinType.INNER);
         q.select(root);
 
         if (params != null) {
             List<Predicate> predicates = new ArrayList<>();
 
-            // Tìm kiếm theo target
             String kw = params.get("kw");
             if (kw != null && !kw.isEmpty()) {
                 predicates.add(b.like(root.get("target"), String.format("%%%s%%", kw)));
             }
 
-            // Tìm kiếm theo BMI
             String minBmi = params.get("minBmi");
             if (minBmi != null && !minBmi.isEmpty()) {
                 predicates.add(b.greaterThanOrEqualTo(root.get("bmi"), Float.valueOf(minBmi)));
@@ -65,7 +63,6 @@ public class HealthProfileRepositoryImpl implements HealthProfileRepository {
                 predicates.add(b.lessThanOrEqualTo(root.get("bmi"), Float.valueOf(maxBmi)));
             }
 
-            // Tìm kiếm theo tên người dùng
             String username = params.get("username");
             if (username != null && !username.isEmpty()) {
                 predicates.add(b.like(userJoin.get("username"), String.format("%%%s%%", username)));
@@ -94,16 +91,13 @@ public class HealthProfileRepositoryImpl implements HealthProfileRepository {
 
     @Override
     public HealthProfile getHealthProfileByUserId(int userId) {
-        // Tạo một session và sử dụng Criteria API để truy vấn
         Session session = this.factory.getObject().getCurrentSession();
         CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<HealthProfile> cq = cb.createQuery(HealthProfile.class);
         Root<HealthProfile> root = cq.from(HealthProfile.class);
 
-        // Thực hiện join với bảng UserAccount
         Join<HealthProfile, UserAccount> userJoin = root.join("userId", JoinType.INNER);
 
-        // Điều kiện WHERE userId.id = :userId
         cq.select(root).where(cb.equal(userJoin.get("id"), userId));
 
         org.hibernate.query.Query<HealthProfile> query = session.createQuery(cq);
@@ -120,9 +114,7 @@ public class HealthProfileRepositoryImpl implements HealthProfileRepository {
     public HealthProfile addOrUpdateHealthProfile(HealthProfile healthProfile) {
         Session s = this.factory.getObject().getCurrentSession();
 
-        // Kiểm tra nếu đang cập nhật mà user_id trùng với hồ sơ khác
         if (healthProfile.getId() == null) {
-            // Tạo mới → kiểm tra user_id đã tồn tại chưa
             HealthProfile existing = (HealthProfile) s.createQuery("FROM HealthProfile WHERE userId = :user")
                     .setParameter("user", healthProfile.getUserId())
                     .uniqueResult();

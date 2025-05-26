@@ -29,7 +29,6 @@ public class StatisticsController {
             Model model) {
 
         if (startDate == null || endDate == null) {
-            // Nếu bạn muốn có giá trị mặc định
             LocalDate now = LocalDate.now();
             if (startDate == null) {
                 startDate = now.minusMonths(1);

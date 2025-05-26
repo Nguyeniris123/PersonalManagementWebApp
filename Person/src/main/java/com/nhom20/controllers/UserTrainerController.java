@@ -4,7 +4,6 @@
  */
 package com.nhom20.controllers;
 
-import com.nhom20.pojo.HealthProfile;
 import com.nhom20.pojo.UserAccount;
 import com.nhom20.pojo.UserTrainer;
 import com.nhom20.services.UserService;
@@ -12,9 +11,7 @@ import com.nhom20.services.UserTrainerService;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Role;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,12 +47,12 @@ public class UserTrainerController {
     public String addUserTrainer(@ModelAttribute("userTrainer") UserTrainer userTrainer,
             Model model, @RequestParam Map<String, String> params) {
         try {
-            userTrainer.setCreatedAt(new Date()); // Đặt thời gian hiện tại
+            userTrainer.setCreatedAt(new Date());
             userTrainerService.addOrUpdateUserTrainer(userTrainer);
-            return "redirect:/user-trainer"; // quay lại danh sách userTrainer sau khi thêm
+            return "redirect:/user-trainer";
         } catch (RuntimeException ex) {
             model.addAttribute("error", ex.getMessage());
-            return "addupdateusertrainer"; // giữ lại form khi có lỗi
+            return "addupdateusertrainer";
         }
     }
     

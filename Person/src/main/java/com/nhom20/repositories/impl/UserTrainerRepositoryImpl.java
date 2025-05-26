@@ -43,7 +43,6 @@ public class UserTrainerRepositoryImpl implements UserTrainerRepository {
         CriteriaQuery<UserTrainer> q = b.createQuery(UserTrainer.class);
         Root<UserTrainer> root = q.from(UserTrainer.class);
 
-        // Join tới bảng user_account để lấy tên user và trainer
         Join<UserTrainer, UserAccount> userJoin = root.join("userId", JoinType.INNER);
         Join<UserTrainer, UserAccount> trainerJoin = root.join("trainerId", JoinType.INNER);
 
@@ -52,7 +51,6 @@ public class UserTrainerRepositoryImpl implements UserTrainerRepository {
         if (params != null) {
             List<Predicate> predicates = new ArrayList<>();
 
-            // Tìm kiếm theo tên người dùng hoặc tên huấn luyện viên
             String kw = params.get("kw");
             if (kw != null && !kw.isEmpty()) {
                 Predicate byUserName = b.like(userJoin.get("username"), "%" + kw + "%");
@@ -60,7 +58,6 @@ public class UserTrainerRepositoryImpl implements UserTrainerRepository {
                 predicates.add(b.or(byUserName, byTrainerName));
             }
 
-            // Lọc theo trạng thái
             String status = params.get("status");
             if (status != null && !status.isEmpty()) {
                 predicates.add(b.equal(root.get("status"), status));
@@ -68,7 +65,6 @@ public class UserTrainerRepositoryImpl implements UserTrainerRepository {
 
             q.where(predicates.toArray(Predicate[]::new));
 
-            // Sắp xếp
             String orderBy = params.get("orderBy");
             if (orderBy != null && !orderBy.isEmpty()) {
                 q.orderBy(b.asc(root.get(orderBy)));
@@ -77,7 +73,6 @@ public class UserTrainerRepositoryImpl implements UserTrainerRepository {
 
         Query query = s.createQuery(q);
 
-        // Phân trang
         if (params != null && params.containsKey("page")) {
             int page = Integer.parseInt(params.get("page"));
             int start = (page - 1) * PAGE_SIZE;
@@ -97,7 +92,6 @@ public class UserTrainerRepositoryImpl implements UserTrainerRepository {
     public UserTrainer addOrUpdateUserTrainer(UserTrainer userTrainer) {
         Session s = this.factory.getObject().getCurrentSession();
 
-        // Kiểm tra nếu là thêm mới
         if (userTrainer.getId() == null) {
             String hql = "SELECT ut FROM UserTrainer ut WHERE ut.userId.id = :userId";
             UserTrainer existing = (UserTrainer) s.createQuery(hql)
@@ -110,11 +104,10 @@ public class UserTrainerRepositoryImpl implements UserTrainerRepository {
 
             s.persist(userTrainer);
         } else {
-            // Kiểm tra nếu người dùng có huấn luyện viên khác khi đang cập nhật
             String hql = "SELECT ut FROM UserTrainer ut WHERE ut.userId.id = :userId AND ut.id != :id";
             UserTrainer existing = (UserTrainer) s.createQuery(hql)
                     .setParameter("userId", userTrainer.getUserId().getId())
-                    .setParameter("id", userTrainer.getId()) // Exclude current trainer
+                    .setParameter("id", userTrainer.getId())
                     .uniqueResult();
 
             if (existing != null) {
@@ -144,7 +137,6 @@ public class UserTrainerRepositoryImpl implements UserTrainerRepository {
 
         q.select(root);
 
-        // Điều kiện lọc theo userId
         Predicate predicate = b.equal(root.get("userId").get("id"), userId);
         q.where(predicate);
 
@@ -176,7 +168,6 @@ public class UserTrainerRepositoryImpl implements UserTrainerRepository {
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
         Root<UserTrainer> root = cq.from(UserTrainer.class);
 
-        // Điều kiện: userId, trainerId và status = 'ACCEPTED'
         Predicate userPredicate = cb.equal(root.get("userId").get("id"), userId);
         Predicate trainerPredicate = cb.equal(root.get("trainerId").get("id"), trainerId);
         Predicate statusPredicate = cb.equal(root.get("status"), "ACCEPTED");
@@ -195,13 +186,10 @@ public class UserTrainerRepositoryImpl implements UserTrainerRepository {
         CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<UserAccount> cq = cb.createQuery(UserAccount.class);
 
-        // Root cho UserTrainer (bảng trung gian)
         Root<UserTrainer> root = cq.from(UserTrainer.class);
 
-        // Join tới bảng user_account lấy user (người dùng)
-        Join<UserTrainer, UserAccount> userJoin = root.join("userId"); // property userId trong UserTrainer entity
+        Join<UserTrainer, UserAccount> userJoin = root.join("userId");
 
-        // Điều kiện status = ACCEPTED, trainerId = tham số
         Predicate trainerPredicate = cb.equal(root.get("trainerId").get("id"), trainerId);
         Predicate statusPredicate = cb.equal(root.get("status"), "ACCEPTED");
 

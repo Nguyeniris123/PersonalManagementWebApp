@@ -42,13 +42,12 @@ public class HealthJournalRepositoryImpl implements HealthJournalRepository {
         CriteriaBuilder b = s.getCriteriaBuilder();
         CriteriaQuery<HealthJournal> q = b.createQuery(HealthJournal.class);
         Root<HealthJournal> root = q.from(HealthJournal.class);
-        Join<HealthJournal, UserAccount> userJoin = root.join("userId", JoinType.INNER);  // Thêm Join với bảng UserAccount
+        Join<HealthJournal, UserAccount> userJoin = root.join("userId", JoinType.INNER);
         q.select(root);
 
         if (params != null) {
             List<Predicate> predicates = new ArrayList<>();
 
-            // Tìm kiếm theo target
             String kw = params.get("kw");
             if (kw != null && !kw.isEmpty()) {
                 predicates.add(b.like(root.get("content"), String.format("%%%s%%", kw)));
@@ -112,7 +111,6 @@ public class HealthJournalRepositoryImpl implements HealthJournalRepository {
         predicates.add(b.equal(root.get("userId").get("id"), userId)); // Luôn lọc theo user
 
         if (params != null) {
-            // Tìm kiếm theo target
             String kw = params.get("kw");
             if (kw != null && !kw.isEmpty()) {
                 predicates.add(b.like(root.get("content"), String.format("%%%s%%", kw)));

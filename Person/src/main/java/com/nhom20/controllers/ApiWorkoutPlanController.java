@@ -50,8 +50,8 @@ public class ApiWorkoutPlanController {
     @PostMapping("/secure/workout-plan/add")
     public ResponseEntity<?> createWorkoutPlan(@RequestBody WorkoutPlan wp, Principal principal) {
         try {
-            String username = principal.getName(); // Lấy username từ người dùng đang đăng nhập
-            UserAccount user = this.userService.getUserByUsername(username); // Tìm UserAccount tương ứng
+            String username = principal.getName(); 
+            UserAccount user = this.userService.getUserByUsername(username);
 
             if (user == null) {
                 return new ResponseEntity<>("Không tìm thấy người dùng!", HttpStatus.BAD_REQUEST);
@@ -61,12 +61,12 @@ public class ApiWorkoutPlanController {
                 return ResponseEntity.badRequest().body("Ngày kết thúc không được nhỏ hơn ngày bắt đầu!");
             }
 
-            wp.setUserId(user); // Gán user vào health profile
-            wp.setCreatedAt(new Date()); // Đặt thời gian hiện tại
+            wp.setUserId(user); 
+            wp.setCreatedAt(new Date());
 
             return new ResponseEntity<>(this.workoutPlanService.addOrUpdateWorkOutPlan(wp), HttpStatus.CREATED);
         } catch (Exception ex) {
-            ex.printStackTrace(); // Log lỗi
+            ex.printStackTrace();
             return ResponseEntity.badRequest().body("Có lỗi xảy ra khi thêm kế hoạch!");
         }
     }
@@ -74,7 +74,6 @@ public class ApiWorkoutPlanController {
     @GetMapping("/secure/workout-plans")
     public ResponseEntity<?> getMyWorkoutPlans(@RequestParam Map<String, String> params, Principal principal) {
         try {
-            // Lấy username từ token
             String username = principal.getName();
             UserAccount user = userService.getUserByUsername(username);
 
@@ -82,7 +81,6 @@ public class ApiWorkoutPlanController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Người dùng không tồn tại");
             }
 
-            // Gọi service: truyền userId + params (gồm kw, page, orderBy...)
             List<WorkoutPlan> workoutPlans = workoutPlanService.getWorkoutPlanByUserId(user.getId(), params);
 
             return ResponseEntity.ok(workoutPlans);

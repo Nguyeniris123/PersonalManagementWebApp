@@ -59,23 +59,19 @@ public class ApiWorkoutPlanExerciseController {
             @PathVariable("workoutPlanId") int workoutPlanId,
             Principal user) {
 
-        // Lấy userId từ token (nếu bạn lưu username trong token)
-        String username = user.getName();  // username từ JWT
+        String username = user.getName();
         UserAccount currentUser = userService.getUserByUsername(username);
 
-        // Lấy kế hoạch tập
         WorkoutPlan plan = workoutPlanService.getWorkOutPlanById(workoutPlanId);
         if (plan == null) {
             return ResponseEntity.notFound().build();
         }
 
-        // So sánh userId
         if (plan.getUserId().getId() != currentUser.getId()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(Map.of("error", "Bạn không có quyền truy cập kế hoạch này!"));
         }
 
-        // Trả danh sách bài tập của kế hoạch
         return ResponseEntity.ok(workoutPlanExerciseService.getWorkoutPlanExercisesByWorkoutPlanId(workoutPlanId));
     }
 
@@ -99,15 +95,13 @@ public class ApiWorkoutPlanExerciseController {
                     .body("Bạn không có quyền truy cập kế hoạch này!");
         }
 
-        // Lấy exercise từ DB
         Exercise exercise = exerciseService.getExerciseById(workoutPlanExercise.getExerciseId().getId());
         if (exercise == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy bài tập!");
         }
 
-        // Gán lại các thông tin
         workoutPlanExercise.setWorkoutPlanId(plan);
-        workoutPlanExercise.setExerciseId(exercise); // Gán đối tượng đầy đủ
+        workoutPlanExercise.setExerciseId(exercise);
 
         WorkoutPlanExercise added = workoutPlanExerciseService.addOrUpdateWorkOutPlanExercise(workoutPlanExercise);
 
