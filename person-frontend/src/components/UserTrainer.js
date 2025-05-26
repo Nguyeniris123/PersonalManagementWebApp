@@ -4,6 +4,7 @@ import { authApis, endpoints } from "../configs/Apis";
 import { Link } from 'react-router-dom';
 import { MyUserContext } from '../configs/MyContexts';
 import MySpinner from './layout/MySpinner';
+import ChatBox from "./ChatBox";
 
 const ConnectTrainer = () => {
     const user = useContext(MyUserContext);
@@ -12,6 +13,7 @@ const ConnectTrainer = () => {
     const [loading, setLoading] = useState(true);
     const [msg, setMsg] = useState("");
     const [searchTerm, setSearchTerm] = useState(""); // Tìm kiếm
+    const [openChatTrainerId, setOpenChatTrainerId] = useState(null);
 
     // Lấy danh sách huấn luyện viên
     useEffect(() => {
@@ -136,7 +138,7 @@ const ConnectTrainer = () => {
                     <p>Bạn chưa gửi yêu cầu nào.</p>
                 ) : (
                     connections.map(conn => (
-                        <Card key={conn.id} style={{ width: '18rem' }}>
+                        <Card key={conn.id} style={{ width: '28rem', position: 'relative' }}>
                             <Card.Body>
                                 <div className="text-center mb-3">
                                     <Image src={conn.trainerId?.avatar} roundedCircle width="120" height="120" alt="Avatar" />
@@ -145,6 +147,31 @@ const ConnectTrainer = () => {
                                 <Card.Text>Email: {conn.trainerId?.email}</Card.Text>
                                 <Card.Text>Trạng thái: {conn.status}</Card.Text>
                                 <Button variant="danger" onClick={() => handleDeleteConnection(conn.id)}>Xóa yêu cầu</Button>
+                                <Button
+                                    variant={openChatTrainerId === conn.trainerId.id ? "secondary" : "success"}
+                                    className="ms-2"
+                                    onClick={() => setOpenChatTrainerId(openChatTrainerId === conn.trainerId.id ? null : conn.trainerId.id)}
+                                >
+                                    {openChatTrainerId === conn.trainerId.id ? "Đóng chat" : "Chat"}
+                                </Button>
+
+                                {openChatTrainerId === conn.trainerId.id && (
+                                    <div
+                                        style={{
+                                            marginTop: '1rem',
+                                            maxHeight: '450px',
+                                            overflowY: 'auto',
+                                            border: '1px solid #ddd',
+                                            borderRadius: '5px',
+                                            padding: '0.5rem',
+                                            backgroundColor: '#fafafa',
+                                            width: '100%',  // Đảm bảo chatbox rộng bằng card
+                                            boxSizing: 'border-box',
+                                        }}
+                                    >
+                                        <ChatBox userId={user.id} trainerId={conn.trainerId.id} />
+                                    </div>
+                                )}
                             </Card.Body>
                         </Card>
                     ))

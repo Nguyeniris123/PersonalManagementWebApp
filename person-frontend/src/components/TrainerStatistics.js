@@ -13,6 +13,7 @@ import { authApis, endpoints } from "../configs/Apis";
 import { MyUserContext } from "../configs/MyContexts";
 import { Button, Container, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import ChatBox from "./ChatBox";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -59,7 +60,7 @@ const TrainerStatistics = () => {
             const [statsRes, profileRes] = await Promise.all([
                 authApis().get(
                     `${endpoints.trainerStatistics}?userId=${selectedUserId}&startDate=${startDate}&endDate=${endDate}`
-),
+                ),
                 authApis().get(`${endpoints.trainer_health_profile}?userId=${selectedUserId}`)
             ]);
 
@@ -151,6 +152,12 @@ const TrainerStatistics = () => {
                         ))}
                     </Form.Select>
                 </Form.Group>
+            )}
+
+            {selectedUserId && (
+                <div className="mb-4 d-flex justify-content-center">
+                    <ChatBox userId={user.id} trainerId={selectedUserId} />
+                </div>
             )}
 
             <div className="d-flex justify-content-center gap-2 mb-3 flex-wrap">
