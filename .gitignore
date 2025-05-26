@@ -26,3 +26,4 @@ replay_pid*
 .idea/
 /PersonalManagement/target/
 /Person/target/
+person-frontend/.env

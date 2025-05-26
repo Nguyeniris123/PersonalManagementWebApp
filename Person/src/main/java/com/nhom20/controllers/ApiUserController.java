@@ -60,11 +60,11 @@ public class ApiUserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserAccount u) {
-
         if (this.userDetailsService.authenticate(u.getUsername(), u.getPassword())) {
             try {
-                String token = JwtUtils.generateToken(u.getUsername());
-                return ResponseEntity.ok().body(Collections.singletonMap("token", token));
+                UserAccount user = userDetailsService.getUserByUsername(u.getUsername());
+                String token = JwtUtils.generateToken(user.getUsername(), user.getRole());
+                return ResponseEntity.ok(Collections.singletonMap("token", token));
             } catch (Exception e) {
                 return ResponseEntity.status(500).body("Lỗi khi tạo JWT");
             }
