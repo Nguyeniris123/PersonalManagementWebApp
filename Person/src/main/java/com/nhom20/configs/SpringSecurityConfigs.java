@@ -67,11 +67,11 @@ public class SpringSecurityConfigs {
                         "/api/secure/health-journals", "/api/secure/health-journals/**",
                         "/api/secure/health-journal/add", "/api/secure/reminders",
                         "/api/secure/reminder/add", "/api/secure/reminders/**", "/api/secure/update-reminder/**",
-                        "/api/secure/statistics").hasAnyRole("USER", "ADMIN")
+                        "/api/secure/statistics").hasAnyRole("USER")
                 .requestMatchers("/api/secure/request-user-trainers", "/api/secure/user-trainer/accept/**",
                         "/api/secure/user-trainer/reject/**", "/api/secure/accepted-user", "/api/secure/trainer-statistics",
                         "/api/secure/trainer-health-profile").hasAnyRole("TRAINER")
-                .requestMatchers("/api/users/**", "/api/exercises/**", "/api/workout-plans/**", "/api/workout-plans-exercise/**","/api/user-trainer/**", "/api/health-journal/**", "/api/reminder/**", "/api/health-profiles/**").permitAll()
+                .requestMatchers("/api/meal-suggestion", "/api/users/**", "/api/exercises/**", "/api/workout-plans/**", "/api/workout-plans-exercise/**","/api/user-trainer/**", "/api/health-journal/**", "/api/reminder/**", "/api/health-profiles/**").permitAll()
                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class)
